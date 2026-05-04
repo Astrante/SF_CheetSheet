@@ -115,7 +115,7 @@ svg { width: 100%; height: 100%; }
 .link { stroke: var(--link-color); stroke-width: 1; transition: stroke 0.25s; }
 .link.active { stroke: var(--link-active); stroke-width: 1.5; }
 .node-group { cursor: pointer; }
-.node-bg { fill: var(--node-fill); stroke: var(--node-stroke); stroke-width: 1.5; transition: stroke 0.2s, stroke-width 0.2s; }
+.node-bg { fill: var(--node-fill); stroke: var(--node-stroke); stroke-width: 1; transition: stroke 0.2s, stroke-width 0.2s; }
 .node-bg.active { stroke: var(--node-stroke-active); stroke-width: 1.5; }
 .node-bg.placeholder { fill: var(--placeholder-fill); stroke: var(--placeholder-stroke); stroke-dasharray: 3 3; }
 
@@ -496,12 +496,12 @@ const abbrTexts = nodeGroup.append("text")
   .attr("font-family","'IBM Plex Mono', monospace").attr("font-weight","500")
   .attr("pointer-events","none")
   .attr("y",d=>d.subtopics&&d.subtopics.length?-5:0)
-  .attr("font-size",d=>Math.max(10,d.size*0.35)+"px")
+  .attr("font-size",d=>Math.max(8,d.size*0.28)+"px")
   .text(d=>d.abbr);
 
 const labelTexts = nodeGroup.append("text")
   .attr("text-anchor","middle").attr("dominant-baseline","auto")
-  .attr("font-family","'IBM Plex Sans', sans-serif").attr("font-size","9px").attr("font-weight","500")
+  .attr("font-family","'IBM Plex Sans', sans-serif").attr("font-size","8px").attr("font-weight","500")
   .attr("pointer-events","none")
   .attr("y",d=>d.size*0.5)
   .text(d=>d.label);
@@ -522,10 +522,7 @@ function updateNodeColors() {
   });
 }
 
-// Force initial color update
-setTimeout(() => updateNodeColors(), 100);
-// Also update on window load
-window.addEventListener('load', () => updateNodeColors());
+updateNodeColors();
 
 nodeGroup.on("click",(e,d)=>{ e.stopPropagation(); selectTopic(d.id); })
   .on("mouseenter",(e,d)=>{
