@@ -1,0 +1,3160 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<!-- Updated: 2026-05-05 - Flashcards style with badges -->
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Interactive Salesforce interview preparation cheatsheet with knowledge graph covering all major topics">
+<title>Salesforce Interview Cheatsheet</title>
+<meta name="theme-color" content="#1f1f1e">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com https://d3js.org; script-src 'self' 'unsafe-inline' https://d3js.org;">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://d3js.org/d3.v7.min.js" integrity="sha384-...CROSSORIGIN..." crossorigin="anonymous" onerror="window.dispatchEvent(new CustomEvent('d3error'))"></script>
+<style>
+/* Accessibility */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--text);
+  color: var(--bg);
+  padding: 8px 16px;
+  text-decoration: none;
+  z-index: 1000;
+  border-radius: 0 0 4px 0;
+}
+.skip-link:focus {
+  top: 0;
+}
+
+/* Focus visible for better keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+/* Error Banner */
+.error-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #dc2626;
+  color: white;
+  padding: 16px 24px;
+  z-index: 10000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.error-banner button {
+  background: white;
+  color: #dc2626;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+[data-theme="light"] {
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --border: #e5e5e5;
+  --border-strong: #d4d4d4;
+  --text: #171717;
+  --text-2: #737373;
+  --text-3: #a3a3a3;
+  --accent-soft: rgba(0,0,0,0.04);
+  --node-fill: #ffffff;
+  --node-stroke: #e5e5e5;
+  --node-stroke-active: #171717;
+  --link-color: rgba(0,0,0,0.08);
+  --link-active: rgba(0,0,0,0.25);
+  --placeholder-fill: #f5f5f5;
+  --placeholder-stroke: #e5e5e5;
+  --placeholder-text: #d4d4d4;
+  --panel-bg: rgba(255,255,255,0.98);
+  --tip-bg: #fafafa;
+  --tip-border: #e5e5e5;
+  --q-bg: #fafafa;
+  --q-border: #e5e5e5;
+  --badge-q-bg: #f5f5f5;
+  --badge-q-text: #404040;
+  --badge-tip-bg: #f5f5f5;
+  --badge-tip-text: #404040;
+  --chip-bg: #f5f5f5;
+  --chip-border: #e5e5e5;
+  --chip-hover: #e5e5e5;
+  --toggle-bg: #f5f5f5;
+  --toggle-text: #737373;
+  --code-bg: #fafafa;
+  --code-border: #e5e5e5;
+
+  /* Topic Colors */
+  --color-basics: #8B5CF6;
+  --color-datamodel: #3B82F6;
+  --color-soql: #0EA5E9;
+  --color-apex: #F97316;
+  --color-lwc: #EF4444;
+  --color-security: #22C55E;
+  --color-flow: #A855F7;
+  --color-integrations: #EAB308;
+  --color-javascript: #EC4899;
+  --color-git: #14B8A6;
+  --color-processes: #6B7280;
+  --color-limits: #1E40AF;
+  --color-sosl: #06B6D4;
+  --color-setup: #64748B;
+  --color-aura: #8B5CF6;
+  --color-visualforce: #6366F1;
+  --color-ai: #10B981;
+}
+[data-theme="dark"] {
+  --bg: #1f1f1e;
+  --surface: #2a2a29;
+  --border: #3a3a38;
+  --border-strong: #525250;
+  --text: #fafafa;
+  --text-2: #a3a3a3;
+  --text-3: #737373;
+  --accent-soft: rgba(255,255,255,0.04);
+  --node-fill: #171717;
+  --node-stroke: #262626;
+  --node-stroke-active: #fafafa;
+  --link-color: rgba(255,255,255,0.08);
+  --link-active: rgba(255,255,255,0.25);
+  --placeholder-fill: #2a2a29;
+  --placeholder-stroke: #3a3a38;
+  --placeholder-text: #525250;
+  --panel-bg: rgba(42, 42, 41, 0.98);
+  --tip-bg: #2a2a29;
+  --tip-border: #3a3a38;
+  --q-bg: #2a2a29;
+  --q-border: #3a3a38;
+  --badge-q-bg: #2a2a29;
+  --badge-q-text: #d4d4d4;
+  --badge-tip-bg: #2a2a29;
+  --badge-tip-text: #d4d4d4;
+  --chip-bg: #2a2a29;
+  --chip-border: #3a3a38;
+  --chip-hover: #3a3a38;
+  --toggle-bg: #2a2a29;
+  --toggle-text: #a3a3a3;
+  --code-bg: #2a2a29;
+  --code-border: #3a3a38;
+
+  /* Topic Colors */
+  --color-basics: #A78BFA;
+  --color-datamodel: #60A5FA;
+  --color-soql: #38BDF8;
+  --color-apex: #FB923C;
+  --color-lwc: #F87171;
+  --color-security: #4ADE80;
+  --color-flow: #C084FC;
+  --color-integrations: #FACC15;
+  --color-javascript: #F472B6;
+  --color-git: #2DD4BF;
+  --color-processes: #9CA3AF;
+  --color-limits: #3B82F6;
+  --color-sosl: #22D3EE;
+  --color-setup: #94A3B8;
+  --color-aura: #A78BFA;
+  --color-visualforce: #818CF8;
+  --color-ai: #34D399;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  transition: background 0.2s, color 0.2s;
+}
+#app { position: relative; width: 100%; height: 100vh; }
+
+/* HEADER */
+#header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 14px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(to bottom, var(--bg), transparent);
+  pointer-events: none;
+}
+#header-left { pointer-events: none; }
+#header h1 {
+  font-weight: 700; font-size: 0.94rem; color: var(--text);
+  letter-spacing: -0.02em;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+#header .sub {
+  font-size: 0.64rem; color: var(--text-3); margin-top: 3px;
+  font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.05em; text-transform: uppercase;
+}
+#header-right { display: flex; align-items: center; gap: 14px; pointer-events: all; }
+#node-count {
+  font-size: 0.6rem; color: var(--text-3);
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 0.05em; text-transform: uppercase;
+}
+#theme-toggle {
+  width: 34px; height: 34px; border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--toggle-bg); color: var(--toggle-text);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-family: 'IBM Plex Mono', monospace;
+  transition: all 0.2s; flex-shrink: 0;
+}
+#theme-toggle:hover {
+  border-color: var(--border-strong);
+  background: var(--chip-hover);
+}
+
+/* GRAPH */
+#graph-container {
+  width: 100%; height: 100vh; position: relative;
+}
+svg { width: 100%; height: 100%; }
+.link {
+  stroke: var(--link-color); stroke-width: 1.2;
+  transition: stroke 0.3s;
+}
+.link.active { stroke: var(--link-active); stroke-width: 2; }
+.node-group { cursor: pointer; }
+.node-group:hover .node-bg { filter: brightness(1.15); }
+.node-bg {
+  stroke: var(--node-stroke);
+  stroke-width: 0.8;
+  transition: all 0.2s;
+}
+.node-bg[data-topic="basics"] {
+  fill: #EEEDFE;
+  stroke: #534AB7;
+}
+.node-bg[data-topic="basics"].active {
+  fill: #534AB7;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="datamodel"] {
+  fill: #E6F1FB;
+  stroke: #185FA5;
+}
+.node-bg[data-topic="datamodel"].active {
+  fill: #185FA5;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="soql"] {
+  fill: #E6F1FB;
+  stroke: #185FA5;
+}
+.node-bg[data-topic="soql"].active {
+  fill: #185FA5;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="apex"] {
+  fill: #E1F5EE;
+  stroke: #0F6E56;
+}
+.node-bg[data-topic="apex"].active {
+  fill: #0F6E56;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="lwc"] {
+  fill: #FAECE7;
+  stroke: #993C1D;
+}
+.node-bg[data-topic="lwc"].active {
+  fill: #993C1D;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="security"] {
+  fill: #FBEAF0;
+  stroke: #993556;
+}
+.node-bg[data-topic="security"].active {
+  fill: #993556;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="flow"] {
+  fill: #FAEEDA;
+  stroke: #854F0B;
+}
+.node-bg[data-topic="flow"].active {
+  fill: #854F0B;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="integrations"] {
+  fill: #EAF3DE;
+  stroke: #3B6D11;
+}
+.node-bg[data-topic="integrations"].active {
+  fill: #3B6D11;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="javascript"] {
+  fill: #FCE7F3;
+  stroke: #9D174D;
+}
+.node-bg[data-topic="javascript"].active {
+  fill: #9D174D;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="git"] {
+  fill: #CCFBF1;
+  stroke: #115E59;
+}
+.node-bg[data-topic="git"].active {
+  fill: #115E59;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="processes"] {
+  fill: #F3F4F6;
+  stroke: #4B5563;
+}
+.node-bg[data-topic="processes"].active {
+  fill: #4B5563;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="limits"] {
+  fill: #E6F1FB;
+  stroke: #185FA5;
+}
+.node-bg[data-topic="limits"].active {
+  fill: #185FA5;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="sosl"] {
+  fill: #E6F1FB;
+  stroke: #185FA5;
+}
+.node-bg[data-topic="sosl"].active {
+  fill: #185FA5;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="setup"] {
+  fill: #F3F4F6;
+  stroke: #4B5563;
+}
+.node-bg[data-topic="setup"].active {
+  fill: #4B5563;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="aura"] {
+  fill: #FAECE7;
+  stroke: #993C1D;
+}
+.node-bg[data-topic="aura"].active {
+  fill: #993C1D;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="visualforce"] {
+  fill: #FAECE7;
+  stroke: #993C1D;
+}
+.node-bg[data-topic="visualforce"].active {
+  fill: #993C1D;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="ai"] {
+  fill: #FBEAF0;
+  stroke: #993556;
+}
+.node-bg[data-topic="ai"].active {
+  fill: #993556;
+  stroke-width: 2;
+}
+
+.node-bg.placeholder {
+  fill: var(--placeholder-fill);
+  stroke: var(--placeholder-stroke);
+  stroke-dasharray: 4 3;
+}
+
+.node-abbr {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 600; font-size: 11px; text-anchor: middle;
+  dominant-baseline: central; pointer-events: none;
+  letter-spacing: 0.05em;
+  transition: fill 0.2s;
+}
+.node-abbr[data-topic="basics"] { fill: #534AB7; }
+.node-abbr[data-topic="basics"].active { fill: #ffffff; }
+
+.node-abbr[data-topic="datamodel"] { fill: #185FA5; }
+.node-abbr[data-topic="datamodel"].active { fill: #ffffff; }
+
+.node-abbr[data-topic="soql"] { fill: #185FA5; }
+.node-abbr[data-topic="soql"].active { fill: #ffffff; }
+
+.node-abbr[data-topic="apex"] { fill: #0F6E56; }
+.node-abbr[data-topic="apex"].active { fill: #ffffff; }
+
+.node-abbr[data-topic="lwc"] { fill: #993C1D; }
+.node-abbr[data-topic="lwc"].active { fill: #ffffff; }
+
+.node-abbr[data-topic="security"] { fill: #993556; }
+.node-abbr[data-topic="security"].active { fill: #ffffff; }
+
+.node-abbr[data-topic="flow"] { fill: #854F0B; }
+.node-abbr[data-topic="flow"].active { fill: #ffffff; }
+
+.node-abbr[data-topic="integrations"] { fill: #3B6D11; }
+.node-abbr[data-topic="integrations"].active { fill: #ffffff; }
+
+.node-abbr[data-topic="javascript"] { fill: #9D174D; }
+.node-abbr[data-topic="javascript"].active { fill: #ffffff; }
+
+.node-abbr[data-topic="git"] { fill: #115E59; }
+.node-abbr[data-topic="git"].active { fill: #ffffff; }
+
+.node-abbr[data-topic="processes"] { fill: #4B5563; }
+.node-abbr[data-topic="processes"].active { fill: #ffffff; }
+
+.node-abbr[data-topic="limits"] { fill: #185FA5; }
+.node-abbr[data-topic="limits"].active { fill: #ffffff; }
+
+.node-abbr[data-topic="sosl"] { fill: #185FA5; }
+.node-abbr[data-topic="sosl"].active { fill: #ffffff; }
+
+.node-abbr[data-topic="setup"] { fill: #4B5563; }
+.node-abbr[data-topic="setup"].active { fill: #ffffff; }
+
+.node-abbr[data-topic="aura"] { fill: #993C1D; }
+.node-abbr[data-topic="aura"].active { fill: #ffffff; }
+
+.node-abbr[data-topic="visualforce"] { fill: #993C1D; }
+.node-abbr[data-topic="visualforce"].active { fill: #ffffff; }
+
+.node-abbr[data-topic="ai"] { fill: #993556; }
+.node-abbr[data-topic="ai"].active { fill: #ffffff; }
+
+.node-abbr.placeholder { fill: var(--placeholder-text); }
+
+.node-label {
+  fill: var(--text-2); font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 500; font-size: 8px; text-anchor: middle;
+  pointer-events: none; letter-spacing: 0.02em;
+}
+.node-label.placeholder { fill: var(--placeholder-text); }
+
+/* PANEL */
+#content-panel {
+  position: fixed; top: 0; right: -100%;
+  width: 80%; height: 100vh;
+  background: var(--panel-bg);
+  border-left: 1px solid var(--border);
+  overflow: hidden;
+  transition: right 0.3s ease;
+  z-index: 50; display: flex; flex-direction: column;
+  backdrop-filter: blur(20px);
+  box-shadow: -8px 0 32px rgba(0,0,0,0.12);
+  min-width: 300px;
+  max-width: 95vw;
+}
+#content-panel.open { right: 0; }
+
+#graph-container {
+  width: 100%; height: 100vh; position: relative;
+  transition: width 0.3s ease;
+}
+
+#graph-container.panel-open {
+  width: 20%;
+}
+
+/* RESIZE HANDLE */
+#resize-handle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  cursor: ew-resize;
+  background: transparent;
+  transition: background 0.2s;
+  z-index: 10;
+}
+#resize-handle:hover,
+#resize-handle.active {
+  background: var(--accent-soft);
+}
+#resize-handle::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 40px;
+  background: var(--border);
+  border-radius: 1px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+#resize-handle:hover::before,
+#resize-handle.active::before {
+  opacity: 1;
+}
+
+#panel-header {
+  padding: 62px 24px 14px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0; background: var(--surface);
+}
+#panel-title {
+  font-weight: 600; font-size: 0.94rem; color: var(--text);
+  letter-spacing: -0.01em;
+}
+#panel-close {
+  background: none; border: 1px solid var(--border);
+  color: var(--text-3); cursor: pointer;
+  width: 28px; height: 28px; border-radius: 6px; font-size: 12px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s; flex-shrink: 0;
+}
+#panel-close:hover {
+  border-color: var(--border-strong); color: var(--text);
+  background: var(--accent-soft);
+}
+
+#panel-body {
+  overflow-y: auto; flex: 1; padding: 16px;
+  scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+}
+#panel-body::-webkit-scrollbar { width: 4px; }
+#panel-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* FLIP CARDS - FLASHCARDS STYLE */
+.limits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin-bottom: .75rem;
+}
+
+.card {
+  perspective: 600px;
+  height: 130px;
+  cursor: pointer;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform .45s cubic-bezier(.4,0,.2,1);
+  transform-style: preserve-3d;
+}
+
+.card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+.front,.back {
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  border: 0.5px solid var(--border);
+  padding: 14px 16px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.front {
+  background: var(--surface);
+}
+
+.back {
+  background: var(--code-bg);
+  transform: rotateY(180deg);
+}
+
+.num {
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -.5px;
+  color: var(--text);
+  font-family: "Times New Roman", Times, serif;
+}
+
+.num-sub {
+  font-size: 11px;
+  color: var(--text-2);
+  margin-top: 2px;
+  font-weight: 500;
+}
+
+.label {
+  font-size: 12px;
+  color: var(--text-3);
+  margin-top: 6px;
+  line-height: 1.3;
+}
+
+.back-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.back-desc {
+  font-size: 11px;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+
+.flip-hint {
+  font-size: 10px;
+  color: var(--text-3);
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.b-soql { background: #E6F1FB; color: #185FA5; }
+.b-dml { background: #EAF3DE; color: #3B6D11; }
+.b-apex { background: #EEEDFE; color: #3C3489; }
+.b-misc { background: #FAEEDA; color: #854F0B; }
+.b-async { background: #FAECE7; color: #993C1D; }
+.b-heap { background: #FEF9C3; color: #854D0E; }
+.b-cpu { background: #FED7AA; color: #9A3412; }
+.b-callout { background: #FCE7F3; color: #9D174D; }
+.b-email { background: #F3E8FF; color: #6B21A8; }
+.b-timeout { background: #CFFAFE; color: #155E75; }
+.b-schema { background: #E0E7FF; color: #3730A3; }
+.b-streaming { background: #CCFBF1; color: #115E59; }
+.b-default { background: var(--accent-soft); color: var(--text); }
+
+/* INFO SECTIONS - EXPANDABLE */
+.info-section {
+  margin-bottom: 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.info-section.expanded .info-section-header .section-toggle {
+  transform: rotate(180deg);
+}
+
+.info-section-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.info-section.expanded .info-section-content {
+  max-height: 3000px;
+  transition: max-height 0.5s ease-in;
+}
+
+.info-section-body {
+  padding: 12px 14px;
+}
+
+.section-title {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+  margin-top: 16px;
+}
+
+.section-title:first-child {
+  margin-top: 0;
+}
+
+@media (max-width: 768px) {
+  .limits-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+}
+
+/* LIMIT ITEM - SALESFORCE STYLE */
+.limit-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 8px;
+  background: var(--surface);
+  border-radius: 4px;
+  border-left: 3px solid var(--border);
+  margin-bottom: 4px;
+  font-size: 11px;
+}
+
+.limit-item.critical {
+  border-left-color: #dc3545;
+  background: var(--accent-soft);
+}
+
+.limit-item.warning {
+  border-left-color: #ffc107;
+  background: var(--accent-soft);
+}
+
+.limit-name {
+  flex: 1;
+  padding-right: 8px;
+  font-weight: 500;
+  word-break: break-word;
+  color: var(--text);
+}
+
+.limit-value {
+  background: var(--border-strong);
+  color: var(--text);
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 10px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.limit-item.critical .limit-value {
+  background: #dc3545;
+  color: white;
+}
+
+.limit-item.warning .limit-value {
+  background: #ffc107;
+  color: #000;
+}
+
+.limit-values {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.limit-value.sync {
+  background: var(--border-strong);
+  font-size: 9px;
+  position: relative;
+}
+
+.limit-value.sync::after {
+  content: "S";
+  position: absolute;
+  top: -6px;
+  right: -2px;
+  font-size: 6px;
+  background: var(--text);
+  color: var(--surface);
+  padding: 1px 3px;
+  border-radius: 2px;
+}
+
+.limit-value.async {
+  background: var(--text-3);
+  color: var(--surface);
+  font-size: 9px;
+  position: relative;
+}
+
+.limit-value.async::after {
+  content: "A";
+  position: absolute;
+  top: -6px;
+  right: -2px;
+  font-size: 6px;
+  background: var(--text);
+  color: var(--surface);
+  padding: 1px 3px;
+  border-radius: 2px;
+}
+
+.limit-item.critical .limit-value.sync {
+  background: #dc3545;
+}
+
+.limit-item.critical .limit-value.sync::after {
+  background: #a71d2a;
+}
+
+.limit-item.critical .limit-value.async {
+  background: #6f42c1;
+}
+
+.limit-item.critical .limit-value.async::after {
+  background: #4c2c8f;
+}
+
+/* BADGE */
+.badge {
+  display: inline-block;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 9px;
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+.badge-critical {
+  background: #dc3545;
+  color: white;
+}
+
+.badge-warning {
+  background: #ffc107;
+  color: #000;
+}
+
+/* FLIP CARDS FOR LIMITS - DEPRECATED BUT KEEP FOR COMPATIBILITY */
+.limits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+  margin: 10px 0;
+}
+.limit-card {
+  perspective: 600px;
+  height: 120px;
+  cursor: pointer;
+}
+.limit-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+.limit-card.flipped .limit-card-inner {
+  transform: rotateY(180deg);
+}
+.limit-front, .limit-back {
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  padding: 12px 14px;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.limit-front {
+  background: var(--surface);
+}
+.limit-back {
+  background: var(--code-bg);
+  transform: rotateY(180deg);
+  align-items: flex-start;
+  text-align: left;
+}
+.limit-num {
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.5px;
+  color: var(--text);
+}
+.limit-num-sub {
+  font-size: 10px;
+  color: var(--text-3);
+  margin-top: 2px;
+  font-weight: 500;
+}
+.limit-label {
+  font-size: 11px;
+  color: var(--text-3);
+  margin-top: 6px;
+  line-height: 1.3;
+}
+.limit-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-size: 9px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+/* SOQL & SOSL - blue */
+[data-theme="light"] .badge-soql { background: #E0F2FE; color: #0369A1; }
+[data-theme="dark"] .badge-soql { background: rgba(3, 105, 161, 0.2); color: #7DD3FC; }
+/* DML - green */
+[data-theme="light"] .badge-dml { background: #DCFCE7; color: #166534; }
+[data-theme="dark"] .badge-dml { background: rgba(22, 101, 52, 0.2); color: #86EFAC; }
+/* CPU - orange */
+[data-theme="light"] .badge-cpu { background: #FED7AA; color: #9A3412; }
+[data-theme="dark"] .badge-cpu { background: rgba(154, 52, 18, 0.2); color: #FDBA74; }
+/* Heap - yellow */
+[data-theme="light"] .badge-heap { background: #FEF9C3; color: #854D0E; }
+[data-theme="dark"] .badge-heap { background: rgba(133, 77, 14, 0.2); color: #FDE047; }
+/* Callout - pink */
+[data-theme="light"] .badge-callout { background: #FCE7F3; color: #9D174D; }
+[data-theme="dark"] .badge-callout { background: rgba(157, 23, 77, 0.2); color: #F9A8D4; }
+/* Email - purple */
+[data-theme="light"] .badge-email { background: #F3E8FF; color: #6B21A8; }
+[data-theme="dark"] .badge-email { background: rgba(107, 33, 168, 0.2); color: #D8B4FE; }
+/* Async - red */
+[data-theme="light"] .badge-async { background: #FEE2E2; color: #991B1B; }
+[data-theme="dark"] .badge-async { background: rgba(153, 27, 27, 0.2); color: #FCA5A5; }
+/* Schema - indigo */
+[data-theme="light"] .badge-schema { background: #E0E7FF; color: #3730A3; }
+[data-theme="dark"] .badge-schema { background: rgba(55, 48, 163, 0.2); color: #A5B4FC; }
+/* Timeout - cyan */
+[data-theme="light"] .badge-timeout { background: #CFFAFE; color: #155E75; }
+[data-theme="dark"] .badge-timeout { background: rgba(21, 94, 117, 0.2); color: #67E8F9; }
+/* Email - yellow */
+[data-theme="light"] .badge-email { background: #FEF3C7; color: #92400E; }
+[data-theme="dark"] .badge-email { background: rgba(146, 64, 14, 0.2); color: #FDE68A; }
+/* Streaming - teal */
+[data-theme="light"] .badge-streaming { background: #CCFBF1; color: #115E59; }
+[data-theme="dark"] .badge-streaming { background: rgba(17, 94, 89, 0.2); color: #5EEAD4; }
+/* Apex - gray */
+[data-theme="light"] .badge-apex { background: #F3F4F6; color: #374151; }
+[data-theme="dark"] .badge-apex { background: rgba(55, 65, 81, 0.2); color: #D1D5DB; }
+/* SOSL - sky */
+[data-theme="light"] .badge-sosl { background: #E0F2FE; color: #075985; }
+[data-theme="dark"] .badge-sosl { background: rgba(7, 89, 133, 0.2); color: #7DD3FC; }
+.limit-back-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.limit-back-desc {
+  font-size: 10px;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+.flip-hint {
+  font-size: 9px;
+  color: var(--text-3);
+  position: absolute;
+  bottom: 6px;
+  right: 8px;
+  opacity: 0.6;
+}
+@media (max-width: 768px) {
+  .limits-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+
+  .sf-card-header {
+    padding: 10px 14px;
+    font-size: 12px;
+  }
+
+  .sf-card-body {
+    padding: 12px 14px;
+  }
+
+  .limit-item {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 8px 10px;
+  }
+
+  .limit-value {
+    margin-top: 4px;
+    align-self: flex-end;
+  }
+
+  .limit-values {
+    margin-top: 4px;
+    align-self: flex-end;
+  }
+}
+
+/* INFO CARDS */
+.topic-section {
+  margin-bottom: 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  background: var(--surface);
+}
+.topic-section-header {
+  background: linear-gradient(135deg, var(--border-strong) 0%, var(--border) 100%);
+  padding: 10px 14px;
+  font-weight: 600;
+  font-size: 0.7rem;
+  color: var(--text);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.topic-section-content {
+  padding: 12px 14px;
+}
+
+.info-item {
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.info-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+.info-title {
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.info-desc {
+  color: var(--text-2);
+  font-size: 0.68rem;
+  line-height: 1.6;
+  margin-bottom: 6px;
+}
+.info-list {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0;
+}
+.info-list li {
+  padding: 3px 0;
+  padding-left: 16px;
+  position: relative;
+  font-size: 0.68rem;
+  color: var(--text-2);
+  line-height: 1.7;
+}
+.info-list li:before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: var(--border-strong);
+  font-weight: bold;
+  font-size: 10px;
+}
+
+.code-block {
+  background: var(--code-bg);
+  color: var(--text-2);
+  border: 1px solid var(--code-border);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.64rem;
+  margin: 8px 0;
+  overflow-x: auto;
+  white-space: pre;
+  line-height: 1.6;
+}
+
+.example-box {
+  background: rgba(34, 197, 94, 0.08);
+  border-left: 3px solid #22c55e;
+  padding: 8px 10px;
+  margin: 6px 0;
+  font-size: 0.68rem;
+  line-height: 1.6;
+  color: var(--text-2);
+  border-radius: 0 4px 4px 0;
+}
+
+.tip-box {
+  background: rgba(251, 191, 36, 0.08);
+  border-left: 3px solid #fbbf24;
+  padding: 8px 10px;
+  margin: 6px 0;
+  font-size: 0.68rem;
+  line-height: 1.6;
+  color: var(--text-2);
+  border-radius: 0 4px 4px 0;
+}
+
+.warning-box {
+  background: rgba(239, 68, 68, 0.08);
+  border-left: 3px solid #ef4444;
+  padding: 8px 10px;
+  margin: 6px 0;
+  font-size: 0.68rem;
+  line-height: 1.6;
+  color: var(--text-2);
+  border-radius: 0 4px 4px 0;
+}
+
+.info-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.54rem;
+  font-weight: 600;
+  margin-left: 6px;
+  font-family: 'IBM Plex Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.badge-critical {
+  background: #dc2626;
+  color: white;
+}
+.badge-warning {
+  background: #f59e0b;
+  color: #000;
+}
+.badge-info {
+  background: var(--border-strong);
+  color: var(--text);
+}
+.badge-limit {
+  background: #8b5cf6;
+  color: white;
+}
+
+.code-inline {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  background: var(--code-bg);
+  border: 1px solid var(--code-border);
+  border-radius: 3px;
+  padding: 2px 5px;
+  color: var(--text);
+}
+
+.badge {
+  display: inline-block; font-size: 0.54rem; padding: 2px 6px;
+  border-radius: 4px; margin-right: 6px; font-weight: 600;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.badge-q { background: var(--badge-q-bg); color: var(--badge-q-text); }
+.badge-tip { background: var(--badge-tip-bg); color: var(--badge-tip-text); }
+.badge-new { background: #d1fae5; color: #065f46; }
+[data-theme="dark"] .badge-new { background: #064e3b; color: #6ee7b7; }
+
+.related-row {
+  padding: 16px 24px; border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+.related-label {
+  font-size: 0.6rem; color: var(--text-3);
+  letter-spacing: 0.08em; text-transform: uppercase;
+  font-family: 'IBM Plex Mono', monospace; margin-bottom: 10px;
+}
+.related-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.related-chip {
+  font-size: 0.67rem; padding: 5px 11px; border: 1px solid var(--chip-border);
+  border-radius: 20px; color: var(--text-2); cursor: pointer;
+  transition: all 0.2s; background: var(--chip-bg);
+  font-family: 'IBM Plex Mono', monospace; font-weight: 500;
+}
+.related-chip:hover {
+  border-color: var(--border-strong); color: var(--text);
+  background: var(--chip-hover); transform: translateY(-1px);
+}
+
+/* MOBILE SHEET */
+#mobile-sheet {
+  display: none; position: fixed; bottom: -100%; left: 0; right: 0;
+  height: 75vh; background: var(--panel-bg);
+  border-top: 1px solid var(--border); border-radius: 16px 16px 0 0;
+  z-index: 200; transition: bottom 0.36s cubic-bezier(0.23,1,0.32,1);
+  backdrop-filter: blur(20px); overflow: hidden; flex-direction: column;
+  box-shadow: 0 -8px 32px rgba(0,0,0,0.2);
+}
+#mobile-sheet.open { bottom: 0; display: flex; }
+#sheet-handle {
+  width: 40px; height: 4px; background: var(--border);
+  border-radius: 3px; margin: 12px auto 8px; flex-shrink: 0;
+}
+#sheet-header {
+  padding: 0 24px 14px; display: flex; align-items: center;
+  justify-content: space-between; border-bottom: 1px solid var(--border);
+  flex-shrink: 0; background: var(--surface);
+}
+#sheet-title { font-weight: 600; font-size: 0.94rem; color: var(--text); }
+#sheet-close {
+  background: none; border: 1px solid var(--border);
+  color: var(--text-3); cursor: pointer;
+  width: 32px; height: 32px; border-radius: 6px; font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+}
+#sheet-close:hover { border-color: var(--border-strong); color: var(--text); }
+#sheet-body { overflow-y: auto; flex: 1; padding: 12px; }
+#sheet-body::-webkit-scrollbar { width: 4px; }
+#sheet-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* TOOLTIP */
+#tooltip {
+  position: fixed; pointer-events: none; z-index: 300;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 6px; padding: 6px 10px;
+  font-size: 0.67rem; color: var(--text-2);
+  opacity: 0; transition: opacity 0.15s;
+  font-family: 'IBM Plex Mono', monospace; white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* FOOTER */
+#hint {
+  position: fixed; bottom: 18px; right: 24px;
+  font-size: 0.6rem; color: var(--text-3); text-align: right;
+  pointer-events: none; line-height: 1.8;
+  font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.03em;
+}
+
+/* MENU */
+#menu-btn {
+  width: 34px; height: 34px; border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--toggle-bg); color: var(--toggle-text);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 16px; transition: all 0.2s; flex-shrink: 0;
+}
+#menu-btn:hover {
+  border-color: var(--border-strong);
+  background: var(--chip-hover);
+}
+
+#menu-panel {
+  position: fixed; top: 60px; right: 16px;
+  width: 280px;
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transform: translateY(-10px);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  z-index: 200;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+  backdrop-filter: blur(20px);
+}
+#menu-panel.open {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+#menu-header {
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid var(--border);
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+#menu-body {
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 8px;
+}
+#menu-body::-webkit-scrollbar { width: 4px; }
+#menu-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-bottom: 4px;
+}
+.menu-item:hover {
+  background: var(--accent-soft);
+  transform: translateX(2px);
+}
+.menu-item:last-child { margin-bottom: 0; }
+
+.menu-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.menu-dot[data-topic="basics"] { background: var(--color-basics); }
+.menu-dot[data-topic="datamodel"] { background: var(--color-datamodel); }
+.menu-dot[data-topic="soql"] { background: var(--color-soql); }
+.menu-dot[data-topic="apex"] { background: var(--color-apex); }
+.menu-dot[data-topic="lwc"] { background: var(--color-lwc); }
+.menu-dot[data-topic="security"] { background: var(--color-security); }
+.menu-dot[data-topic="flow"] { background: var(--color-flow); }
+.menu-dot[data-topic="integrations"] { background: var(--color-integrations); }
+.menu-dot[data-topic="javascript"] { background: var(--color-javascript); }
+.menu-dot[data-topic="git"] { background: var(--color-git); }
+.menu-dot[data-topic="processes"] { background: var(--color-processes); }
+.menu-dot[data-topic="limits"] { background: var(--color-limits); }
+.menu-dot[data-topic="sosl"] { background: var(--color-sosl); }
+.menu-dot[data-topic="setup"] { background: var(--color-setup); }
+.menu-dot[data-topic="aura"] { background: var(--color-aura); }
+.menu-dot[data-topic="visualforce"] { background: var(--color-visualforce); }
+.menu-dot[data-topic="ai"] { background: var(--color-ai); }
+
+.menu-label {
+  font-size: 0.7rem;
+  color: var(--text-2);
+  font-weight: 500;
+}
+.menu-sub {
+  font-size: 0.58rem;
+  color: var(--text-3);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+@media (max-width: 768px) {
+  #menu-panel {
+    top: auto; bottom: 16px; right: 16px;
+    max-height: 50vh;
+  }
+}
+#legend {
+  position: fixed; bottom: 18px; left: 24px;
+  display: flex; gap: 18px; font-size: 0.6rem; color: var(--text-3);
+  font-family: 'IBM Plex Mono', monospace; pointer-events: none;
+  align-items: center;
+}
+.ldot {
+  width: 7px; height: 7px; border-radius: 50%;
+  display: inline-block; margin-right: 5px; vertical-align: middle;
+}
+
+@media (max-width: 768px) {
+  #content-panel { display: none; }
+  #mobile-sheet { display: flex; }
+  #hint { display: none; }
+  #header { padding: 12px 16px; }
+  #header h1 { font-size: 0.82rem; }
+  #header .sub { font-size: 0.58rem; }
+}
+</style>
+</head>
+<body>
+<a href="#content-panel" class="skip-link">Skip to content</a>
+<div id="app" role="application" aria-label="Salesforce Interview Cheatsheet">
+  <header id="header" role="banner">
+    <div id="header-left">
+      <h1>Salesforce Interview Cheatsheet</h1>
+      <div class="sub">Interactive knowledge graph · click any node to explore</div>
+    </div>
+    <div id="header-right" role="group" aria-label="Controls">
+      <span id="node-count" aria-live="polite"></span>
+      <button id="theme-toggle" title="Toggle theme" onclick="toggleTheme()" aria-label="Toggle dark/light theme">◐</button>
+      <button id="menu-btn" title="Topics menu" onclick="toggleMenu()" aria-label="Open topics menu" aria-expanded="false" aria-haspopup="true">≡</button>
+    </div>
+  </header>
+
+  <main id="graph-container" role="main" aria-label="Interactive knowledge graph">
+    <svg id="graph" role="img" aria-label="Knowledge graph visualization"></svg>
+  </main>
+
+  <nav id="menu-panel" role="navigation" aria-label="Topics menu" aria-hidden="true">
+    <div id="menu-header">📚 All Topics</div>
+    <div id="menu-body" role="list"></div>
+  </nav>
+
+  <aside id="content-panel" role="dialog" aria-modal="true" aria-labelledby="panel-title" aria-hidden="true">
+    <div id="resize-handle" role="separator" aria-orientation="vertical" aria-label="Resize panel"></div>
+    <div id="panel-header">
+      <h2 id="panel-title">Select a topic</h2>
+      <button id="panel-close" title="Close (ESC)" aria-label="Close panel">✕</button>
+    </div>
+    <div id="panel-body" role="document" tabindex="0"></div>
+  </aside>
+
+  <div id="mobile-sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" aria-hidden="true">
+    <div id="sheet-handle" role="separator" aria-orientation="horizontal"></div>
+    <div id="sheet-header">
+      <h2 id="sheet-title">Select a topic</h2>
+      <button id="sheet-close" aria-label="Close sheet">✕</button>
+    </div>
+    <div id="sheet-body" role="document" tabindex="0"></div>
+  </div>
+
+  <div id="tooltip" role="tooltip" aria-hidden="true"></div>
+  <div id="hint" role="note" aria-label="Keyboard and mouse hints">scroll to zoom · drag to pan · click node to open · ≡ menu · esc to close</div>
+</div>
+
+<!-- Error handling for D3.js loading failure -->
+<div id="error-banner" class="error-banner" style="display:none;" role="alert">
+  <p>⚠️ Failed to load D3.js library. Please check your internet connection and refresh the page.</p>
+  <button onclick="location.reload()">Retry</button>
+</div>
+
+<script>
+'use strict';
+
+// ── ERROR HANDLING & FEATURE DETECTION ───────────────────────────────────────
+// Check D3.js loaded successfully
+window.addEventListener('d3error', () => {
+  const errorBanner = document.getElementById('error-banner');
+  if (errorBanner) {
+    errorBanner.style.display = 'flex';
+    document.getElementById('app').style.opacity = '0.3';
+  }
+});
+
+// Check if D3 is available
+if (typeof d3 === 'undefined') {
+  document.addEventListener('DOMContentLoaded', () => {
+    const errorBanner = document.getElementById('error-banner');
+    if (errorBanner) {
+      errorBanner.style.display = 'flex';
+      document.getElementById('app').style.opacity = '0.3';
+    }
+  });
+}
+
+// Security: HTML escaping function to prevent XSS
+function escapeHtml(unsafe) {
+  if (typeof unsafe !== 'string') return unsafe;
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+// Safe HTML builder using textContent where possible
+function safeHtml(tag, content, attrs = {}) {
+  const el = document.createElement(tag);
+  Object.entries(attrs).forEach(([key, value]) => {
+    el.setAttribute(key, value);
+  });
+  if (content) {
+    el.textContent = content; // Safe: textContent prevents XSS
+  }
+  return el;
+}
+
+// Debounce function for performance optimization
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+// ── THEME MANAGEMENT ────────────────────────────────────────────────────────
+function toggleTheme() {
+  const html = document.documentElement;
+  const next = html.dataset.theme === "light" ? "dark" : "light";
+  html.dataset.theme = next;
+  localStorage.setItem("sfcs-theme", next);
+  updateNodeColors();
+}
+(function() {
+  const saved = localStorage.getItem("sfcs-theme") ||
+    (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  document.documentElement.dataset.theme = saved;
+})();
+function cssVar(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
+// ── MENU ────────────────────────────────────────────────────────────────────────
+function toggleMenu() {
+  const menu = document.getElementById("menu-panel");
+  const menuBtn = document.getElementById("menu-btn");
+  const isOpen = menu.classList.toggle("open");
+
+  // Update ARIA attributes
+  menu.setAttribute('aria-hidden', !isOpen);
+  menuBtn.setAttribute('aria-expanded', isOpen);
+
+  // Focus first menu item when opened
+  if (isOpen) {
+    const firstItem = menu.querySelector('.menu-item');
+    if (firstItem) {
+      setTimeout(() => firstItem.focus(), 100);
+    }
+  }
+}
+
+function closeMenu() {
+  const menu = document.getElementById("menu-panel");
+  const menuBtn = document.getElementById("menu-btn");
+
+  menu.classList.remove("open");
+  menu.setAttribute('aria-hidden', 'true');
+  menuBtn.setAttribute('aria-expanded', 'false');
+  menuBtn.focus(); // Return focus to menu button
+}
+
+function buildMenu() {
+  const menuBody = document.getElementById("menu-body");
+  menuBody.innerHTML = ''; // Clear existing content
+
+  TOPICS.forEach(topic => {
+    if (topic.category === "placeholder") return;
+
+    const menuItem = document.createElement('div');
+    menuItem.className = 'menu-item';
+    menuItem.setAttribute('role', 'button');
+    menuItem.setAttribute('tabindex', '0');
+    menuItem.setAttribute('data-topic', topic.id);
+    menuItem.onclick = () => { selectTopic(topic.id); closeMenu(); };
+    menuItem.onkeydown = (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        selectTopic(topic.id);
+        closeMenu();
+      }
+    };
+
+    const dot = document.createElement('div');
+    dot.className = 'menu-dot';
+    dot.setAttribute('data-topic', topic.id);
+    dot.setAttribute('aria-hidden', 'true');
+
+    const textDiv = document.createElement('div');
+
+    const label = document.createElement('div');
+    label.className = 'menu-label';
+    label.textContent = topic.label;
+
+    const abbrDiv = document.createElement('div');
+    abbrDiv.className = 'menu-sub';
+    abbrDiv.textContent = topic.abbr;
+
+    textDiv.appendChild(label);
+    textDiv.appendChild(abbrDiv);
+    menuItem.appendChild(dot);
+    menuItem.appendChild(textDiv);
+
+    menuBody.appendChild(menuItem);
+  });
+}
+
+
+// Close menu when clicking outside
+document.addEventListener("click", (e) => {
+  const menu = document.getElementById("menu-panel");
+  const btn = document.getElementById("menu-btn");
+  if (!menu.contains(e.target) && !btn.contains(e.target)) {
+    closeMenu();
+  }
+});
+
+// Close menu on ESC key
+document.addEventListener("keydown", (e) => {
+  const menu = document.getElementById("menu-panel");
+  if (e.key === "Escape" && menu.classList.contains("open")) {
+    closeMenu();
+  }
+});
+
+// ── TOPIC DATA ────────────────────────────────────────────────────────────────
+const TOPICS = [
+  {
+    id: "basics", label: "Salesforce Basics", abbr: "SFB", size: 36, category: "core",
+    subtopics: [
+      {
+        name: "Multitenant Architecture",
+        items: ["Shared infrastructure, isolated tenant data", "IaaS: Infrastructure as a Service", "PaaS: Platform as a Service (Salesforce)", "SaaS: Software as a Service (end users)"],
+        tips: ["Metadata-driven architecture: config, not code"],
+        questions: ["Explain multitenancy", "IaaS vs PaaS vs SaaS?"]
+      },
+      {
+        name: "Editions & Sandboxes",
+        items: ["Essentials, Professional, Enterprise, Unlimited", "Performance: unlimited sandbox & live agent", "Developer: dev & testing, no prod data", "Developer Pro: larger data limits", "Partial Copy: sampled prod data (1GB)", "Full: complete prod copy"],
+        tips: ["Full sandbox for final UAT before deploy"],
+        questions: ["When to use each sandbox type?"]
+      },
+      {
+        name: "Order of Execution",
+        items: ["1. System validation rules", "2. Before triggers", "3. Custom validation rules", "4. Duplicate rules", "5. After triggers", "6. Assignment rules / auto-response", "7. Workflow rules", "8. Process Builder / Flow", "9. Roll-up summary fields", "10. Criteria-based sharing"],
+        tips: ["Before triggers: can modify records before save", "After triggers: records have IDs, can do DML"],
+        questions: ["Where do validation rules fire?", "Before vs After trigger?"]
+      },
+      {
+        name: "Cloud Products",
+        items: ["Sales Cloud: CRM, sales automation", "Service Cloud: customer service, support", "Marketing Cloud: marketing automation", "Commerce Cloud: e-commerce", "Experience Cloud: communities & portals", "Health Cloud: healthcare management", "Financial Services Cloud: financial CRM"],
+        tips: ["Experience Cloud = formerly Communities"]
+      },
+      {
+        name: "Data Management",
+        items: ["Import Wizard: ≤50k records, simple", "Data Loader: any volume, complex", "Mass Transfer Records: change ownership", "Mass Delete Records: bulk cleanup", "Storage limits: file vs data storage"],
+        tips: ["Use Data Loader with CLI for automation"]
+      },
+      {
+        name: "Deferred Calculations",
+        items: ["Defer Sharing Calculations: batch sharing updates", "Defer Group Membership: batch group changes", "Improves bulk data load performance", "Recalculate when load completes"],
+        tips: ["Enable for large data migrations"]
+      }
+    ]
+  },
+  {
+    id: "datamodel", label: "Data Model", abbr: "DM", size: 40, category: "core",
+    subtopics: [
+      {
+        name: "🗂️ Objects & Fields",
+        items: [
+          "Standard objects: Account, Contact, Opportunity, Case, Lead (258+)",
+          "Custom objects: <span class='code-inline'>__c</span> suffix, max <span class='info-badge badge-warning'>500</span> fields per object",
+          "Field types: Text, Number, Formula, Lookup, Master-Detail, Picklist",
+          "External ID: unique, indexed, upsert key, integrates external data",
+          "Formula fields: calculated values, cross-object references",
+          "Roll-Up Summary: aggregate child data on parent (Master-Detail only)"
+        ],
+        tips: ["Hit 500 field limit? Use External Objects, Big Objects, or refactor to Custom Metadata"],
+        examples: [
+          "External ID field for upsert from external system",
+          "Formula field: AnnualRevenue * 0.10 (commission calculation)"
+        ],
+        questions: ["What's the workaround for 500 field limit?", "External ID use cases?"]
+      },
+      {
+        name: "🔗 Relationships",
+        items: [
+          "Lookup: loose coupling, nullable, optional parent relationship",
+          "Master-Detail (MD): tight coupling, required parent, controls sharing",
+          "MD benefits: cascade delete, roll-up summary fields, inherited sharing",
+          "Junction object: many-to-many via 2 Master-Detail relationships",
+          "External Lookup: connect to external data via Salesforce Connect"
+        ],
+        tips: ["Master-Detail required on child, affects sharing and deletion"],
+        examples: [
+          "Lookup: Account → Contact (one Account, many Contacts)",
+          "Junction: Student ← Enrollment → Course (many-to-many)"
+        ],
+        questions: ["How to implement many-to-many relationship?", "Cascade delete gotchas?"]
+      },
+      {
+        name: "📄 Record Types & Page Layouts",
+        items: [
+          "Record Types: support different business processes",
+          "Controls: picklist values, page layouts, business processes",
+          "Page Layouts: field arrangement, buttons, links, related lists",
+          "Dynamic Forms: field-level visibility without record types (LWC)",
+          "Page Layout Assignment: by profile and record type combination"
+        ],
+        tips: ["Dynamic Forms can reduce record type complexity"],
+        examples: [
+          "B2B vs B2C customers: different record types, different fields",
+          "Dynamic Forms: show fields based on picklist value"
+        ],
+        questions: ["Record Type vs Dynamic Forms - when to use which?"]
+      },
+      {
+        name: "✅ Validation & Business Logic",
+        items: [
+          "Validation Rules: prevent save on error conditions",
+          "Field Dependencies: control picklist values based on another field",
+          "Matching Rules: define duplicate record matching criteria",
+          "Duplicate Rules: prevent or allow duplicates based on Matching Rules",
+          "Limit: <span class='info-badge badge-warning'>100</span> validation rules per object"
+        ],
+        code: "AND(\n  NOT(ISBLANK(AnnualRevenue)),\n  AnnualRevenue < 1000000,\n  ISPICKVAL(Type, 'Enterprise')\n)",
+        examples: [
+          "VR: Require email domain for certain Account types",
+          "Field Dependency: Country → State (filtered values)"
+        ],
+        tips: ["Use description field to document Validation Rule purpose"],
+        questions: ["How to prevent duplicate records automatically?"]
+      },
+      {
+        name: "📦 Custom Metadata Types (CMT)",
+        items: [
+          "Deployable metadata (like Custom Settings but better)",
+          "Type-safe, can use in packaging, can migrate via change sets",
+          "Features: field sets, relationships, validation rules",
+          "Use cases: feature flags, configuration mappings, business rules",
+          "Accessible via SOQL and Apex Metadata API"
+        ],
+        examples: [
+          "Feature flag: Enable_New_Flow__c = true",
+          "Field mapping: External_Field__c → SF_Field__c"
+        ],
+        tips: ["Prefer CMT over Custom Settings for new development"],
+        questions: ["CMT vs Custom Settings - key differences?"]
+      },
+      {
+        name: "📊 Data Quality & Scale",
+        items: ["Validation Rules enforce data integrity", "Field Dependencies guide valid inputs", "Duplicate Rules with Matching Rules", "Indexes improve query performance", "Archive old data: Big Objects, external"],
+        tips: ["Slow reports? Add custom index on filter field"],
+        questions: ["Reports slow with millions of records?"]
+      },
+      {
+        name: "Enterprise Data Architecture",
+        items: ["Logical Data Model: entity relationships", "Data Lifecycle: create → active → archive → delete", "Retention Strategy: compliance requirements", "Reporting Strategy: aggregate objects, analytics", "Data Migration: ETL, delta loads, validation"],
+        tips: ["Plan for data growth from day one"]
+      }
+    ]
+  },
+  {
+    id: "soql", label: "SOQL", abbr: "SQL", size: 34, category: "dev",
+    subtopics: [
+      {
+        name: "📝 Basic Structure",
+        items: [
+          "<span class='code-inline'>SELECT</span> - Fields to retrieve (required)",
+          "<span class='code-inline'>FROM</span> - Object type (required)",
+          "<span class='code-inline'>WHERE</span> - Filter records (optional)",
+          "<span class='code-inline'>ORDER BY</span> - Sort results (optional)",
+          "<span class='code-inline'>LIMIT n</span> - Max records (optional, max 50k)",
+          "<span class='code-inline'>OFFSET n</span> - Skip records (optional, max 2000)"
+        ],
+        examples: [
+          "SELECT Id, Name, Industry FROM Account WHERE Industry = 'Technology' ORDER BY Name DESC LIMIT 10",
+          "SELECT FirstName, LastName FROM Contact WHERE CreatedDate = LAST_N_DAYS:30"
+        ],
+        tips: ["Use LIMIT to prevent governor limit issues"],
+        questions: ["SOQL vs SQL key differences?"]
+      },
+      {
+        name: "🔗 Relationship Queries",
+        items: [
+          "Child-to-Parent: <span class='code-inline'>Account.Name</span> in query (up to 5 levels)",
+          "Parent-to-Child: <span class='code-inline'>(SELECT field FROM Contacts)</span>",
+          "Cross-object: <span class='code-inline'>Account.Owner.CreatedBy.Name</span>",
+          "Nested query counts as 1 SOQL query, not 2"
+        ],
+        code: "// Child-to-Parent\nSELECT Id, Name, Account.Name, Account.Industry\nFROM Contact\n\n// Parent-to-Child\nSELECT Id, Name, (\n  SELECT FirstName, LastName\n  FROM Contacts\n  LIMIT 5\n)\nFROM Account",
+        examples: [
+          "SELECT Id, Name, Account.Owner.Name FROM Contact",
+          "SELECT Id, (SELECT Amount FROM Opportunities ORDER BY Amount DESC LIMIT 3) FROM Account"
+        ],
+        tips: ["Cannot use OFFSET in parent query with subquery"],
+        questions: ["How many levels deep can you query?"]
+      },
+      {
+        name: "📊 Aggregate Functions",
+        items: [
+          "<span class='code-inline'>COUNT()</span> / <span class='code-inline'>COUNT_DISTINCT()</span>",
+          "<span class='code-inline'>SUM()</span> / <span class='code-inline'>AVG()</span> / <span class='code-inline'>MIN()</span> / <span class='code-inline'>MAX()</span>",
+          "<span class='code-inline'>GROUP BY</span> for aggregation",
+          "<span class='code-inline'>HAVING</span> for filtering aggregates",
+          "Returns <span class='code-inline'>AggregateResult</span> objects"
+        ],
+        code: "SELECT Industry, COUNT(Id), AVG(AnnualRevenue)\nFROM Account\nWHERE AnnualRevenue > 0\nGROUP BY Industry\nHAVING COUNT(Id) > 5\nORDER BY AVG(AnnualRevenue) DESC",
+        examples: [
+          "SELECT Status, COUNT(Id) FROM Case GROUP BY Status",
+          "SELECT LeadSource, COUNT_DISTINCT(CreatedById) FROM Lead GROUP BY LeadSource"
+        ],
+        tips: ["Cannot use OFFSET with aggregate queries"],
+        questions: ["HAVING vs WHERE - when to use each?"]
+      },
+      {
+        name: "🔒 SOQL Injection Defense",
+        items: [
+          "Use bind variables <span class='code-inline'>:variable</span> - prevents injection",
+          "<span class='code-inline'>String.escapeSingleQuotes()</span> for dynamic field names",
+          "Never concatenate user input directly",
+          "<span class='code-inline'>WITH SECURITY_ENFORCED</span> - adds FLS check"
+        ],
+        code: "// ✅ Safe - Bind Variables\nString name = 'Test Account';\nString query = 'SELECT Id FROM Account WHERE Name = :name';\nList<Account> accounts = Database.query(query);\n\n// ❌ Unsafe - Concatenation\nString userInput = \"Name' OR '1'='1\";\nString query = 'SELECT Id FROM Account WHERE Name = \\'' + userInput + '\\'';\n\n// ✅ Safe - Escaping\nString field = 'Name';\nString safeField = String.escapeSingleQuotes(field);\nString query = 'SELECT Id, ' + safeField + ' FROM Account';",
+        tips: ["Bind variables improve performance by enabling query caching"],
+        questions: ["Why use bind variables over string concatenation?"]
+      },
+      {
+        name: "⚡ Query Optimization",
+        items: [
+          "Indexed fields: Id, Name, OwnerId, RecordTypeId, External ID, Unique",
+          "Custom indexes: 5 per object (can be extended)",
+          "Selectivity threshold: < 10% of records returned",
+          "Avoid: NOT operators, leading wildcards <span class='code-inline'>LIKE '%text'</span>",
+          "Use Query Plan Tool in Developer Console"
+        ],
+        examples: [
+          "✅ SELECT Id FROM Account WHERE Type = 'Customer' AND Name LIKE 'Acme%' (selective)",
+          "❌ SELECT Id FROM Account WHERE Name LIKE '%Inc' (non-selective, table scan)"
+        ],
+        tips: ["Add custom index on frequently filtered fields"],
+        questions: ["How to make a slow SOQL query faster?"]
+      },
+      {
+        name: "🛡️ WITH SECURITY_ENFORCED",
+        items: [
+          "Enforces object-level & field-level permissions",
+          "Throws <span class='code-inline'>System.QueryException</span> if no access",
+          "Use at user-facing query boundaries",
+          "Alternative: <span class='code-inline'>Security.stripInaccessible()</span>"
+        ],
+        code: "// Throws exception if user lacks FLS\nSELECT Id, Name WITH SECURITY_ENFORCED FROM Account\n\n// Silently removes inaccessible fields\nList<Account> accounts = [SELECT Id, Name FROM Account];\nList<Account> secured = (List<Account>) Security.stripInaccessible(\n  QueryAccessType.READING, accounts\n).getRecords();",
+        examples: [
+          "Check field accessibility: Schema.sObjectType.Account.fields.Name.isAccessible()"
+        ],
+        tips: ["Always enforce FLS for user-initiated queries"],
+        questions: ["WITH SECURITY_ENFORCED vs stripInaccessible?"]
+      }
+    ]
+  },
+  {
+    id: "limits", label: "Governor Limits", abbr: "LIM", size: 38, category: "core",
+    subtopics: [
+      {
+        name: "🎯 SOQL & SOSL Limits",
+        limits: [
+          {num: "100 (200)", label: "SOQL queries per transaction", badge: "soql", category: "SOQL", desc: "Synchronous Apex: 100 queries. Async (Batch, Future, Queueable): 200 queries. Each query in loops counts!"},
+          {num: "50,000", label: "Records retrieved by SOQL", badge: "soql", category: "SOQL", desc: "Maximum records returned per query. Use Database.getQueryLocator() in Batch for 50M+ records."},
+          {num: "50,000", label: "Aggregate result rows", badge: "soql", category: "SOQL", desc: "GROUP BY returns max 50,000 AggregateResult rows."},
+          {num: "10", label: "Nested subqueries", badge: "soql", category: "SOQL", desc: "Maximum 10 relationship subqueries per parent query. Each counts toward 100 query limit."},
+          {num: "2,000", sub: "OFFSET", label: "OFFSET value", badge: "soql", category: "SOQL", desc: "Maximum OFFSET value for pagination. Cannot use with parent query + subquery."},
+          {num: "10", label: "SOSL queries", badge: "soql", category: "SOSL", desc: "Maximum SOSL queries per transaction. Each returns up to 2,000 records."},
+          {num: "2,000", label: "SOSL result rows", badge: "soql", category: "SOSL", desc: "FIND ... RETURNING can return max 2,000 records total across all objects."},
+          {num: "120s", label: "Query timeout", badge: "cpu", category: "Timeout", desc: "SOQL query execution timeout. Optimize with selective filters and custom indexes."}
+        ]
+      },
+      {
+        name: "💾 DML & Heap Limits",
+        limits: [
+          {num: "150", label: "DML operations", badge: "dml", category: "DML", desc: "insert, update, delete, undelete, merge, upsert - each counts as 1. List<SObject> in one operation = 1."},
+          {num: "10,000", label: "Records per DML operation", badge: "dml", category: "DML", desc: "One DML call can process up to 10,000 records. Example: insert myList - max 10,000 elements."},
+          {num: "6MB / 12MB", label: "Heap size", badge: "heap", category: "Heap", desc: "Heap size: 6 MB sync, 12 MB async. Large collections exhaust heap quickly. Optimize data structures."},
+          {num: "1,000", label: "Variables in scope", badge: "heap", category: "Heap", desc: "Maximum variables allowed in scope at once. Includes primitives, collections, objects."}
+        ]
+      },
+      {
+        name: "⏱️ CPU & Execution Limits",
+        limits: [
+          {num: "10s / 60s", label: "CPU time limit", badge: "cpu", category: "CPU", desc: "CPU time: 10,000ms sync, 60,000ms async. Apex execution time, excluding SOQL/callout wait time."},
+          {num: "120s", label: "Single callout timeout", badge: "callout", category: "Callout", desc: "Maximum wait time for HTTP callout response. Set via req.setTimeout(120000)."},
+          {num: "100", label: "Callout requests", badge: "callout", category: "Callout", desc: "HTTP requests and WebService callouts combined per transaction."},
+          {num: "10s / 15s", label: "Synchronous Apex limit", badge: "cpu", category: "CPU", desc: "Total execution time for synchronous Apex including all operations."}
+        ]
+      },
+      {
+        name: "📧 Email & Messaging Limits",
+        limits: [
+          {num: "1,000", label: "Email invocations", badge: "email", category: "Email", desc: "Maximum emails per transaction via Messaging.sendEmail(). SingleEmailMessage counts as 1."},
+          {num: "10", label: "Email invocations via Apex", badge: "email", category: "Email", desc: "Maximum of 10 invocations of Messaging.sendEmail in a single transaction."},
+          {num: "5MB", label: "Single file attachment", badge: "email", category: "Email", desc: "Size of single email file attachment in Messaging.EmailFileAttachment."},
+          {num: "10MB", label: "Total email attachments", badge: "email", category: "Email", desc: "Total size of all email file attachments per message."}
+        ]
+      },
+      {
+        name: "🔄 Async Apex Limits",
+        limits: [
+          {num: "250,000", label: "Future jobs / 24hr", badge: "async", category: "Async", desc: "@future method limit: 250,000 per day or 200 × user licenses - whichever is greater."},
+          {num: "5", label: "Queueable chain depth", badge: "async", category: "Async", desc: "Maximum 5 Queueable jobs chained in a single transaction. Developer Edition: 1."},
+          {num: "50", label: "Batch jobs queued", badge: "async", category: "Async", desc: "Maximum 5 active Batch Apex jobs, 100 queued (Hold status) at once."},
+          {num: "100", label: "Batch start/execute/finish", badge: "async", category: "Async", desc: "Maximum number of start(), execute(), finish() methods across all Batch jobs."}
+        ]
+      },
+      {
+        name: "🔧 Other Limits",
+        limits: [
+          {num: "100", label: "Describe calls", badge: "soql", category: "Schema", desc: "Schema describe calls: 100 describeGlobal() + up to 10 calls. Total 100 describe operations."},
+          {num: "15", label: "Triggers per object", badge: "cpu", category: "Apex", desc: "Maximum 15 Apex triggers per object. Order not guaranteed - use 1 trigger with handler pattern."},
+          {num: "50", label: "Push topics / org", badge: "async", category: "Streaming", desc: "Platform Events and PushTopic: max 50 unique topics per org."},
+          {num: "10", label: "Future method calls", badge: "async", category: "Async", desc: "Maximum @future method calls per Apex transaction."}
+        ],
+        tips: ["Use Limits class: Limits.getLimitQueries(), Limits.getQueries(), Limits.getCpuTime()"],
+        questions: ["How to monitor limit usage in Apex?", "What happens when you hit a limit?"]
+      }
+    ]
+  },
+  {
+    id: "apex", label: "Apex", abbr: "APX", size: 40, category: "dev",
+    subtopics: [
+      {
+        name: "🎯 Core Concepts",
+        items: [
+          "Strongly typed, object-oriented (like Java)",
+          "Runs on Salesforce servers (multi-tenant)",
+          "Triggers: database event handlers (7 events)",
+          "Classes: business logic, controllers, utilities",
+          "Interfaces: Comparable, Database.Batchable, etc",
+          "Collections: List (ordered), Set (unique), Map (key-value)"
+        ],
+        tips: ["Follow Single Responsibility Principle"],
+        questions: ["List vs Set vs Map - when to use each?"]
+      },
+      {
+        name: "⚡ Triggers",
+        items: [
+          "Events: before/after insert, update, delete, undelete",
+          "Context variables: <span class='code-inline'>Trigger.new</span>, <span class='code-inline'>Trigger.old</span>, <span class='code-inline'>Trigger.newMap</span>, <span class='code-inline'>Trigger.oldMap</span>",
+          "Best practice: One trigger per object → Handler class",
+          "Bulkify: handle 200+ records, no SOQL/DML in loops"
+        ],
+        code: "trigger AccountTrigger on Account (\n  before insert, before update,\n  after insert, after update\n) {\n  AccountTriggerHandler.handle(\n    Trigger.new, Trigger.oldMap,\n    Trigger.isInsert, Trigger.isUpdate\n  );\n}",
+        examples: [
+          "Before insert: Set default values, validate",
+          "After insert: Create related records, send emails"
+        ],
+        tips: ["Use Trigger.isExecuting, Trigger.isInsert, Trigger.isUpdate for conditional logic"],
+        questions: ["What's the handler pattern and why use it?"]
+      },
+      {
+        name: "⏱️ Async Apex",
+        items: [
+          "<span class='code-inline'>@future</span>: static methods, void return, primitive params only",
+          "<span class='code-inline'>Queueable</span>: chaining, complex objects, job monitoring",
+          "<span class='code-inline'>Batch Apex</span>: up to 50M records, start/execute/finish",
+          "<span class='code-inline'>Schedulable</span>: cron-like scheduling",
+          "Queueable can chain up to 50 jobs total"
+        ],
+        code: "// Future Method\n@future\npublic static void processAsync(Id accountId) {\n  // Async logic\n}\n\n// Queueable\npublic class MyQueueable implements Queueable {\n  public void execute(QueueableContext ctx) {\n    // Complex async logic\n  }\n}\n\n// Enqueue\nSystem.enqueueJob(new MyQueueable());",
+        examples: [
+          "@future: simple callouts, web service integration",
+          "Queueable: complex processing, chaining",
+          "Batch: large data volumes, record processing"
+        ],
+        tips: ["Batch: query in start(), process in execute(), notify in finish()"],
+        questions: ["When to use @future vs Queueable vs Batch?"]
+      },
+      {
+        name: "🔐 Apex Security",
+        items: [
+          "Default: <span class='code-inline'>without sharing</span> - system mode, no record security",
+          "<span class='code-inline'>with sharing</span>: enforce record sharing rules",
+          "<span class='code-inline'>without sharing</span>: bypass sharing (use carefully)",
+          "<span class='code-inline'>inherited sharing</span>: maintain caller's sharing context",
+          "<span class='code-inline'>Security.stripInaccessible()</span>: enforce FLS"
+        ],
+        code: "public with sharing class MyController {\n  // Enforces record sharing\n}\n\npublic without sharing class MyService {\n  // Bypasses sharing - use with caution\n}\n\n// FLS Check\nif (Schema.sObjectType.Account.fields.Name.isAccessible()) {\n  accounts = [SELECT Name FROM Account];\n}",
+        examples: [
+          "Use with sharing for user-facing operations",
+          "Use without sharing for system-level background jobs"
+        ],
+        tips: ["Default to with sharing for most Apex classes"],
+        questions: ["with sharing vs without sharing - which to use?"]
+      },
+      {
+        name: "🧪 Testing",
+        items: [
+          "<span class='info-badge badge-warning'>≥75%</span> code coverage required",
+          "<span class='code-inline'>@isTest</span>: test classes, no limits applied",
+          "<span class='code-inline'>Test.startTest()</span> / <span class='code-inline'>Test.stopTest()</span>: reset limits",
+          "<span class='code-inline'>System.assert()</span>, <span class='code-inline'>assertEquals()</span>, <span class='code-inline'>assertNotEquals()</span>",
+          "<span class='code-inline'>Test.isRunningTest()</span>: conditional test logic",
+          "<span class='code-inline'>SeeAllData=true</span>: access org data (avoid, use test data)"
+        ],
+        code: "@isTest\nprivate class AccountHandlerTest {\n  @isTest\n  static void testCreateAccount() {\n    Test.startTest();\n    Account acc = new Account(Name = 'Test');\n    insert acc;\n    Test.stopTest();\n\n    System.assertEquals('Test', acc.Name);\n  }\n}",
+        examples: [
+          "Test positive cases: happy path",
+          "Test negative cases: error handling",
+          "Test bulk: 200+ records"
+        ],
+        tips: ["Use Test.loadData() for large test datasets"]
+      },
+      {
+        name: "🚀 Advanced Patterns",
+        items: [
+          "Dynamic SOQL: <span class='code-inline'>Database.query(string)</span>",
+          "Dynamic DML: <span class='code-inline'>Database</span> class methods",
+          "Platform Events: pub/sub, Change Data Capture",
+          "Platform Cache: Org cache (session) / Session cache",
+          "Dependency Injection: DI framework for testability",
+          "Custom Exception: <span class='code-inline'>extends Exception</span>"
+        ],
+        code: "// Dynamic SOQL\nString query = 'SELECT Id FROM Account WHERE Name = :name';\nList<SObject> results = Database.query(query);\n\n// Database methods with allOrNone = false\nDatabase.SaveResult[] srList = Database.insert(\n  records, false\n);\n\n// Check results\nfor (Database.SaveResult sr : srList) {\n  if (sr.isSuccess()) {\n    // Success\n  } else {\n    // Handle errors\n    for(Database.Error err : sr.getErrors()) {\n      System.debug(err.getMessage());\n    }\n  }\n}",
+        examples: [
+          "Platform Events for async processing",
+          "Platform Cache to reduce repeated SOQL queries",
+          "DI framework for mocking dependencies in tests"
+        ],
+        tips: ["Use allOrNone=false for partial success processing"],
+        questions: ["How to implement a custom Logger in Apex?"]
+      }
+    ]
+  },
+  {
+    id: "lwc", label: "Lightning Web Components", abbr: "LWC", size: 38, category: "dev",
+    subtopics: [
+      {
+        name: "Bundle Structure",
+        items: ["component.html: template", "component.js: controller", "component.js-meta.xml: config", "component.css: styles (scoped)"],
+        tips: ["Files share same base name"]
+      },
+      {
+        name: "Lifecycle Hooks",
+        items: ["constructor(): before DOM, no property access", "connectedCallback(): DOM ready, query first", "disconnectedCallback(): cleanup", "renderCallback(): after render", "errorCallback(): error handling"],
+        tips: ["Don't query DOM in constructor"],
+        questions: ["Lifecycle order?"]
+      },
+      {
+        name: "Decorators",
+        items: ["@api: public property, reactive", "@track: (legacy) reactive deep objects", "@wire: reactive data service", "@readonly: track in tests only"],
+        code: "@api recordId;\n@wire(getRecord, { recordId: '$recordId' })\nrecord;\n\n// Imperative apex\n@track contacts;\nasync loadContacts() {\n  this.contacts = await getContacts();\n}",
+        tips: ["Primitives reactive by default (Spring '20+)"]
+      },
+      {
+        name: "Lightning Data Service (LDS)",
+        items: ["getRecord: single record", "getListUI: list view data", "createRecord, deleteRecord, updateRecord", "generateRecordInputForCreate: form data", "@wire or imperative patterns"],
+        tips: ["LDS handles sharing & FLS automatically"]
+      },
+      {
+        name: "Events",
+        items: ["Event bubbling: child → parent (up to 10 levels)", "CustomEvent('name', {detail: data})", "dispatchEvent(event)", "Lightning Message Service (LMS): cross-component"],
+        code: "this.dispatchEvent(new CustomEvent('itemselect', {\n  detail: { itemId: '123' }\n}));",
+        questions: ["Bubbling vs LMS?"]
+      },
+      {
+        name: "JavaScript Integration",
+        items: ["import resources from @salesforce/*", "loadStyle, loadScript from lightning/platformResourceLoader", "NavigationMixin from lightning/navigation", "refreshApex from @salesforce/apex"],
+        tips: ["Use static resources for third-party libs"]
+      },
+      {
+        name: "Testing",
+        items: ["@salesforce/sfdx-lwc-jest: test framework", "jest.config.js: configuration", "describe(), it(), expect()", "createElement(): render component", "Test for user interactions, @wire data"]
+      }
+    ]
+  },
+  {
+    id: "security", label: "Security", abbr: "SEC", size: 36, category: "core",
+    subtopics: [
+      {
+        name: "Access Layers (4 levels)",
+        items: ["1. Organization-level: IP restrictions, login hours", "2. Object-level: CRUD (Profile, Permission Set)", "3. Field-level: FLS (read/edit per field)", "4. Record-level: Sharing (OWD, Rules, Manual)"],
+        tips: ["Security evaluation: top to bottom"],
+        questions: ["Order of security evaluation?"]
+      },
+      {
+        name: "Object-Level Security",
+        items: ["Profiles: baseline CRUD permissions", "Permission Sets: additive CRUD", "Permission Set Groups: bundle PS", "Tab visibility: separate from object access"],
+        tips: ["Minimize profile changes; use permission sets"]
+      },
+      {
+        name: "Field-Level Security (FLS)",
+        items: ["Profile: baseline field access", "Permission Sets: additive field access", "Hidden vs Read-Only vs Edit", "Field accessibility check in Apex"],
+        code: "Schema.sObjectType.Account.fields.Name.isAccessible()\nSchema.sObjectType.Account.fields.Name.isUpdateable()",
+        questions: ["How to enforce FLS in Apex?"]
+      },
+      {
+        name: "Record-Level Security",
+        items: ["OWD (Organization-Wide Defaults): baseline", "Private: owner only", "Public Read/Write: all users", "Public Read/Write/Transfer: all + transfer", "Public Full Access: all + edit/delete all (custom only)"],
+        tips: ["OWD is most restrictive baseline"]
+      },
+      {
+        name: "Sharing Mechanisms",
+        items: ["Role Hierarchy: inherit upward", "Sharing Rules: criteria-based or owner-based", "Manual Sharing: ad hoc (record owner)", "Apex Sharing: programmatic (AccountShare)", "Team-based sharing: account teams, opportunity teams"],
+        tips: ["Role hierarchy grants access, never revokes"]
+      },
+      {
+        name: "Profiles & Permission Sets",
+        items: ["Profile: required, baseline access", "Permission Set: optional, additive", "Permission Set Group: bundle permission sets", "Muting Permission: remove from PSG", "Custom Permission: feature flag logic"],
+        tips: ["Move customizations to Permission Sets"]
+      },
+      {
+        name: "Apex Security",
+        items: ["with sharing: enforce record security", "without sharing: bypass record security", "inherited sharing: maintain caller's context", "Sharing recalculation: on FLS, role changes", "Apex Managed Sharing: custom sharing reasons"],
+        questions: ["When to use without sharing?"]
+      }
+    ]
+  },
+  {
+    id: "flow", label: "Flow", abbr: "FLW", size: 32, category: "core",
+    subtopics: [
+      {
+        name: "Flow Types",
+        items: ["Screen Flow: user-interactive UI", "Record-Triggered Flow: auto on DML", "Scheduled Flow: time-based execution", "Platform Event-Triggered Flow: event-driven", "Auto-Launched Flow: no UI, invocable"],
+        questions: ["Screen vs Record-Triggered?"]
+      },
+      {
+        name: "Record-Triggered Flow",
+        items: ["Trigger: Create, Update, Delete, Undelete", "Optimization: Before Save (fast, no DML)", "After Save: can do DML, creates transaction", "Trigger Order: 1, 2, 3, ... 200", "Record-Triggered vs: Flow: run as record owner"],
+        tips: ["Before Save replaces simple Apex triggers"],
+        questions: ["Before vs After Save Flow?"]
+      },
+      {
+        name: "Flow Elements",
+        items: ["Screens: UI components", "Actions: create records, send email", "Decisions: logic branches", "Loops: iterate collections", "Assignments: set variable values", "Get Records: query SOQL", "Update Records: DML"],
+        tips: ["Use Get Records with filters to avoid iteration"]
+      },
+      {
+        name: "Best Practices",
+        items: ["Bulkify: no SOQL in loops", "Fault Paths: always handle errors", "Use One Element per Action", "Subflows: reusable components", "Debug with Debug Mode + run as specific user"],
+        questions: ["How to debug Flow errors?"]
+      },
+      {
+        name: "Flow Limits",
+        items: ["SOQL queries: 100 per transaction", "DML operations: 150 per transaction", "Elements: 2000 per flow (screen)", "Interview limit: 200 elements executed", "Execution time limits apply"]
+      },
+      {
+        name: "Flow with LWC",
+        items: ["LWC as Flow Screen component", "lightning-flow-support: access flow attrs", "Input attributes, output attributes", "Validation with FlowValidation", "Use for: complex UI, custom logic"]
+      }
+    ]
+  },
+  {
+    id: "integrations", label: "Integrations", abbr: "INT", size: 36, category: "core",
+    subtopics: [
+      {
+        name: "Authentication",
+        items: ["Named Credentials: secure endpoint + auth", "Remote Site Settings: whitelist domains", "Connected App: OAuth (client creds, JWT)", "Auth Provider: SSO, OpenID Connect", "Single Sign-On: SAML, OAuth"],
+        tips: ["Never hardcode credentials in Apex"],
+        questions: ["Named Credential vs Remote Site Setting?"]
+      },
+      {
+        name: "REST API",
+        items: ["Resources: /services/data/v56.0/", "CRUD: GET, POST, PATCH, DELETE", "SOQL: /query/?q=SELECT...", "Composite: batch requests, SObject tree", "REST resources: @RestResource annotation"],
+        code: "GET /services/data/v56.0/sobjects/Account/001xx\nPOST /services/data/v56.0/sobjects/Account/\nPATCH /services/data/v56.0/sobjects/Account/001xx"
+      },
+      {
+        name: "SOAP API",
+        items: ["WSDL-based: enterprise vs partner", "describeSObject(): metadata", "query(): SOQL execution", "Enterprise WSDL: strong typing", "Partner WSDL: dynamic types"],
+        tips: ["Use SOAP when WSDL provided by vendor"]
+      },
+      {
+        name: "Bulk API",
+        items: ["Bulk API 1.0: CSV-based, sequential", "Bulk API 2.0: JSON, parallel processing", "Use for: 50k+ records", "Operations: insert, update, upsert, delete, query"],
+        tips: ["Use Bulk API 2.0 for better performance"]
+      },
+      {
+        name: "Streaming & Events",
+        items: ["PushTopics: SOQL-based subscriptions", "Change Data Capture (CDC): all changes", "Platform Events: pub/sub, custom events", "Generic Events: standard CDC events", "empAPI: subscribe in LWC/Apex"],
+        tips: ["CDC: real-time data sync without polling"]
+      },
+      {
+        name: "Integration Patterns",
+        items: ["Request/Reply: sync, wait for response", "Fire & Forget: async, no response", "Publish/Subscribe: event-driven", "Batch: scheduled, large volumes", "Retry: exponential backoff"],
+        questions: ["Sync vs Async pattern?"]
+      },
+      {
+        name: "Middleware",
+        items: ["MuleSoft, Boomi, Tibco", "Apache Kafka: event streaming", "AWS Lambda: serverless processing", "Custom Node.js: lightweight middleware"],
+        tips: ["Middleware for complex transformations"]
+      }
+    ]
+  },
+  {
+    id: "javascript", label: "JavaScript", abbr: "JS", size: 30, category: "dev",
+    subtopics: [
+      {
+        name: "Variables & Scope",
+        items: ["var: function scope, hoisted, redeclare", "let: block scope, TDZ, no redeclare", "const: block scope, no reassign", "Hoisting: declarations lifted, not values", "TDZ: Temporal Dead Zone (let/const)"],
+        tips: ["Prefer const, use let if needed, avoid var"],
+        questions: ["var vs let vs const?"]
+      },
+      {
+        name: "Functions",
+        items: ["Function declaration: hoisted", "Function expression: not hoisted", "Arrow function: no own this, arguments", "this: depends on call site", "Default parameters: fn(a=1) {}"],
+        code: "const arrow = () => { /* no own this */ };\nfn.apply(obj, args); // set this\nfn.call(obj, arg1, arg2);\nfn.bind(obj); // return bound fn",
+        questions: ["Arrow fn gotchas?"]
+      },
+      {
+        name: "Closures",
+        items: ["Function retains access to outer scope", "Used for: data hiding, factories", "Memory leak risk: circular references", "Module pattern: IIFE closure"],
+        code: "function createCounter() {\n  let count = 0;\n  return () => ++count;\n}"
+      },
+      {
+        name: "Promises & Async",
+        items: ["Promise states: pending, fulfilled, rejected", "async/await: syntactic sugar over Promise", "Promise.all(): parallel, fail-fast", "Promise.any(): first success", "Promise.race(): first settled", "Promise.allSettled(): wait for all"],
+        tips: ["Callback hell → async/await"],
+        questions: ["Promise.all vs Promise.any?"]
+      },
+      {
+        name: "Array Methods",
+        items: ["map(): transform each element", "filter(): keep matching", "reduce(): aggregate to single value", "find(), findIndex(): search", "some(), every(): test condition", "forEach(): side effects (no return)"],
+        code: "nums.filter(n => n > 0).map(n => n * 2).reduce((a,b) => a+b, 0)"
+      },
+      {
+        name: "ES6+ Features",
+        items: ["Destructuring: const {a} = obj", "Spread: [...arr], {...obj}", "Template literals: `hello ${name}`", "Classes: class syntax", "Modules: import/export"]
+      }
+    ]
+  },
+  {
+    id: "git", label: "Git", abbr: "GIT", size: 28, category: "proc",
+    subtopics: [
+      {
+        name: "Core Commands",
+        items: ["git clone: copy repository", "git checkout: switch branch/commit", "git add: stage changes", "git commit: save snapshot", "git push: upload to remote", "git pull: fetch + merge", "git fetch: download without merge"],
+        tips: ["Use git pull --rebase to avoid merge commits"]
+      },
+      {
+        name: "Branching",
+        items: ["git branch: list/create branches", "git checkout -b: create & switch", "git merge: combine branches", "git rebase: linear history", "git cherry-pick: apply specific commit"],
+        questions: ["Merge vs Rebase?"]
+      },
+      {
+        name: "Branching Strategies",
+        items: ["GitFlow: feature, develop, release, master", "Trunk-based: short-lived feature branches", "GitHub Flow: master + feature branches", "Feature flags: branch by abstraction"],
+        tips: ["Trunk-based reduces merge pain, requires CI/CD"]
+      },
+      {
+        name: "Undo Changes",
+        items: ["git reset --soft: keep changes staged", "git reset --hard: discard all changes", "git revert: create undo commit", "git commit --amend: edit last commit", "git restore: restore working tree files"],
+        tips: ["Never amend pushed commits"]
+      },
+      {
+        name: "Conflict Resolution",
+        items: ["git mergetool: visual merge tool", "git diff: view conflicts", "<<<<<<<, =======, >>>>>>> markers", "Accept current, accept incoming, or both", "Test merge resolution before commit"]
+      },
+      {
+        name: ".gitignore",
+        items: ["Exclude files from tracking", "Patterns: *.log, node_modules/, .env", "gitignore.io: generate templates", "Tracked files: require git rm --cached"]
+      }
+    ]
+  },
+  {
+    id: "processes", label: "Engineering Process", abbr: "ENG", size: 30, category: "proc",
+    subtopics: [
+      {
+        name: "Methodologies",
+        items: ["Scrum: sprints (1-4 weeks), ceremonies", "Kanban: continuous flow, WIP limits", "Agile: iterative, adaptive to change", "Waterfall: sequential, plan-driven", "Lean: eliminate waste, deliver faster"],
+        questions: ["When to use Scrum vs Kanban?"]
+      },
+      {
+        name: "Scrum Events",
+        items: ["Sprint Planning: plan sprint backlog", "Daily Standup: 15min, yesterday/today/blockers", "Sprint Review: demo increment", "Sprint Retrospective: improve process", "Backlog Refinement: groom upcoming work"]
+      },
+      {
+        name: "Definition of Done (DoD)",
+        items: ["Code complete", "Unit tests written & passing", "Code reviewed & approved", "Documentation updated", "Deployed to staging", "Product owner accepted"],
+        tips: ["Customize DoD for your team"]
+      },
+      {
+        name: "Definition of Ready (DoR)",
+        items: ["User story has acceptance criteria", "Business value defined", "Estimate provided", "Dependencies identified", "Design approved"],
+        tips: ["Don't start work not meeting DoR"]
+      },
+      {
+        name: "Code Review",
+        items: ["Pull Request: propose changes", "Review checklist: logic, style, tests", "≤400 lines per PR for effective review", "Automated checks: lint, tests", "At least 1 approval required"],
+        tips: ["Be kind, constructive in reviews"]
+      },
+      {
+        name: "CI/CD",
+        items: ["Continuous Integration: merge → test → build", "Continuous Deployment: auto-deploy", "Pipeline: test → build → deploy", "Automated tests: unit, integration, e2e", "Feature flags: deploy incomplete features"]
+      },
+      {
+        name: "Production Incidents",
+        items: ["1. Assess impact & prioritize", "2. Communicate with stakeholders", "3. Hotfix or workaround first", "4. Root Cause Analysis (RCA)", "5. Process changes to prevent recurrence"],
+        tips: ["Document runbooks for common incidents"]
+      },
+      {
+        name: "Team Dynamics",
+        items: ["Bus factor: spread critical knowledge", "Code ownership: collective vs hero", "Mentorship: pair programming, shadowing", "Psychological safety: admit mistakes"]
+      }
+    ]
+  },
+  {
+    id: "sosl", label: "SOSL", abbr: "SOSL", size: 26, category: "dev",
+    subtopics: [
+      {
+        name: "Structure",
+        items: ["FIND 'search term' IN FIELDS", "RETURNING Object(fields)", "LIMIT n, OFFSET n", "Can search multiple objects"],
+        code: "FIND 'John*' IN NAME FIELDS\nRETURNING Account(Id, Name), Contact(Id, FirstName, LastName)\nLIMIT 10"
+      },
+      {
+        name: "When to Use",
+        items: ["Don't know which object contains data", "Fuzzy text search across fields", "Search multiple objects simultaneously", "Lead, Contact, Account search together"]
+      },
+      {
+        name: "SOSL vs SOQL",
+        items: ["SOSL: text search, multiple objects", "SOQL: precise queries, single object", "SOSL: simpler fuzzy matching", "SOQL: relationships, aggregates"]
+      },
+      {
+        name: "Limits",
+        items: ["20 SOSL queries per transaction", "2000 records retrieved per query", "Search: all fields or specific fields"]
+      }
+    ]
+  },
+  {
+    id: "setup", label: "Setup", abbr: "SET", size: 26, category: "core",
+    subtopics: [
+      {
+        name: "User Management",
+        items: ["Users: add, edit, deactivate", "Public Groups: sharing, permissions", "Queues: record ownership", "Permission Sets: grant access", "Profiles: baseline permissions"]
+      },
+      {
+        name: "Security Controls",
+        items: ["Session Settings: timeout, high assurance", "Password Policies: complexity, expiration", "Login Flows: custom login logic", "Login IP Ranges: restrict by IP", "Two-Factor Authentication: 2FA"]
+      },
+      {
+        name: "Audit & Monitoring",
+        items: ["Setup Audit Trail: track changes", "Field History Tracking: data changes", "Login History: access logs", "Event Monitoring: detailed user activity"]
+      },
+      {
+        name: "Data & Storage",
+        items: ["Storage Usage: monitor file vs data", "Data Export: weekly backup", "Mass Delete: cleanup old data", "Storage Limits: plan for growth"]
+      }
+    ]
+  },
+  {
+    id: "aura", label: "Aura Components", abbr: "AUR", size: 28, category: "dev",
+    subtopics: [
+      {
+        name: "Bundle Structure",
+        items: ["Component: .cmp file", "Controller: .js (client-side)", "Helper: .js (reusable functions)", "Renderer: custom rendering logic", "CSS: styles for component"]
+      },
+      {
+        name: "Data Binding",
+        items: ["<aura:attribute>: component state", "{!v.attribute}: value binding", "{!c.method}: controller binding", "Two-way binding with <aura:if>"]
+      },
+      {
+        name: "Calling Apex",
+        items: ["@AuraEnabled: expose Apex method", "<force:recordData>: LDS", "action.setCallback(): handle response", "component.get(): invoke Apex"],
+        code: "@AuraEnabled(cacheable=true)\npublic static Account getAccount(Id id) {\n  return [SELECT Name FROM Account WHERE Id = :id];\n}"
+      },
+      {
+        name: "Events",
+        items: ["Component events: child → parent", "Application events: broadcast globally", "Standard events: force:showToast, etc"]
+      }
+    ]
+  },
+  {
+    id: "visualforce", label: "Visualforce", abbr: "VF", size: 26, category: "dev",
+    subtopics: [
+      {
+        name: "Pages & Controllers",
+        items: ["<apex:page>: VF page markup", "Standard Controller: auto CRUD", "Custom Controller: Apex class", "Controller Extension: extend standard"]
+      },
+      {
+        name: "View State",
+        items: ["Holds page state between requests", "Max 135KB (65KB licensed)", "Minimize: transient keyword, re-render"],
+        tips: ["Use transient for large, non-essential data"]
+      },
+      {
+        name: "JavaScript Integration",
+        items: ["<apex:actionFunction>: call JS from Apex", "<apex:includeScript>: load JS libs", "Visualforce Remoting: async Apex calls"]
+      },
+      {
+        name: "When to Use",
+        items: ["Need fine-grained PDF control", "Migrate legacy VF", "Complex rendering not possible in LWC"]
+      }
+    ]
+  },
+  {
+    id: "ai", label: "AI & Agentforce", abbr: "AI", size: 30, category: "core",
+    subtopics: [
+      {
+        name: "AI Concepts",
+        items: ["Model: algorithm trained on data", "Prompt: input to AI model", "Token: basic unit of text", "Temperature: randomness control", "Hallucination: false confidence"],
+        tips: ["Lower temp = more deterministic"]
+      },
+      {
+        name: "Einstein GPT",
+        items: ["Sales Email: generate outreach", "Service Replies: auto-response", "Work Summary: summarize records", "Einstein Copilot: AI assistant"]
+      },
+      {
+        name: "Prompt Engineering",
+        items: ["Be specific & provide context", "Chain of Thought: show reasoning", "Few-shot: provide examples", "Structure: clear instructions"]
+      },
+      {
+        name: "Agentforce",
+        items: ["Agents: autonomous AI assistants", "Topics: agent capabilities", "Actions: what agent can do", "RAG: Retrieval-Augmented Generation"]
+      }
+    ]
+  }
+];
+
+// Keyword aliases for auto-linking
+const ALIASES = {
+  basics: ["salesforce", "multitenant", "iaas", "paas", "saas", "edition", "sandbox", "order of execution", "cloud", "import wizard", "data loader", "defer"],
+  datamodel: ["object", "field", "lookup", "master-detail", "relationship", "record type", "page layout", "validation rule", "custom metadata", "cmt", "big object", "formula", "roll-up"],
+  soql: ["soql", "query", "aggregate", "group by", "having", "bind variable", "injection", "security_enforced", "optimization", "index", "selectivity"],
+  apex: ["apex", "trigger", "batch", "queueable", "future", "scheduled", "governor limits", "soql", "dml", "cpu", "heap", "testing", "with sharing", "without sharing"],
+  lwc: ["lwc", "lightning web component", "wire", "api", "lwc service", "lds", "lightning data service", "lms", "lightning message service", "javascript"],
+  security: ["security", "sharing", "owd", "role hierarchy", "permission set", "profile", "fls", "crud", "record access", "apex sharing"],
+  flow: ["flow", "screen flow", "record-triggered", "before save", "after save", "scheduled flow", "subflow", "fault path"],
+  integrations: ["integration", "rest", "soap", "bulk api", "streaming", "platform event", "cdc", "named credential", "connected app", "middleware", "callout"],
+  javascript: ["javascript", "js", "promise", "async", "await", "closure", "this", "arrow function", "destructuring", "spread"],
+  git: ["git", "branch", "merge", "rebase", "commit", "pull", "push", "conflict", "gitignore"],
+  processes: ["scrum", "agile", "kanban", "sprint", "dod", "dor", "code review", "ci/cd", "incident", "rca"],
+  limits: ["limits", "governor limits", "soql limit", "dml limit", "cpu limit", "heap limit", "callout limit", "email limit", "batch limit"],
+  sosl: ["sosl", "find", "returning", "text search"],
+  setup: ["setup", "user", "queue", "public group", "audit trail", "login", "session"],
+  aura: ["aura", "aura component", "lightning component", "aura attribute", "auraenabled"],
+  visualforce: ["visualforce", "vf", "view state", "standard controller", "custom controller"],
+  ai: ["ai", "einstein", "gpt", "agentforce", "prompt", "llm", "copilot"]
+};
+
+// Build edges based on content cross-references
+function buildEdges() {
+  const edges = [];
+  const added = new Set();
+
+  TOPICS.forEach(topic => {
+    if (topic.category === "placeholder") return;
+
+    // Build content string for keyword matching
+    const content = [
+      topic.label,
+      topic.subtopics.map(s => [s.name, s.items, s.tips, s.questions].flat()).flat()
+    ].flat().join(' ').toLowerCase();
+
+    TOPICS.forEach(other => {
+      if (other.id === topic.id || other.category === "placeholder") return;
+
+      const key = [topic.id, other.id].sort().join('-');
+      if (added.has(key)) return;
+
+      // Check if aliases exist in content
+      const aliases = ALIASES[other.id] || [];
+      const matchCount = aliases.filter(a => content.includes(a.toLowerCase())).length;
+
+      if (matchCount > 0) {
+        edges.push({
+          source: topic.id,
+          target: other.id,
+          weight: matchCount
+        });
+        added.add(key);
+      }
+    });
+  });
+
+  return edges;
+}
+
+// Build HTML content for topic panel with card-based layout and flip cards for limits
+// SECURITY: Uses DOM manipulation instead of innerHTML to prevent XSS
+function buildContent(topic) {
+  if (!topic.subtopics || topic.subtopics.length === 0) {
+    const container = document.createElement('div');
+    container.style.cssText = 'padding:60px 24px;text-align:center';
+
+    const title = document.createElement('div');
+    title.style.cssText = 'font-size:0.82rem;font-weight:600;color:var(--text-2);margin-bottom:8px';
+    title.textContent = topic.label;
+
+    const subtitle = document.createElement('div');
+    subtitle.style.cssText = 'font-size:0.7rem;color:var(--text-3);font-family:"IBM Plex Mono",monospace';
+    subtitle.textContent = 'coming soon';
+
+    container.appendChild(title);
+    container.appendChild(subtitle);
+    return container;
+  }
+
+  const container = document.createElement('div');
+
+  // Group content by sections
+  topic.subtopics.forEach((sub, idx) => {
+    // Create section header
+    const sectionHeader = document.createElement('div');
+    sectionHeader.className = 'section-title';
+    sectionHeader.style.cssText = 'font-size:11px;font-weight:500;color:var(--text-3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;margin-top:16px';
+    if (idx === 0) sectionHeader.style.marginTop = '0';
+    sectionHeader.textContent = sub.name;
+    container.appendChild(sectionHeader);
+
+    // Check if this is a limits section (has limits array) - create flip cards
+    if (sub.limits && sub.limits.length > 0) {
+      const grid = document.createElement('div');
+      grid.className = 'limits-grid';
+
+      sub.limits.forEach((limit, i) => {
+        const cardId = `card-${topic.id}-${idx}-${i}`;
+        const badgeClass = limit.badge ? `b-${limit.badge}` : 'b-default';
+        const category = limit.category || sub.name;
+
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.id = cardId;
+
+        const cardInner = document.createElement('div');
+        cardInner.className = 'card-inner';
+
+        // Front of card
+        const front = document.createElement('div');
+        front.className = 'front';
+
+        const badge = document.createElement('span');
+        badge.className = `badge ${badgeClass}`;
+        badge.textContent = category;
+
+        front.appendChild(badge);
+
+        const num = document.createElement('div');
+        num.className = 'num';
+        num.textContent = limit.num;
+        front.appendChild(num);
+
+        if (limit.sub) {
+          const numSub = document.createElement('div');
+          numSub.className = 'num-sub';
+          numSub.textContent = limit.sub;
+          front.appendChild(numSub);
+        }
+
+        const label = document.createElement('div');
+        label.className = 'label';
+        label.textContent = limit.label;
+        front.appendChild(label);
+
+        const hint = document.createElement('span');
+        hint.className = 'flip-hint';
+        hint.textContent = 'нажми ↩';
+        front.appendChild(hint);
+
+        // Back of card
+        const back = document.createElement('div');
+        back.className = 'back';
+
+        const backTitle = document.createElement('div');
+        backTitle.className = 'back-title';
+        backTitle.textContent = `${limit.num}${limit.sub ? ' (' + limit.sub + ')' : ''} — ${limit.label}`;
+
+        const backDesc = document.createElement('div');
+        backDesc.className = 'back-desc';
+        backDesc.textContent = limit.desc;
+
+        back.appendChild(backTitle);
+        back.appendChild(backDesc);
+
+        cardInner.appendChild(front);
+        cardInner.appendChild(back);
+        card.appendChild(cardInner);
+
+        // Add click handler for flip
+        card.onclick = function() { this.classList.toggle('flipped'); };
+
+        grid.appendChild(card);
+      });
+
+      container.appendChild(grid);
+    }
+
+    // Create flip cards for items
+    if (sub.items && sub.items.length) {
+      const grid = document.createElement('div');
+      grid.className = 'limits-grid';
+      grid.style.cssText = 'margin: 0 0 12px 0';
+
+      sub.items.forEach((item, i) => {
+        const cardId = `card-${topic.id}-${idx}-${i}`;
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.id = cardId;
+
+        const cardInner = document.createElement('div');
+        cardInner.className = 'card-inner';
+
+        // Front - item text
+        const front = document.createElement('div');
+        front.className = 'front';
+        front.style.cssText = 'justify-content:center;align-items:flex-start;text-align:left';
+
+        const itemLabel = document.createElement('div');
+        itemLabel.style.cssText = 'font-size:12px;color:var(--text);line-height:1.4;overflow:hidden';
+        itemLabel.innerHTML = item;
+        front.appendChild(itemLabel);
+
+        const hint = document.createElement('span');
+        hint.className = 'flip-hint';
+        hint.textContent = 'нажми ↩';
+        front.appendChild(hint);
+
+        // Back - context + item detail
+        const back = document.createElement('div');
+        back.className = 'back';
+        back.style.cssText = 'align-items:flex-start;text-align:left';
+
+        const backBadge = document.createElement('span');
+        backBadge.className = 'badge b-default';
+        backBadge.textContent = sub.name.replace(/^[\s\S]*?[▸]\s*/, '').replace(/^[^\w]*/, '');
+        back.appendChild(backBadge);
+
+        const backDesc = document.createElement('div');
+        backDesc.className = 'back-desc';
+        backDesc.style.cssText = 'margin-top:8px';
+        backDesc.innerHTML = item;
+        back.appendChild(backDesc);
+
+        if (sub.tips && sub.tips.length) {
+          sub.tips.forEach(t => {
+            const tipEl = document.createElement('div');
+            tipEl.style.cssText = 'font-size:10px;color:var(--text-2);margin-top:6px;padding-top:6px;border-top:1px solid var(--border)';
+            tipEl.textContent = '💡 ' + t;
+            back.appendChild(tipEl);
+          });
+        }
+
+        cardInner.appendChild(front);
+        cardInner.appendChild(back);
+        card.appendChild(cardInner);
+        card.onclick = function() { this.classList.toggle('flipped'); };
+
+        grid.appendChild(card);
+      });
+
+      container.appendChild(grid);
+    }
+
+    // Create expandable section for code, questions, examples
+    const hasExtraContent = sub.code || (sub.questions && sub.questions.length) || (sub.examples && sub.examples.length);
+
+    if (hasExtraContent) {
+      const infoSection = document.createElement('div');
+      infoSection.className = 'info-section';
+
+      const infoHeader = document.createElement('div');
+      infoHeader.className = 'info-section-header';
+      infoHeader.style.cssText = 'background:linear-gradient(135deg, var(--border-strong) 0%, var(--border) 100%);padding:10px 14px;font-weight:600;font-size:11px;color:var(--text);cursor:pointer;user-select:none;display:flex;justify-content:space-between;align-items:center;transition:all 0.2s ease';
+
+      const headerTitle = document.createElement('span');
+      headerTitle.textContent = sub.name + ' Details';
+
+      const toggle = document.createElement('span');
+      toggle.className = 'section-toggle';
+      toggle.textContent = '▼';
+      toggle.style.cssText = 'font-size:14px;transition:transform 0.3s ease;color:var(--text-3)';
+
+      infoHeader.appendChild(headerTitle);
+      infoHeader.appendChild(toggle);
+
+      const infoContent = document.createElement('div');
+      infoContent.className = 'info-section-content';
+
+      const infoBody = document.createElement('div');
+      infoBody.className = 'info-section-body';
+      infoBody.style.cssText = 'padding:12px 14px';
+
+      if (sub.code) {
+        const codeBlock = document.createElement('div');
+        codeBlock.className = 'code-block';
+        codeBlock.textContent = sub.code;
+        infoBody.appendChild(codeBlock);
+      }
+
+      if (sub.questions && sub.questions.length) {
+        const infoTitle = document.createElement('div');
+        infoTitle.className = 'info-title';
+        infoTitle.textContent = '❓ Interview Questions';
+        infoBody.appendChild(infoTitle);
+
+        const list = document.createElement('ul');
+        list.className = 'info-list';
+        list.style.cssText = 'list-style:none;padding:0;margin:4px 0';
+
+        sub.questions.forEach(q => {
+          const li = document.createElement('li');
+          li.style.cssText = 'padding:3px 0';
+          li.textContent = q;
+          list.appendChild(li);
+        });
+
+        infoBody.appendChild(list);
+      }
+
+      if (sub.examples && sub.examples.length) {
+        sub.examples.forEach(ex => {
+          const exampleBox = document.createElement('div');
+          exampleBox.className = 'example-box';
+
+          const strong = document.createElement('strong');
+          strong.textContent = 'Example: ';
+
+          exampleBox.appendChild(strong);
+          exampleBox.appendChild(document.createTextNode(ex));
+          infoBody.appendChild(exampleBox);
+        });
+      }
+
+      infoContent.appendChild(infoBody);
+      infoSection.appendChild(infoHeader);
+      infoSection.appendChild(infoContent);
+      container.appendChild(infoSection);
+
+      infoHeader.addEventListener('click', () => {
+        infoSection.classList.toggle('expanded');
+        infoHeader.setAttribute('aria-expanded', infoSection.classList.contains('expanded'));
+      });
+    }
+  });
+
+  // Add related topics
+  const related = buildEdges()
+    .filter(e => e.source === topic.id || e.target === topic.id)
+    .map(e => e.source === topic.id ? e.target : e.source);
+
+  if (related.length > 0) {
+    const sectionHeader = document.createElement('div');
+    sectionHeader.className = 'section-title';
+    sectionHeader.style.cssText = 'font-size:11px;font-weight:500;color:var(--text-3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;margin-top:16px';
+    sectionHeader.textContent = 'Related Topics';
+    container.appendChild(sectionHeader);
+
+    const infoSection = document.createElement('div');
+    infoSection.className = 'info-section expanded';
+
+    const infoHeader = document.createElement('div');
+    infoHeader.className = 'info-section-header';
+    infoHeader.style.cssText = 'background:linear-gradient(135deg, var(--border-strong) 0%, var(--border) 100%);padding:10px 14px;font-weight:600;font-size:11px;color:var(--text);cursor:pointer;user-select:none;display:flex;justify-content:space-between;align-items:center;transition:all 0.2s ease';
+
+    const headerTitle = document.createElement('span');
+    headerTitle.textContent = '📎 Related Topics';
+
+    const toggle = document.createElement('span');
+    toggle.className = 'section-toggle';
+    toggle.textContent = '▼';
+    toggle.style.cssText = 'font-size:14px;transition:transform 0.3s ease;color:var(--text-3)';
+
+    infoHeader.appendChild(headerTitle);
+    infoHeader.appendChild(toggle);
+
+    const infoContent = document.createElement('div');
+    infoContent.className = 'info-section-content';
+
+    const infoBody = document.createElement('div');
+    infoBody.className = 'info-section-body';
+    infoBody.style.cssText = 'padding:12px 14px';
+
+    const chips = document.createElement('div');
+    chips.className = 'related-chips';
+    chips.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px';
+
+    related.forEach(rid => {
+      const rt = TOPICS.find(t => t.id === rid);
+      if (rt) {
+        const chip = document.createElement('span');
+        chip.className = 'related-chip';
+        chip.style.cssText = 'display:inline-block;padding:6px 12px;border-radius:16px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;font-size:11px;font-weight:500;transition:all 0.2s ease';
+        chip.textContent = rt.label;
+        chip.onclick = () => selectTopic(rid);
+        chip.onkeydown = (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            selectTopic(rid);
+          }
+        };
+        chip.onmouseover = () => chip.style.background = 'var(--accent-soft)';
+        chip.onmouseout = () => chip.style.background = 'var(--surface)';
+        chip.setAttribute('role', 'button');
+        chip.setAttribute('tabindex', '0');
+        chips.appendChild(chip);
+      }
+    });
+
+    infoBody.appendChild(chips);
+    infoContent.appendChild(infoBody);
+    infoSection.appendChild(infoHeader);
+    infoSection.appendChild(infoContent);
+    container.appendChild(infoSection);
+
+    // Toggle functionality
+    infoHeader.addEventListener('click', () => {
+      infoSection.classList.toggle('expanded');
+    });
+  }
+
+  return container;
+}
+
+// ── D3 GRAPH ─────────────────────────────────────────────────────────────────
+const edges = buildEdges();
+const nodes = TOPICS.map(t => ({...t}));
+const isMobile = () => window.innerWidth <= 768;
+const W = () => document.getElementById('graph-container').offsetWidth;
+const H = () => document.getElementById('graph-container').offsetHeight;
+let selectedId = null;
+
+const svg = d3.select("#graph");
+const g = svg.append("g");
+const zoom = d3.zoom()
+  .scaleExtent([0.2, 3])
+  .on("zoom", e => g.attr("transform", e.transform));
+svg.call(zoom).on("dblclick.zoom", null);
+
+const simulation = d3.forceSimulation(nodes)
+  .force("link", d3.forceLink(edges).id(d => d.id)
+    .distance(d => {
+      const minDim = Math.min(W(), H());
+      const isDev = d.source.category === "dev" || d.target.category === "dev";
+      const basePct = isDev ? 0.18 : 0.22;
+      return minDim * basePct;
+    })
+    .strength(0.45))
+  .force("charge", d3.forceManyBody()
+    .strength(d => {
+      const minDim = Math.min(W(), H());
+      return -minDim * 0.65;
+    }))
+  .force("center", d3.forceCenter(W() / 2, H() / 2))
+  .force("collision", d3.forceCollide(d => d.size + Math.min(W(), H()) * 0.04))
+  .alpha(1).alphaDecay(0.018);
+
+const link = g.append("g").selectAll("line")
+  .data(edges)
+  .join("line")
+  .attr("class", "link");
+
+const nodeGroup = g.append("g").selectAll(".node-group")
+  .data(nodes)
+  .join("g")
+  .attr("class", "node-group")
+  .attr("role", "button")
+  .attr("tabindex", "0")
+  .attr("aria-label", d => `${d.label} (${d.abbr}) - ${d.subtopics?.length || 0} sections`)
+  .call(d3.drag()
+    .on("start", (e, d) => {
+      if (!e.active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    })
+    .on("drag", (e, d) => {
+      d.fx = e.x;
+      d.fy = e.y;
+    })
+    .on("end", (e, d) => {
+      if (!e.active) simulation.alphaTarget(0);
+      d.fx = null;
+      d.fy = null;
+    })
+  );
+
+nodeGroup.append("circle")
+  .attr("class", d => "node-bg" + (d.category === "placeholder" ? " placeholder" : ""))
+  .attr("data-topic", d => d.id)
+  .attr("r", d => d.size);
+
+const abbrTexts = nodeGroup.append("text")
+  .attr("class", d => "node-abbr" + (d.category === "placeholder" ? " placeholder" : ""))
+  .attr("data-topic", d => d.id)
+  .attr("text-anchor", "middle")
+  .attr("dominant-baseline", "central")
+  .attr("y", d => d.subtopics && d.subtopics.length ? -4 : 0)
+  .text(d => d.abbr);
+
+const labelTexts = nodeGroup.append("text")
+  .attr("class", d => "node-label" + (d.category === "placeholder" ? " placeholder" : ""))
+  .attr("text-anchor", "middle")
+  .attr("y", d => d.size * 0.55)
+  .text(d => d.label);
+
+function updateNodeColors() {
+  // Colors are now handled by CSS via data-topic attributes
+}
+
+updateNodeColors();
+
+nodeGroup
+  .on("click", (e, d) => {
+    e.stopPropagation();
+    selectTopic(d.id);
+  })
+  .on("keydown", (e, d) => {
+    // Keyboard navigation: Enter or Space to activate
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      e.stopPropagation();
+      selectTopic(d.id);
+    }
+    // Arrow keys for navigation could be added here
+  })
+  .on("mouseenter", (e, d) => {
+    const tip = document.getElementById("tooltip");
+    const sectionCount = d.subtopics ? d.subtopics.length : 0;
+    tip.textContent = d.label + (d.category === "placeholder" ? " · coming soon" : ` · ${sectionCount} sections`);
+    tip.style.opacity = "1";
+    tip.setAttribute('aria-hidden', 'false');
+  })
+  .on("mousemove", e => {
+    const tip = document.getElementById("tooltip");
+    tip.style.left = (e.clientX + 14) + "px";
+    tip.style.top = (e.clientY - 8) + "px";
+  })
+  .on("mouseleave", () => {
+    const tip = document.getElementById("tooltip");
+    tip.style.opacity = "0";
+    tip.setAttribute('aria-hidden', 'true');
+  })
+  .on("focus", function(e, d) {
+    // Add visual focus indicator
+    d3.select(this).select(".node-bg").attr("stroke-width", 2.5);
+  })
+  .on("blur", function(e, d) {
+    // Remove visual focus indicator
+    d3.select(this).select(".node-bg").attr("stroke-width", 0.8);
+  });
+
+svg.on("click", () => closeTopic());
+
+simulation.on("tick", () => {
+  link
+    .attr("x1", d => d.source.x)
+    .attr("y1", d => d.source.y)
+    .attr("x2", d => d.target.x)
+    .attr("y2", d => d.target.y);
+
+  nodeGroup.attr("transform", d => `translate(${d.x},${d.y})`);
+});
+
+// Performance: Stop simulation when alpha is very low
+simulation.on("end", () => {
+  // Simulation has stabilized
+  console.debug("Force simulation stabilized");
+});
+
+// ── TOPIC SELECTION ───────────────────────────────────────────────────────────
+function selectTopic(id) {
+  selectedId = id;
+  const topic = TOPICS.find(t => t.id === id);
+  if (!topic) return;
+
+  const content = buildContent(topic);
+
+  // Update node/link styles
+  nodeGroup.selectAll("circle.node-bg").classed("active", d => d.id === id);
+  nodeGroup.selectAll("text.node-abbr").classed("active", d => d.id === id);
+  link.classed("active", d => d.source.id === id || d.target.id === id);
+
+  // Update panel
+  if (isMobile()) {
+    const sheetTitle = document.getElementById("sheet-title");
+    const sheetBody = document.getElementById("sheet-body");
+    const sheet = document.getElementById("mobile-sheet");
+
+    sheetTitle.textContent = topic.label;
+    sheetBody.innerHTML = '';
+    sheetBody.appendChild(content);
+    sheet.classList.add("open");
+    sheet.setAttribute('aria-hidden', 'false');
+
+    // Focus management
+    setTimeout(() => sheetBody.focus(), 100);
+  } else {
+    const panelTitle = document.getElementById("panel-title");
+    const panelBody = document.getElementById("panel-body");
+    const panel = document.getElementById("content-panel");
+
+    panelTitle.textContent = topic.label;
+    panelBody.innerHTML = '';
+    panelBody.appendChild(content);
+    panel.classList.add("open");
+    panel.setAttribute('aria-hidden', 'false');
+    document.getElementById("graph-container").classList.add("panel-open");
+
+    // Resize simulation after panel animation completes
+    setTimeout(() => {
+      const container = document.getElementById('graph-container');
+      simulation.force("center", d3.forceCenter(container.offsetWidth / 2, container.offsetHeight / 2))
+        .alpha(0.3)
+        .restart();
+    }, 350);
+
+    // Focus management
+    setTimeout(() => panelBody.focus(), 100);
+  }
+
+  // Update hash
+  window.location.hash = id;
+}
+
+function closeTopic() {
+  selectedId = null;
+  nodeGroup.selectAll("circle.node-bg").classed("active", false);
+  nodeGroup.selectAll("text.node-abbr").classed("active", false);
+  link.classed("active", false);
+
+  const panel = document.getElementById("content-panel");
+  const sheet = document.getElementById("mobile-sheet");
+
+  panel.classList.remove("open");
+  panel.setAttribute('aria-hidden', 'true');
+  document.getElementById("graph-container").classList.remove("panel-open");
+
+  sheet.classList.remove("open");
+  sheet.setAttribute('aria-hidden', 'true');
+
+  // Resize simulation after panel animation completes
+  setTimeout(() => {
+    const container = document.getElementById('graph-container');
+    simulation.force("center", d3.forceCenter(container.offsetWidth / 2, container.offsetHeight / 2))
+      .alpha(0.3)
+      .restart();
+  }, 350);
+
+  window.location.hash = "";
+}
+
+// Event listeners
+document.getElementById("panel-close").addEventListener("click", e => {
+  e.stopPropagation();
+  closeTopic();
+});
+
+document.getElementById("sheet-close").addEventListener("click", e => {
+  e.stopPropagation();
+  closeTopic();
+});
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeTopic();
+});
+
+// RESIZE HANDLE FUNCTIONALITY
+const resizeHandle = document.getElementById("resize-handle");
+const contentPanel = document.getElementById("content-panel");
+const graphContainer = document.getElementById("graph-container");
+let isResizing = false;
+let startX = 0;
+let startWidth = 0;
+
+resizeHandle.addEventListener("mousedown", (e) => {
+  isResizing = true;
+  startX = e.clientX;
+  startWidth = contentPanel.offsetWidth;
+  resizeHandle.classList.add("active");
+  document.body.style.cursor = "ew-resize";
+  document.body.style.userSelect = "none";
+  e.preventDefault();
+});
+
+document.addEventListener("mousemove", (e) => {
+  if (!isResizing) return;
+
+  const deltaX = startX - e.clientX;
+  const newWidth = Math.max(300, Math.min(window.innerWidth * 0.95, startWidth + deltaX));
+  const widthPercent = (newWidth / window.innerWidth) * 100;
+
+  contentPanel.style.width = widthPercent + "%";
+  graphContainer.style.width = (100 - widthPercent) + "%";
+
+  // Resize simulation after a short delay
+  clearTimeout(window.resizeSimulationTimeout);
+  window.resizeSimulationTimeout = setTimeout(() => {
+    simulation.force("center", d3.forceCenter(graphContainer.offsetWidth / 2, graphContainer.offsetHeight / 2))
+      .alpha(0.3)
+      .restart();
+  }, 150);
+});
+
+document.addEventListener("mouseup", () => {
+  if (isResizing) {
+    isResizing = false;
+    resizeHandle.classList.remove("active");
+    document.body.style.cursor = "";
+    document.body.style.userSelect = "";
+  }
+});
+
+// Touch support for mobile
+resizeHandle.addEventListener("touchstart", (e) => {
+  isResizing = true;
+  startX = e.touches[0].clientX;
+  startWidth = contentPanel.offsetWidth;
+  resizeHandle.classList.add("active");
+  e.preventDefault();
+});
+
+document.addEventListener("touchmove", (e) => {
+  if (!isResizing) return;
+
+  const deltaX = startX - e.touches[0].clientX;
+  const newWidth = Math.max(300, Math.min(window.innerWidth * 0.95, startWidth + deltaX));
+  const widthPercent = (newWidth / window.innerWidth) * 100;
+
+  contentPanel.style.width = widthPercent + "%";
+  graphContainer.style.width = (100 - widthPercent) + "%";
+
+  clearTimeout(window.resizeSimulationTimeout);
+  window.resizeSimulationTimeout = setTimeout(() => {
+    simulation.force("center", d3.forceCenter(graphContainer.offsetWidth / 2, graphContainer.offsetHeight / 2))
+      .alpha(0.3)
+      .restart();
+  }, 150);
+});
+
+document.addEventListener("touchend", () => {
+  if (isResizing) {
+    isResizing = false;
+    resizeHandle.classList.remove("active");
+  }
+});
+
+document.getElementById("node-count").textContent =
+  `${TOPICS.filter(t => t.category !== "placeholder").length}/${TOPICS.length} topics`;
+
+// Debounced resize handler for performance
+window.addEventListener("resize", debounce(() => {
+  simulation.force("center", d3.forceCenter(W() / 2, H() / 2))
+    .alpha(0.3)
+    .restart();
+}, 250));
+
+// Handle hash-based routing
+function handleHash() {
+  const hash = window.location.hash.slice(1);
+  if (hash && TOPICS.find(t => t.id === hash)) {
+    selectTopic(hash);
+  }
+}
+
+window.addEventListener("hashchange", handleHash);
+
+// Build menu
+buildMenu();
+
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeApp);
+} else {
+  initializeApp();
+}
+
+function initializeApp() {
+  // Initial positioning
+  requestAnimationFrame(() => {
+    handleHash();
+    svg.call(zoom.transform,
+      d3.zoomIdentity
+        .translate(W() * 0.05, H() * 0.05)
+        .scale(0.90)
+    );
+  });
+}
+</script>
+</body>
+</html>

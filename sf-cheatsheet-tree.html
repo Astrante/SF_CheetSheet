@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salesforce Interview Cheatsheet - Tree View</title>
+    <meta name="theme-color" content="#1f1f1e">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--text);
+            color: var(--bg);
+            padding: 8px 16px;
+            text-decoration: none;
+            z-index: 1000;
+            border-radius: 0 0 4px 0
+        }
+
+        .skip-link:focus {
+            top: 0
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--text);
+            outline-offset: 2px
+        }
+
+        @media(prefers-reduced-motion:reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: .01ms !important
+            }
+        }
+
+        [data-theme="light"] {
+            --bg: #fafafa;
+            --surface: #fff;
+            --border: #e5e5e5;
+            --border-strong: #d4d4d4;
+            --text: #171717;
+            --text-2: #737373;
+            --text-3: #a3a3a3;
+            --accent-soft: rgba(0, 0, 0, .04);
+            --code-bg: #fafafa;
+            --code-border: #e5e5e5;
+            --toggle-bg: #f5f5f5;
+            --toggle-text: #737373;
+            --color-basics: #8B5CF6;
+            --color-datamodel: #3B82F6;
+            --color-soql: #0EA5E9;
+            --color-apex: #F97316;
+            --color-lwc: #EF4444;
+            --color-security: #22C55E;
+            --color-flow: #A855F7;
+            --color-integrations: #EAB308;
+            --color-javascript: #EC4899;
+            --color-git: #14B8A6;
+            --color-processes: #6B7280;
+            --color-limits: #1E40AF;
+            --color-sosl: #06B6D4;
+            --color-setup: #64748B;
+            --color-aura: #8B5CF6;
+            --color-visualforce: #6366F1;
+            --color-ai: #10B981
+        }
+
+        [data-theme="dark"] {
+            --bg: #1f1f1e;
+            --surface: #2a2a29;
+            --border: #3a3a38;
+            --border-strong: #525250;
+            --text: #fafafa;
+            --text-2: #a3a3a3;
+            --text-3: #737373;
+            --accent-soft: rgba(255, 255, 255, .04);
+            --code-bg: #2a2a29;
+            --code-border: #3a3a38;
+            --toggle-bg: #2a2a29;
+            --toggle-text: #a3a3a3;
+            --color-basics: #A78BFA;
+            --color-datamodel: #60A5FA;
+            --color-soql: #38BDF8;
+            --color-apex: #FB923C;
+            --color-lwc: #F87171;
+            --color-security: #4ADE80;
+            --color-flow: #C084FC;
+            --color-integrations: #FACC15;
+            --color-javascript: #F472B6;
+            --color-git: #2DD4BF;
+            --color-processes: #9CA3AF;
+            --color-limits: #3B82F6;
+            --color-sosl: #22D3EE;
+            --color-setup: #94A3B8;
+            --color-aura: #A78BFA;
+            --color-visualforce: #818CF8;
+            --color-ai: #34D399
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            overflow-x: clip;
+            min-height: 100vh;
+            transition: background .2s, color .2s
+        }
+
+        #app {
+            position: relative;
+            width: 100%;
+            min-height: 100vh
+        }
+
+        #header {
+            position: sticky;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: clamp(.75rem, 1.5vw, 1rem) clamp(1rem, 2vw, 1.5rem);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(to bottom, var(--bg), transparent);
+            pointer-events: none
+        }
+
+        #nav-toggle {
+            width: clamp(2rem, 3vw, 2.125rem);
+            height: clamp(2rem, 3vw, 2.125rem);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--toggle-bg);
+            color: var(--toggle-text);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            margin-right: clamp(.5rem, 1vw, .875rem);
+        }
+
+        #nav-toggle:hover {
+            border-color: var(--border-strong);
+            background: var(--accent-soft)
+        }
+
+        #nav-panel {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: clamp(280px, 25vw, 400px);
+            height: 100vh;
+            background: var(--panel-bg);
+            border-right: 1px solid var(--border);
+            z-index: 200;
+            transition: left 0.3s ease;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 6px 0 24px rgba(0, 0, 0, 0.15);
+        }
+
+        #nav-panel.open {
+            left: 0;
+        }
+
+        #nav-header {
+            padding: clamp(.75rem, 1.5vw, 1rem) clamp(1rem, 2vw, 1.5rem);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+            background: var(--surface);
+        }
+
+        #nav-title {
+            font-weight: 600;
+            font-size: clamp(.75rem, 1.2vw, .875rem);
+            color: var(--text);
+        }
+
+        #nav-close {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-3);
+            cursor: pointer;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        #nav-close:hover {
+            border-color: var(--border-strong);
+            color: var(--text);
+        }
+
+        #nav-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: clamp(.5rem, 1vw, .75rem);
+        }
+
+        #nav-tree {
+            user-select: none;
+        }
+
+        .nav-node {
+            margin-bottom: 2px;
+        }
+
+        .nav-node-header {
+            display: flex;
+            align-items: center;
+            gap: clamp(.375rem, .75vw, .5rem);
+            padding: clamp(.5rem, 1vw, .625rem);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .nav-node-header:hover {
+            background: var(--accent-soft);
+        }
+
+        .nav-node-header.active {
+            background: var(--accent-soft);
+        }
+
+        .nav-node-header.active .nav-node-label {
+            font-weight: 600;
+        }
+
+        .nav-node-toggle {
+            width: clamp(1rem, 1.5vw, 1.25rem);
+            height: clamp(1rem, 1.5vw, 1.25rem);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+            flex-shrink: 0;
+            font-size: clamp(.7rem, 1vw, .75rem);
+            color: var(--text-3);
+        }
+
+        .nav-node-toggle.expanded {
+            transform: rotate(90deg);
+        }
+
+        .nav-node-toggle.leaf {
+            visibility: hidden;
+        }
+
+        .nav-node-dot {
+            width: clamp(.5rem, .75vw, .625rem);
+            height: clamp(.5rem, .75vw, .625rem);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .nav-node-label {
+            flex: 1;
+            font-size: clamp(.7rem, 1vw, .8rem);
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .nav-node-children {
+            margin-left: clamp(1rem, 1.5vw, 1.25rem);
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .nav-node-children.expanded {
+            max-height: 2000px;
+            transition: max-height 0.5s ease-in;
+        }
+
+        #breadcrumbs {
+            position: sticky;
+            top: 60px;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: clamp(.5rem, 1vw, .75rem) clamp(1rem, 2vw, 1.5rem);
+            display: flex;
+            align-items: center;
+            gap: clamp(.5rem, 1vw, .75rem);
+        }
+
+        .breadcrumb {
+            font-size: clamp(.6rem, .9vw, .7rem);
+            color: var(--text-3);
+            text-decoration: none;
+            transition: color 0.2s;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .breadcrumb:hover {
+            color: var(--text);
+        }
+
+        .breadcrumb.current {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .breadcrumb-separator {
+            color: var(--text-3);
+            font-size: clamp(.6rem, .9vw, .7rem);
+        }
+
+        #main-container {
+            display: flex;
+            min-height: calc(100vh - 60px);
+            transition: margin-left 0.3s ease;
+        }
+
+        #main-container.nav-open {
+            margin-left: clamp(280px, 25vw, 400px);
+        }
+
+        #header-left {
+            pointer-events: none
+        }
+
+        #header h1 {
+            font-weight: 700;
+            font-size: clamp(.875rem, 1.2vw, 1rem);
+            color: var(--text);
+            letter-spacing: -.02em
+        }
+
+        #header .sub {
+            font-size: clamp(.6rem, .8vw, .64rem);
+            color: var(--text-3);
+            margin-top: 3px;
+            font-family: 'IBM Plex Mono', monospace;
+            letter-spacing: .05em;
+            text-transform: uppercase
+        }
+
+        #header-right {
+            display: flex;
+            align-items: center;
+            gap: clamp(.5rem, 1vw, .875rem);
+            pointer-events: all
+        }
+
+        #theme-toggle {
+            width: clamp(2rem, 3vw, 2.125rem);
+            height: clamp(2rem, 3vw, 2.125rem);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--toggle-bg);
+            color: var(--toggle-text);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-family: 'IBM Plex Mono', monospace;
+            transition: all .2s;
+            flex-shrink: 0
+        }
+
+        #theme-toggle:hover {
+            border-color: var(--border-strong);
+            background: var(--accent-soft)
+        }
+
+        #main-container {
+            display: flex;
+            min-height: calc(100vh - 60px)
+        }
+
+        /* Navigation Panel Styles - Updated for new nav-panel */
+#nav-panel {
+            width: clamp(280px, 25vw, 400px);
+            min-width: 280px;
+            max-width: 400px;
+            border-right: 1px solid var(--border);
+            background: var(--surface);
+            overflow-y: auto;
+            flex-shrink: 0;
+            position: fixed;
+            top: 0;
+            left: -100%;
+            height: 100vh;
+            z-index: 200;
+            transition: left 0.3s ease;
+            box-shadow: 6px 0 24px rgba(0, 0, 0, 0.15);
+        }
+
+        #nav-panel.open {
+            left: 0;
+        }
+
+        /* Override some existing styles for proper layout */
+        #main-container {
+            display: flex;
+            min-height: calc(100vh - 60px);
+            transition: margin-left 0.3s ease;
+        }
+
+        #main-container.nav-open {
+            margin-left: clamp(280px, 25vw, 400px);
+        }
+
+        #tree-panel::-webkit-scrollbar {
+            width: 4px
+        }
+
+        #tree-panel::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px
+        }
+
+        #tree-header {
+            padding: clamp(.75rem, 1.5vw, 1rem) clamp(1rem, 2vw, 1.5rem);
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+            font-size: clamp(.75rem, 1vw, .875rem);
+            color: var(--text)
+        }
+
+        #tree-search {
+            padding: clamp(.5rem, 1vw, .75rem);
+            border-bottom: 1px solid var(--border)
+        }
+
+        #tree-search input {
+            width: 100%;
+            padding: clamp(.5rem, 1vw, .75rem);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg);
+            color: var(--text);
+            font-size: clamp(.7rem, 1vw, .8rem);
+            font-family: 'IBM Plex Sans', sans-serif
+        }
+
+        #tree-search input:focus {
+            outline: none;
+            border-color: var(--text)
+        }
+
+        #tree {
+            padding: clamp(.5rem, 1vw, .75rem)
+        }
+
+        .tree-node {
+            margin-bottom: clamp(.25rem, .5vw, .5rem)
+        }
+
+        .tree-node-header {
+            display: flex;
+            align-items: center;
+            gap: clamp(.375rem, .75vw, .5rem);
+            padding: clamp(.5rem, 1vw, .625rem);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background .2s;
+            user-select: none
+        }
+
+        .tree-node-header:hover {
+            background: var(--accent-soft)
+        }
+
+        .tree-node-header.active {
+            background: var(--accent-soft)
+        }
+
+        .tree-node-header.active .tree-node-label {
+            font-weight: 600
+        }
+
+        .tree-node-toggle {
+            width: clamp(1rem, 1.5vw, 1.25rem);
+            height: clamp(1rem, 1.5vw, 1.25rem);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform .2s;
+            flex-shrink: 0;
+            font-size: clamp(.7rem, 1vw, .75rem);
+            color: var(--text-3)
+        }
+
+        .tree-node-toggle.expanded {
+            transform: rotate(90deg)
+        }
+
+        .tree-node-toggle.leaf {
+            visibility: hidden
+        }
+
+        .tree-node-dot {
+            width: clamp(.5rem, .75vw, .625rem);
+            height: clamp(.5rem, .75vw, .625rem);
+            border-radius: 50%;
+            flex-shrink: 0
+        }
+
+        .tree-node-label {
+            flex: 1;
+            font-size: clamp(.7rem, 1vw, .8rem);
+            color: var(--text);
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis
+        }
+
+        .tree-node-children {
+            margin-left: clamp(1.25rem, 2vw, 1.5rem);
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height .3s ease-out
+        }
+
+        .tree-node-children.expanded {
+            max-height: 2000px;
+            transition: max-height .5s ease-in
+        }
+
+        .tree-node-dot[data-topic="basics"] {
+            background: var(--color-basics)
+        }
+
+        .tree-node-dot[data-topic="datamodel"] {
+            background: var(--color-datamodel)
+        }
+
+        .tree-node-dot[data-topic="soql"] {
+            background: var(--color-soql)
+        }
+
+        .tree-node-dot[data-topic="apex"] {
+            background: var(--color-apex)
+        }
+
+        .tree-node-dot[data-topic="lwc"] {
+            background: var(--color-lwc)
+        }
+
+        .tree-node-dot[data-topic="security"] {
+            background: var(--color-security)
+        }
+
+        .tree-node-dot[data-topic="flow"] {
+            background: var(--color-flow)
+        }
+
+        .tree-node-dot[data-topic="integrations"] {
+            background: var(--color-integrations)
+        }
+
+        .tree-node-dot[data-topic="javascript"] {
+            background: var(--color-javascript)
+        }
+
+        .tree-node-dot[data-topic="git"] {
+            background: var(--color-git)
+        }
+
+        .tree-node-dot[data-topic="processes"] {
+            background: var(--color-processes)
+        }
+
+        .tree-node-dot[data-topic="limits"] {
+            background: var(--color-limits)
+        }
+
+        .tree-node-dot[data-topic="sosl"] {
+            background: var(--color-sosl)
+        }
+
+        .tree-node-dot[data-topic="setup"] {
+            background: var(--color-setup)
+        }
+
+        .tree-node-dot[data-topic="aura"] {
+            background: var(--color-aura)
+        }
+
+        .tree-node-dot[data-topic="visualforce"] {
+            background: var(--color-visualforce)
+        }
+
+        .tree-node-dot[data-topic="ai"] {
+            background: var(--color-ai)
+        }
+
+        #content-panel {
+            flex: 1;
+            overflow-y: auto;
+            padding: clamp(1rem, 2vw, 1.5rem);
+            background: var(--bg)
+        }
+
+        #content-panel::-webkit-scrollbar {
+            width: 4px
+        }
+
+        #content-panel::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px
+        }
+
+        #panel-title {
+            font-size: clamp(1rem, 1.5vw, 1.25rem);
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+            letter-spacing: -.02em
+        }
+
+        .accordion {
+            margin-bottom: clamp(.75rem, 1.5vw, 1rem);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            background: var(--surface)
+        }
+
+        .accordion-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: clamp(.75rem, 1.5vw, 1rem) clamp(1rem, 2vw, 1.25rem);
+            background: linear-gradient(135deg, var(--border-strong) 0%, var(--border) 100%);
+            cursor: pointer;
+            user-select: none;
+            transition: all .2s
+        }
+
+        .accordion-header:hover {
+            background: var(--accent-soft)
+        }
+
+        .accordion-title {
+            font-weight: 600;
+            font-size: clamp(.75rem, 1.2vw, .875rem);
+            color: var(--text)
+        }
+
+        .accordion-toggle {
+            font-size: clamp(.875rem, 1.5vw, 1rem);
+            color: var(--text-3);
+            transition: transform .3s
+        }
+
+        .accordion.expanded .accordion-toggle {
+            transform: rotate(180deg)
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height .3s ease-out
+        }
+
+        .accordion.expanded .accordion-content {
+            max-height: 5000px;
+            transition: max-height .5s ease-in
+        }
+
+        .accordion-body {
+            padding: clamp(.75rem, 1.5vw, 1rem)
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+            gap: clamp(.5rem, 1vw, .75rem);
+            margin-bottom: clamp(.75rem, 1.5vw, 1rem)
+        }
+
+        .card {
+            perspective: 600px;
+            height: clamp(120px, 15vw, 150px);
+            cursor: pointer;
+            position: relative
+        }
+
+        .card.dragging {
+            opacity: .5;
+            transform: scale(1.02)
+        }
+
+        .card.drag-over {
+            border: 2px dashed var(--border-strong);
+            border-radius: 8px
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform .45s cubic-bezier(.4, 0, .2, 1);
+            transform-style: preserve-3d
+        }
+
+        .card.flipped .card-inner {
+            transform: rotateY(180deg)
+        }
+
+        .front,
+        .back {
+            position: absolute;
+            inset: 0;
+            border-radius: 8px;
+            border: .5px solid var(--border);
+            padding: clamp(.75rem, 1.5vw, 1rem);
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-family: 'IBM Plex Sans', sans-serif
+        }
+
+        .front {
+            background: var(--surface)
+        }
+
+        .back {
+            background: var(--code-bg);
+            transform: rotateY(180deg)
+        }
+
+        .card-label {
+            font-size: clamp(.7rem, 1.2vw, .8rem);
+            color: var(--text);
+            line-height: 1.4;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical
+        }
+
+        .flip-hint {
+            font-size: clamp(.6rem, 1vw, .625rem);
+            color: var(--text-3);
+            position: absolute;
+            bottom: clamp(.5rem, 1vw, .625rem);
+            right: clamp(.5rem, 1vw, .625rem);
+            opacity: .6
+        }
+
+        .back-title {
+            font-size: clamp(.7rem, 1.2vw, .8rem);
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: clamp(.5rem, 1vw, .625rem)
+        }
+
+        .back-desc {
+            font-size: clamp(.65rem, 1.1vw, .75rem);
+            color: var(--text-2);
+            line-height: 1.5
+        }
+
+        .tip-box {
+            background: rgba(251, 191, 36, .08);
+            border-left: 3px solid #fbbf24;
+            padding: clamp(.5rem, 1vw, .75rem);
+            margin: clamp(.5rem, 1vw, .75rem) 0;
+            font-size: clamp(.65rem, 1.1vw, .75rem);
+            line-height: 1.6;
+            color: var(--text-2);
+            border-radius: 0 4px 4px 0
+        }
+
+        .info-title {
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: clamp(.375rem, .75vw, .5rem);
+            font-size: clamp(.7rem, 1.2vw, .8rem)
+        }
+
+        .info-list {
+            list-style: none;
+            padding: 0;
+            margin: clamp(.25rem, .5vw, .375rem) 0
+        }
+
+        .info-list li {
+            padding: clamp(.25rem, .5vw, .375rem) 0;
+            padding-left: clamp(1rem, 1.5vw, 1.25rem);
+            position: relative;
+            font-size: clamp(.65rem, 1.1vw, .75rem);
+            color: var(--text-2);
+            line-height: 1.7
+        }
+
+        .info-list li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--border-strong);
+            font-weight: bold
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: clamp(2rem, 4vw, 3rem);
+            color: var(--text-3)
+        }
+
+        .empty-state-icon {
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: clamp(.75rem, 1.5vw, 1rem)
+        }
+
+        .empty-state-text {
+            font-size: clamp(.8rem, 1.2vw, .9rem)
+        }
+
+        @media(max-width:768px) {
+            #main-container {
+                flex-direction: column
+            }
+
+            #tree-panel {
+                width: 100%;
+                max-width: 100%;
+                max-height: 40vh;
+                border-right: none;
+                border-bottom: 1px solid var(--border)
+            }
+
+            #content-panel {
+                min-height: 60vh
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr
+            }
+        }
+
+        #content-panel {
+            --topic-color: var(--border-strong)
+        }
+
+        #content-panel .accordion-header {
+            border-left: 3px solid var(--topic-color)
+        }
+
+        #content-panel .card .front {
+            border-top: 2px solid var(--topic-color)
+        }
+
+        #content-panel .tip-box {
+            border-left-color: var(--topic-color);
+            background: color-mix(in srgb, var(--topic-color) 8%, transparent)
+        }
+
+        #content-panel .info-list li:before {
+            color: var(--topic-color)
+        }
+    </style>
+</head>
+
+<body>
+    <a href="#content-panel" class="skip-link">Skip to content</a>
+    <div id="app">
+        <header id="header" role="banner">
+            <div id="header-left">
+                <button id="menu-btn" type="button" aria-label="Open navigation menu">☰</button>
+                <h1>Salesforce Interview Cheatsheet</h1>
+                <div class="sub">Tree navigation · click to explore</div>
+            </div>
+            <div id="header-right"><button id="theme-toggle" onclick="toggleTheme()"
+                    aria-label="Toggle theme">◐</button></div>
+        </header>
+        <div id="main-container">
+            <nav id="nav-panel" role="navigation">
+            <!-- Navigation Panel -->
+            <header id="nav-header">
+                <button id="nav-toggle" type="button" aria-label="Toggle navigation">←</button>
+                <h2 id="nav-title">Salesforce Topics</h2>
+                <button id="nav-close" type="button" aria-label="Close navigation">✕</button>
+            </header>
+
+            <div id="nav-tree" role="tree" aria-label="Topic tree">
+                <!-- Tree Structure Will Be Generated Dynamically -->
+            </div>
+
+            <div id="breadcrumbs" role="navigation" aria-label="Breadcrumb navigation">
+                <!-- Breadcrumbs Will Be Generated Dynamically -->
+            </div>
+
+            <main id="main-container" role="main" aria-live="polite">
+                <!-- Content Panel Will Be Generated Dynamically -->
+            </main>
+        </nav>
+                <div id="tree-header">Topics</div>
+                <div id="tree-search"><input type="text" id="search-input" placeholder="Search topics..."
+                        aria-label="Search topics"></div>
+                <div id="tree" role="tree"></div>
+            </nav>
+            <main id="content-panel" aria-live="polite">
+                <div class="empty-state">
+                    <div class="empty-state-icon">🌳</div>
+                    <div class="empty-state-text">Select a topic from tree to explore</div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script>
+        'use strict';
+        function toggleTheme() { const h = document.documentElement; const n = h.dataset.theme === "light" ? "dark" : "light"; h.dataset.theme = n; localStorage.setItem("sfcs-theme", n) }
+        (function () { const s = localStorage.getItem("sfcs-theme") || (window.matchMedia("(prefers-color-scheme:dark)").matches ? "dark" : "light"); document.documentElement.dataset.theme = s })();
+
+        // Navigation functionality
+        function toggleNav() {
+            const panel = document.getElementById('nav-panel');
+            const mainContainer = document.getElementById('main-container');
+            panel.classList.toggle('open');
+            mainContainer.classList.toggle('nav-open');
+        }
+
+        function closeNav() {
+            const panel = document.getElementById('nav-panel');
+            const mainContainer = document.getElementById('main-container');
+            panel.classList.remove('open');
+            mainContainer.classList.remove('nav-open');
+        }
+
+        // Add event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            const navToggle = document.getElementById('nav-toggle');
+            const navClose = document.getElementById('nav-close');
+            
+            if (navToggle) navToggle.addEventListener('click', toggleNav);
+            if (navClose) navClose.addEventListener('click', closeNav);
+
+            // Close nav on escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeNav();
+                }
+            });
+        });
+
+        // Topic data (existing content)
+        const TOPICS = [
+            {
+                id: "basics", label: "Salesforce Basics", color: "basics", children: [
+                    { id: "basics-arch", label: "Multitenant Architecture", content: { items: ["Shared infrastructure, isolated tenant data", "IaaS: Infrastructure as a Service", "PaaS: Platform as a Service (Salesforce)", "SaaS: Software as a Service (end users)"], tips: ["Metadata-driven architecture: config, not code"], questions: ["Explain multitenancy", "IaaS vs PaaS vs SaaS?"] } },
+                    { id: "basics-editions", label: "Editions & Sandboxes", content: { items: ["Essentials, Professional, Enterprise, Unlimited", "Performance: unlimited sandbox & live agent", "Developer: dev & testing, no prod data", "Developer Pro: larger data limits", "Partial Copy: sampled prod data (1GB)", "Full: complete prod copy"], tips: ["Full sandbox for final UAT before deploy"], questions: ["When to use each sandbox type?"] } },
+                    { id: "basics-execution", label: "Order of Execution", content: { items: ["1. System validation rules", "2. Before triggers", "3. Custom validation rules", "4. Duplicate rules", "5. After triggers", "6. Assignment rules / auto-response", "7. Workflow rules", "8. Process Builder / Flow", "9. Roll-up summary fields", "10. Criteria-based sharing"], tips: ["Before triggers: can modify records before save", "After triggers: records have IDs, can do DML"], questions: ["Where do validation rules fire?", "Before vs After trigger?"] } },
+                    { id: "basics-clouds", label: "Cloud Products", content: { items: ["Sales Cloud: CRM, sales automation", "Service Cloud: customer service, support", "Marketing Cloud: marketing automation", "Commerce Cloud: e-commerce", "Experience Cloud: communities & portals", "Health Cloud: healthcare management", "Financial Services Cloud: financial CRM"], tips: ["Experience Cloud = formerly Communities"] } },
+                    { id: "basics-data", label: "Data Management", content: { items: ["Import Wizard: ≤50k records, simple", "Data Loader: any volume, complex", "Mass Transfer Records: change ownership", "Mass Delete Records: bulk cleanup", "Storage limits: file vs data storage"], tips: ["Use Data Loader with CLI for automation"] } },
+                    { id: "basics-defer", label: "Deferred Calculations", content: { items: ["Defer Sharing Calculations: batch sharing updates", "Defer Group Membership: batch group changes", "Improves bulk data load performance", "Recalculate when load completes"], tips: ["Enable for large data migrations"] } }
+                ]
+            },
+            {
+                id: "datamodel", label: "Data Model", color: "datamodel", children: [
+                    { id: "dm-objects", label: "Objects & Fields", content: { items: ["Standard objects: Account, Contact, Opportunity, Case, Lead (258+)", "Custom objects: __c suffix, max 500 fields per object", "Field types: Text, Number, Formula, Lookup, Master-Detail, Picklist", "External ID: unique, indexed, upsert key, integrates external data", "Formula fields: calculated values, cross-object references", "Roll-Up Summary: aggregate child data on parent (Master-Detail only)"], tips: ["Hit 500 field limit? Use External Objects, Big Objects, or refactor to Custom Metadata"], questions: ["What's the workaround for 500 field limit?", "External ID use cases?"] } },
+                    { id: "dm-relationships", label: "Relationships", content: { items: ["Lookup: loose coupling, nullable, optional parent relationship", "Master-Detail (MD): tight coupling, required parent, controls sharing", "MD benefits: cascade delete, roll-up summary fields, inherited sharing", "Junction object: many-to-many via 2 Master-Detail relationships", "External Lookup: connect to external data via Salesforce Connect"], tips: ["Master-Detail required on child, affects sharing and deletion"], questions: ["How to implement many-to-many relationship?", "Cascade delete gotchas?"] } },
+                    { id: "dm-recordtypes", label: "Record Types & Page Layouts", content: { items: ["Record Types: support different business processes", "Controls: picklist values, page layouts, business processes", "Page Layouts: field arrangement, buttons, links, related lists", "Dynamic Forms: field-level visibility without record types (LWC)", "Page Layout Assignment: by profile and record type combination"], tips: ["Dynamic Forms can reduce record type complexity"], questions: ["Record Type vs Dynamic Forms - when to use which?"] } },
+                    { id: "dm-validation", label: "Validation & Business Logic", content: { items: ["Validation Rules: prevent save on error conditions", "Field Dependencies: control picklist values based on another field", "Matching Rules: define duplicate record matching criteria", "Duplicate Rules: prevent or allow duplicates based on Matching Rules", "Limit: 100 validation rules per object"], tips: ["Use description field to document Validation Rule purpose"], questions: ["How to prevent duplicate records automatically?"] } },
+                    { id: "dm-cmt", label: "Custom Metadata Types", content: { items: ["Deployable metadata (like Custom Settings but better)", "Type-safe, can use in packaging, can migrate via change sets", "Features: field sets, relationships, validation rules", "Use cases: feature flags, configuration mappings, business rules", "Accessible via SOQL and Apex Metadata API"], tips: ["Prefer CMT over Custom Settings for new development"], questions: ["CMT vs Custom Settings - key differences?"] } },
+                    { id: "dm-quality", label: "Data Quality & Scale", content: { items: ["Validation Rules enforce data integrity", "Field Dependencies guide valid inputs", "Duplicate Rules with Matching Rules", "Indexes improve query performance", "Archive old data: Big Objects, external"], tips: ["Slow reports? Add custom index on filter field"], questions: ["Reports slow with millions of records?"] } }
+                ]
+            },
+            {
+                id: "soql", label: "SOQL", color: "soql", children: [
+                    { id: "soql-structure", label: "Basic Structure", content: { items: ["SELECT - Fields to retrieve (required)", "FROM - Object type (required)", "WHERE - Filter records (optional)", "ORDER BY - Sort results (optional)", "LIMIT n - Max records (optional, max 50k)", "OFFSET n - Skip records (optional, max 2000)"], tips: ["Use LIMIT to prevent governor limit issues"], questions: ["SOQL vs SQL key differences?"] } },
+                    { id: "soql-relationships", label: "Relationship Queries", content: { items: ["Child-to-Parent: Account.Name in query (up to 5 levels)", "Parent-to-Child: (SELECT field FROM Contacts)", "Cross-object: Account.Owner.CreatedBy.Name", "Nested query counts as 1 SOQL query, not 2"], tips: ["Cannot use OFFSET in parent query with subquery"], questions: ["How many levels deep can you query?"] } },
+                    { id: "soql-aggregates", label: "Aggregate Functions", content: { items: ["COUNT() / COUNT_DISTINCT()", "SUM() / AVG() / MIN() / MAX()", "GROUP BY for aggregation", "HAVING for filtering aggregates", "Returns AggregateResult objects"], tips: ["Cannot use OFFSET with aggregate queries"], questions: ["HAVING vs WHERE - when to use each?"] } },
+                    { id: "soql-injection", label: "SOQL Injection Defense", content: { items: ["Use bind variables :variable - prevents injection", "String.escapeSingleQuotes() for dynamic field names", "Never concatenate user input directly", "WITH SECURITY_ENFORCED - adds FLS check"], tips: ["Bind variables improve performance by enabling query caching"], questions: ["Why use bind variables over string concatenation?"] } },
+                    { id: "soql-optimization", label: "Query Optimization", content: { items: ["Indexed fields: Id, Name, OwnerId, RecordTypeId, External ID, Unique", "Custom indexes: 5 per object (can be extended)", "Selectivity threshold: < 10% of records returned", "Avoid: NOT operators, leading wildcards LIKE '%text'", "Use Query Plan Tool in Developer Console"], tips: ["Add custom index on frequently filtered fields"], questions: ["How to make a slow SOQL query faster?"] } },
+                    { id: "soql-security", label: "WITH SECURITY_ENFORCED", content: { items: ["Enforces object-level & field-level permissions", "Throws System.QueryException if no access", "Use at user-facing query boundaries", "Alternative: Security.stripInaccessible()"], tips: ["Always enforce FLS for user-initiated queries"], questions: ["WITH SECURITY_ENFORCED vs stripInaccessible?"] } }
+                ]
+            },
+            {
+                id: "apex", label: "Apex", color: "apex", children: [
+                    { id: "apex-core", label: "Core Concepts", content: { items: ["Strongly typed, object-oriented (like Java)", "Runs on Salesforce servers (multi-tenant)", "Triggers: database event handlers (7 events)", "Classes: business logic, controllers, utilities", "Interfaces: Comparable, Database.Batchable, etc", "Collections: List (ordered), Set (unique), Map (key-value)"], tips: ["Follow Single Responsibility Principle"], questions: ["List vs Set vs Map - when to use each?"] } },
+                    { id: "apex-triggers", label: "Triggers", content: { items: ["Events: before/after insert, update, delete, undelete", "Context variables: Trigger.new, Trigger.old, Trigger.newMap, Trigger.oldMap", "Best practice: One trigger per object → Handler class", "Bulkify: handle 200+ records, no SOQL/DML in loops"], tips: ["Use Trigger.isExecuting for conditional logic"], questions: ["What's the handler pattern and why use it?"] } },
+                    { id: "apex-async", label: "Async Apex", content: { items: ["@future: static methods, void return, primitive params only", "Queueable: chaining, complex objects, job monitoring", "Batch Apex: up to 50M records, start/execute/finish", "Schedulable: cron-like scheduling", "Queueable can chain up to 50 jobs total"], tips: ["Batch: query in start(), process in execute(), notify in finish()"], questions: ["When to use @future vs Queueable vs Batch?"] } },
+                    { id: "apex-security", label: "Apex Security", content: { items: ["Default: without sharing - system mode, no record security", "with sharing: enforce record sharing rules", "without sharing: bypass sharing (use carefully)", "inherited sharing: maintain caller's sharing context", "Security.stripInaccessible(): enforce FLS"], tips: ["Default to with sharing for most Apex classes"], questions: ["with sharing vs without sharing - which to use?"] } },
+                    { id: "apex-testing", label: "Testing", content: { items: ["≥75% code coverage required", "@isTest: test classes, no limits applied", "Test.startTest() / Test.stopTest(): reset limits", "System.assert(), assertEquals(), assertNotEquals()", "Test.isRunningTest(): conditional test logic", "SeeAllData=true: access org data (avoid, use test data)"], tips: ["Use Test.loadData() for large test datasets"], questions: ["What are test best practices?"] } },
+                    { id: "apex-advanced", label: "Advanced Patterns", content: { items: ["Dynamic SOQL: Database.query(string)", "Dynamic DML: Database class methods", "Platform Events: pub/sub, Change Data Capture", "Platform Cache: Org cache (session) / Session cache", "Dependency Injection: DI framework for testability", "Custom Exception: extends Exception"], tips: ["Use allOrNone=false for partial success processing"], questions: ["How to implement a custom Logger in Apex?"] } }
+                ]
+            },
+            {
+                id: "lwc", label: "Lightning Web Components", color: "lwc", children: [
+                    { id: "lwc-bundle", label: "Bundle Structure", content: { items: ["component.html: template", "component.js: controller", "component.js-meta.xml: config", "component.css: styles (scoped)"], tips: ["Files share same base name"] } },
+                    { id: "lwc-lifecycle", label: "Lifecycle Hooks", content: { items: ["constructor(): before DOM, no property access", "connectedCallback(): DOM ready, query first", "disconnectedCallback(): cleanup", "renderCallback(): after render", "errorCallback(): error handling"], tips: ["Don't query DOM in constructor"], questions: ["Lifecycle order?"] } },
+                    { id: "lwc-decorators", label: "Decorators", content: { items: ["@api: public property, reactive", "@track: (legacy) reactive deep objects", "@wire: reactive data service", "@readonly: track in tests only"], tips: ["Primitives reactive by default (Spring '20+)"] } },
+                    { id: "lwc-lds", label: "Lightning Data Service", content: { items: ["getRecord: single record", "getListUI: list view data", "createRecord, deleteRecord, updateRecord", "generateRecordInputForCreate: form data", "@wire or imperative patterns"], tips: ["LDS handles sharing & FLS automatically"] } },
+                    { id: "lwc-events", label: "Events", content: { items: ["Event bubbling: child → parent (up to 10 levels)", "CustomEvent('name', {detail: data})", "dispatchEvent(event)", "Lightning Message Service (LMS): cross-component"], tips: ["Use LMS for unrelated components"], questions: ["Bubbling vs LMS?"] } },
+                    { id: "lwc-testing", label: "Testing", content: { items: ["@salesforce/sfdx-lwc-jest: test framework", "jest.config.js: configuration", "describe(), it(), expect()", "createElement(): render component", "Test for user interactions, @wire data"], tips: ["Test both happy path and error cases"] } }
+                ]
+            },
+            {
+                id: "security", label: "Security", color: "security", children: [
+                    { id: "sec-layers", label: "Access Layers (4 levels)", content: { items: ["1. Organization-level: IP restrictions, login hours", "2. Object-level: CRUD (Profile, Permission Set)", "3. Field-level: FLS (read/edit per field)", "4. Record-level: Sharing (OWD, Rules, Manual)"], tips: ["Security evaluation: top to bottom"], questions: ["Order of security evaluation?"] } },
+                    { id: "sec-fls", label: "Field-Level Security", content: { items: ["Profile: baseline field access", "Permission Sets: additive field access", "Hidden vs Read-Only vs Edit", "Field accessibility check in Apex"], tips: ["Check isAccessible() before querying"], questions: ["How to enforce FLS in Apex?"] } },
+                    { id: "sec-record", label: "Record-Level Security", content: { items: ["OWD (Organization-Wide Defaults): baseline", "Private: owner only", "Public Read/Write: all users", "Public Read/Write/Transfer: all + transfer", "Public Full Access: all + edit/delete all (custom only)"], tips: ["OWD is most restrictive baseline"] } },
+                    { id: "sec-sharing", label: "Sharing Mechanisms", content: { items: ["Role Hierarchy: inherit upward", "Sharing Rules: criteria-based or owner-based", "Manual Sharing: ad hoc (record owner)", "Apex Sharing: programmatic (AccountShare)", "Team-based sharing: account teams, opportunity teams"], tips: ["Role hierarchy grants access, never revokes"] } },
+                    { id: "sec-profiles", label: "Profiles & Permission Sets", content: { items: ["Profile: required, baseline access", "Permission Set: optional, additive", "Permission Set Group: bundle permission sets", "Muting Permission: remove from PSG", "Custom Permission: feature flag logic"], tips: ["Move customizations to Permission Sets"] } }
+                ]
+            },
+            {
+                id: "flow", label: "Flow", color: "flow", children: [
+                    { id: "flow-types", label: "Flow Types", content: { items: ["Screen Flow: user-interactive UI", "Record-Triggered Flow: auto on DML", "Scheduled Flow: time-based execution", "Platform Event-Triggered Flow: event-driven", "Auto-Launched Flow: no UI, invocable"], questions: ["Screen vs Record-Triggered?"] } },
+                    { id: "flow-record", label: "Record-Triggered Flow", content: { items: ["Trigger: Create, Update, Delete, Undelete", "Optimization: Before Save (fast, no DML)", "After Save: can do DML, creates transaction", "Trigger Order: 1, 2, 3, ... 200", "Record-Triggered Flow: run as record owner"], tips: ["Before Save replaces simple Apex triggers"], questions: ["Before vs After Save Flow?"] } },
+                    { id: "flow-elements", label: "Flow Elements", content: { items: ["Screens: UI components", "Actions: create records, send email", "Decisions: logic branches", "Loops: iterate collections", "Assignments: set variable values", "Get Records: query SOQL", "Update Records: DML"], tips: ["Use Get Records with filters to avoid iteration"] } },
+                    { id: "flow-best", label: "Best Practices", content: { items: ["Bulkify: no SOQL in loops", "Fault Paths: always handle errors", "Use One Element per Action", "Subflows: reusable components", "Debug with Debug Mode + run as specific user"], questions: ["How to debug Flow errors?"] } },
+                    { id: "flow-limits", label: "Flow Limits", content: { items: ["SOQL queries: 100 per transaction", "DML operations: 150 per transaction", "Elements: 2000 per flow (screen)", "Interview limit: 200 elements executed", "Execution time limits apply"], tips: ["Monitor flow execution with Debug logs"] } }
+                ]
+            },
+            {
+                id: "integrations", label: "Integrations", color: "integrations", children: [
+                    { id: "int-auth", label: "Authentication", content: { items: ["Named Credentials: secure endpoint + auth", "Remote Site Settings: whitelist domains", "Connected App: OAuth (client creds, JWT)", "Auth Provider: SSO, OpenID Connect", "Single Sign-On: SAML, OAuth"], tips: ["Never hardcode credentials in Apex"], questions: ["Named Credential vs Remote Site Setting?"] } },
+                    { id: "int-rest", label: "REST API", content: { items: ["Resources: /services/data/v56.0/", "CRUD: GET, POST, PATCH, DELETE", "SOQL: /query/?q=SELECT...", "Composite: batch requests, SObject tree", "REST resources: @RestResource annotation"], tips: ["Use REST for simple integrations"] } },
+                    { id: "int-bulk", label: "Bulk API", content: { items: ["Bulk API 1.0: CSV-based, sequential", "Bulk API 2.0: JSON, parallel processing", "Use for: 50k+ records", "Operations: insert, update, upsert, delete, query"], tips: ["Use Bulk API 2.0 for better performance"] } },
+                    { id: "int-streaming", label: "Streaming & Events", content: { items: ["PushTopics: SOQL-based subscriptions", "Change Data Capture (CDC): all changes", "Platform Events: pub/sub, custom events", "Generic Events: standard CDC events", "empAPI: subscribe in LWC/Apex"], tips: ["CDC: real-time data sync without polling"] } },
+                    { id: "int-patterns", label: "Integration Patterns", content: { items: ["Request/Reply: sync, wait for response", "Fire & Forget: async, no response", "Publish/Subscribe: event-driven", "Batch: scheduled, large volumes", "Retry: exponential backoff"], questions: ["Sync vs Async pattern?"] } }
+                ]
+            },
+            {
+                id: "javascript", label: "JavaScript", color: "javascript", children: [
+                    { id: "js-variables", label: "Variables & Scope", content: { items: ["var: function scope, hoisted, redeclare", "let: block scope, TDZ, no redeclare", "const: block scope, no reassign", "Hoisting: declarations lifted, not values", "TDZ: Temporal Dead Zone (let/const)"], tips: ["Prefer const, use let if needed, avoid var"], questions: ["var vs let vs const?"] } },
+                    {
+                        id: "js-functions", label: "Functions", content: {
+                            items: ["Function declaration: hoisted", "Function expression: not hoisted", "Arrow function: no own this, arguments", "this: depends on call site", "Default parameters: fn(a=1) {}"], tips: ["Arrow functions don't bind their own this"], questions: ["Arrow fn gotchas?"]
+                        }
+                    },
+                    { id: "js-promises", label: "Promises & Async", content: { items: ["Promise states: pending, fulfilled, rejected", "async/await: syntactic sugar over Promise", "Promise.all(): parallel, fail-fast", "Promise.any(): first success", "Promise.race(): first settled", "Promise.allSettled(): wait for all"], tips: ["Callback hell → async/await"], questions: ["Promise.all vs Promise.any?"] } },
+                    { id: "js-arrays", label: "Array Methods", content: { items: ["map(): transform each element", "filter(): keep matching", "reduce(): aggregate to single value", "find(), findIndex(): search", "some(), every(): test condition", "forEach(): side effects (no return)"], tips: ["Use map/filter/reduce for functional programming"] } },
+                    { id: "js-es6", label: "ES6+ Features", content: { items: ["Destructuring: const {a} = obj", "Spread: [...arr], {...obj}", "Template literals: `hello ${name}`", "Classes: class syntax", "Modules: import/export"], tips: ["ES6+ features make code cleaner"] } }
+                ]
+            },
+            {
+                id: "git", label: "Git", color: "git", children: [
+                    { id: "git-core", label: "Core Commands", content: { items: ["git clone: copy repository", "git checkout: switch branch/commit", "git add: stage changes", "git commit: save snapshot", "git push: upload to remote", "git pull: fetch + merge", "git fetch: download without merge"], tips: ["Use git pull --rebase to avoid merge commits"] } },
+                    { id: "git-branch", label: "Branching", content: { items: ["git branch: list/create branches", "git checkout -b: create & switch", "git merge: combine branches", "git rebase: linear history", "git cherry-pick: apply specific commit"], tips: ["Rebase keeps history linear"], questions: ["Merge vs Rebase?"] } },
+                    { id: "git-strategies", label: "Branching Strategies", content: { items: ["GitFlow: feature, develop, release, master", "Trunk-based: short-lived feature branches", "GitHub Flow: master + feature branches", "Feature flags: branch by abstraction"], tips: ["Trunk-based reduces merge pain, requires CI/CD"] } },
+                    { id: "git-undo", label: "Undo Changes", content: { items: ["git reset --soft: keep changes staged", "git reset --hard: discard all changes", "git revert: create undo commit", "git commit --amend: edit last commit", "git restore: restore working tree files"], tips: ["Never amend pushed commits"] } },
+                    { id: "git-conflicts", label: "Conflict Resolution", content: { items: ["git mergetool: visual merge tool", "git diff: view conflicts", "<<<<<<<, =======, >>>>>>> markers", "Accept current, accept incoming, or both", "Test merge resolution before commit"], tips: ["Communicate with team during conflicts"] } }
+                ]
+            },
+            {
+                id: "processes", label: "Engineering Process", color: "processes", children: [
+                    { id: "proc-methodologies", label: "Methodologies", content: { items: ["Scrum: sprints (1-4 weeks), ceremonies", "Kanban: continuous flow, WIP limits", "Agile: iterative, adaptive to change", "Waterfall: sequential, plan-driven", "Lean: eliminate waste, deliver faster"], questions: ["When to use Scrum vs Kanban?"] } },
+                    { id: "proc-dod", label: "Definition of Done (DoD)", content: { items: ["Code complete", "Unit tests written & passing", "Code reviewed & approved", "Documentation updated", "Deployed to staging", "Product owner accepted"], tips: ["Customize DoD for your team"] } },
+                    { id: "proc-dor", label: "Definition of Ready (DoR)", content: { items: ["User story has acceptance criteria", "Business value defined", "Estimate provided", "Dependencies identified", "Design approved"], tips: ["Don't start work not meeting DoR"] } },
+                    { id: "proc-review", label: "Code Review", content: { items: ["Pull Request: propose changes", "Review checklist: logic, style, tests", "≤400 lines per PR for effective review", "Automated checks: lint, tests", "At least 1 approval required"], tips: ["Be kind, constructive in reviews"] } },
+                    { id: "proc-cicd", label: "CI/CD", content: { items: ["Continuous Integration: merge → test → build", "Continuous Deployment: auto-deploy", "Pipeline: test → build → deploy", "Automated tests: unit, integration, e2e", "Feature flags: deploy incomplete features"], tips: ["Automate everything possible"] } },
+                    { id: "proc-incidents", label: "Production Incidents", content: { items: ["1. Assess impact & prioritize", "2. Communicate with stakeholders", "3. Hotfix or workaround first", "4. Root Cause Analysis (RCA)", "5. Process changes to prevent recurrence"], tips: ["Document runbooks for common incidents"] } }
+                ]
+            },
+            {
+                id: "limits", label: "Governor Limits", color: "limits", children: [
+                    { id: "limits-soql", label: "SOQL & SOSL Limits", content: { items: ["100 (200) SOQL queries per transaction", "50,000 Records retrieved by SOQL", "50,000 Aggregate result rows", "10 Nested subqueries", "2,000 OFFSET value", "10 SOSL queries", "2,000 SOSL result rows", "120s Query timeout"], tips: ["Use Limits class to monitor usage"] } },
+                    { id: "limits-dml", label: "DML & Heap Limits", content: { items: ["150 DML operations", "10,000 Records per DML operation", "6MB / 12MB Heap size", "1,000 Variables in scope"], tips: ["Bulkify DML operations"] } },
+                    { id: "limits-cpu", label: "CPU & Execution Limits", content: { items: ["10s / 60s CPU time limit", "120s Single callout timeout", "100 Callout requests", "10s / 15s Synchronous Apex limit"], tips: ["Optimize code to reduce CPU time"] } },
+                    { id: "limits-email", label: "Email & Messaging Limits", content: { items: ["1,000 Email invocations", "10 Email invocations via Apex", "5MB Single file attachment", "10MB Total email attachments"], tips: ["Use SingleEmailMessage for efficiency"] } },
+                    { id: "limits-async", label: "Async Apex Limits", content: { items: ["250,000 Future jobs / 24hr", "5 Queueable chain depth", "50 Batch jobs queued", "100 Batch start/execute/finish"], tips: ["Monitor async job queue"] } }
+                ]
+            },
+            {
+                id: "sosl", label: "SOSL", color: "sosl", children: [
+                    { id: "sosl-structure", label: "Structure", content: { items: ["FIND 'search term' IN FIELDS", "RETURNING Object(fields)", "LIMIT n, OFFSET n", "Can search multiple objects"], tips: ["SOSL is less selective than SOQL"] } },
+                    { id: "sosl-when", label: "When to Use", content: { items: ["Don't know which object contains data", "Fuzzy text search across fields", "Search multiple objects simultaneously", "Lead, Contact, Account search together"], tips: ["Use SOSL sparingly due to limits"] } },
+                    { id: "sosl-vs-soql", label: "SOSL vs SOQL", content: { items: ["SOSL: text search, multiple objects", "SOQL: precise queries, single object", "SOSL: simpler fuzzy matching", "SOQL: relationships, aggregates"], tips: ["Choose based on use case"] } }
+                ]
+            },
+            {
+                id: "setup", label: "Setup", color: "setup", children: [
+                    { id: "setup-users", label: "User Management", content: { items: ["Users: add, edit, deactivate", "Public Groups: sharing, permissions", "Queues: record ownership", "Permission Sets: grant access", "Profiles: baseline permissions"], tips: ["Use Queues for shared record ownership"] } },
+                    { id: "setup-security", label: "Security Controls", content: { items: ["Session Settings: timeout, high assurance", "Password Policies: complexity, expiration", "Login Flows: custom login logic", "Login IP Ranges: restrict by IP", "Two-Factor Authentication: 2FA"], tips: ["Enable 2FA for all users"] } },
+                    { id: "setup-audit", label: "Audit & Monitoring", content: { items: ["Setup Audit Trail: track changes", "Field History Tracking: data changes", "Login History: access logs", "Event Monitoring: detailed user activity"], tips: ["Regularly review audit logs"] } }
+                ]
+            },
+            {
+                id: "aura", label: "Aura Components", color: "aura", children: [
+                    { id: "aura-bundle", label: "Bundle Structure", content: { items: ["Component: .cmp file", "Controller: .js (client-side)", "Helper: .js (reusable functions)", "Renderer: custom rendering logic", "CSS: styles for component"], tips: ["Use Helper for reusable code"] } },
+                    { id: "aura-binding", label: "Data Binding", content: { items: ["<aura:attribute>: component state", "{!v.attribute}: value binding", "{!c.method}: controller binding", "Two-way binding with <aura:if>"], tips: ["Use expressions for dynamic values"] } },
+                    { id: "aura-apex", label: "Calling Apex", content: { items: ["@AuraEnabled: expose Apex method", "<force:recordData>: LDS", "action.setCallback(): handle response", "component.get(): invoke Apex"], tips: ["Use @AuraEnabled(cacheable=true) for read-only"] } },
+                    { id: "aura-events", label: "Events", content: { items: ["Component events: child → parent", "Application events: broadcast globally", "Standard events: force:showToast, etc"], tips: ["Prefer component events over application events"] } }
+                ]
+            },
+            {
+                id: "visualforce", label: "Visualforce", color: "visualforce", children: [
+                    { id: "vf-pages", label: "Pages & Controllers", content: { items: ["<apex:page>: VF page markup", "Standard Controller: auto CRUD", "Custom Controller: Apex class", "Controller Extension: extend standard"], tips: ["Use standard controller when possible"] } },
+                    { id: "vf-viewstate", label: "View State", content: { items: ["Holds page state between requests", "Max 135KB (65KB licensed)", "Minimize: transient keyword, re-render"], tips: ["Use transient for large, non-essential data"] } },
+                    { id: "vf-js", label: "JavaScript Integration", content: { items: ["<apex:actionFunction>: call JS from Apex", "<apex:includeScript>: load JS libs", "Visualforce Remoting: async Apex calls"], tips: ["Use Remoting for async operations"] } }
+                ]
+            },
+            {
+                id: "ai", label: "AI & Agentforce", color: "ai", children: [
+                    { id: "ai-concepts", label: "AI Concepts", content: { items: ["Model: algorithm trained on data", "Prompt: input to AI model", "Token: basic unit of text", "Temperature: randomness control", "Top K/P: limit output tokens", "Hallucination: false confidence"], tips: ["Lower temp = more deterministic"] } },
+                    { id: "ai-einstein", label: "Einstein GPT", content: { items: ["Sales Email: generate outreach", "Service Replies: auto-response", "Work Summary: summarize records", "Einstein Copilot: AI assistant"], tips: ["Use Einstein for content generation"] } },
+                    { id: "ai-prompting", label: "Prompt Engineering", content: { items: ["Be specific & provide context", "Chain of Thought: show reasoning", "Few-shot: provide examples", "Structure: clear instructions"], tips: ["Test and iterate on prompts"] } },
+                    { id: "ai-agentforce", label: "Agentforce", content: { items: ["Agents: autonomous AI assistants", "Topics: agent capabilities", "Actions: what agent can do", "RAG: Retrieval-Augmented Generation"], tips: ["Start with simple agents"] } }
+                ]
+            }
+        ];
+
+        let selectedTopic = null;
+        let draggedCard = null;
+        let sourceGrid = null;
+
+        function findTopicDeep(id, topics) {
+            for (const t of topics) {
+                if (t.id === id) return t;
+                if (t.children) {
+                    const found = findTopicDeep(id, t.children);
+                    if (found) return found;
+                }
+            }
+            return null;
+        }
+
+        function findRootParent(id) {
+            for (const t of TOPICS) {
+                if (t.id === id) return t;
+                if (t.children) {
+                    for (const c of t.children) {
+                        if (c.id === id) return t;
+                    }
+                }
+            }
+            return null;
+        }
+
+        function selectTopic(id) {
+            selectedTopic = id;
+            const topic = findTopicDeep(id, TOPICS);
+            if (!topic) return;
+            document.querySelectorAll('.tree-node-header').forEach(h => h.classList.remove('active'));
+            const ah = document.querySelector('[data-topic-id="' + id + '"]');
+            if (ah) ah.classList.add('active');
+            // Toggle tree node expansion
+            const childrenEl = document.getElementById('children-' + id);
+            const toggleEl = document.getElementById('toggle-' + id);
+            if (childrenEl) {
+                childrenEl.classList.toggle('expanded');
+                if (toggleEl) toggleEl.classList.toggle('expanded');
+            }
+            buildContent(topic);
+        }
+
+        function buildContent(topic) {
+            const cp = document.getElementById('content-panel');
+            cp.innerHTML = '';
+            // Apply topic color
+            const root = findRootParent(topic.id);
+            const colorVar = (root || topic).color || 'basics';
+            cp.style.setProperty('--topic-color', 'var(--color-' + colorVar + ')');
+            const t = document.createElement('h2');
+            t.id = 'panel-title';
+            t.textContent = topic.label;
+            cp.appendChild(t);
+            if (topic.children && topic.children.length > 0) {
+                topic.children.forEach(c => cp.appendChild(createAccordion(c)));
+            } else if (topic.content) {
+                cp.appendChild(createAccordion(topic));
+            }
+        }
+
+        function createAccordion(sub) {
+            const acc = document.createElement('div');
+            acc.className = 'accordion';
+            const hd = document.createElement('div');
+            hd.className = 'accordion-header';
+            hd.setAttribute('role', 'button');
+            hd.setAttribute('tabindex', '0');
+            hd.onclick = () => toggleAcc(acc);
+            hd.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleAcc(acc); } };
+            const tl = document.createElement('span');
+            tl.className = 'accordion-title';
+            tl.textContent = sub.label;
+            const tg = document.createElement('span');
+            tg.className = 'accordion-toggle';
+            tg.textContent = '\u25BC';
+            hd.appendChild(tl);
+            hd.appendChild(tg);
+            const ct = document.createElement('div');
+            ct.className = 'accordion-content';
+            const bd = document.createElement('div');
+            bd.className = 'accordion-body';
+            if (sub.content) {
+                const { items, tips, questions } = sub.content;
+                if (items && items.length > 0) {
+                    const grid = document.createElement('div');
+                    grid.className = 'card-grid';
+                    items.forEach((item, i) => {
+                        const card = document.createElement('div');
+                        card.className = 'card';
+                        card.setAttribute('draggable', 'true');
+                        card.setAttribute('data-index', i);
+                        const inner = document.createElement('div');
+                        inner.className = 'card-inner';
+                        const front = document.createElement('div');
+                        front.className = 'front';
+                        const lb = document.createElement('div');
+                        lb.className = 'card-label';
+                        lb.textContent = item;
+                        const hint = document.createElement('span');
+                        hint.className = 'flip-hint';
+                        hint.textContent = 'click to flip';
+                        front.appendChild(lb);
+                        front.appendChild(hint);
+                        const back = document.createElement('div');
+                        back.className = 'back';
+                        const bt = document.createElement('div');
+                        bt.className = 'back-title';
+                        bt.textContent = sub.label;
+                        const bd2 = document.createElement('div');
+                        bd2.className = 'back-desc';
+                        bd2.textContent = item;
+                        back.appendChild(bt);
+                        back.appendChild(bd2);
+                        inner.appendChild(front);
+                        inner.appendChild(back);
+                        card.appendChild(inner);
+                        card.onclick = function () { this.classList.toggle('flipped'); };
+                        card.addEventListener('dragstart', handleDragStart);
+                        card.addEventListener('dragend', handleDragEnd);
+                        grid.appendChild(card);
+                    });
+                    bd.appendChild(grid);
+                }
+                if (tips && tips.length > 0) {
+                    tips.forEach(tip => {
+                        const tb = document.createElement('div');
+                        tb.className = 'tip-box';
+                        tb.textContent = tip;
+                        bd.appendChild(tb);
+                    });
+                }
+                if (questions && questions.length > 0) {
+                    const it = document.createElement('div');
+                    it.className = 'info-title';
+                    it.textContent = 'Interview Questions';
+                    bd.appendChild(it);
+                    const ul = document.createElement('ul');
+                    ul.className = 'info-list';
+                    questions.forEach(q => {
+                        const li = document.createElement('li');
+                        li.textContent = q;
+                        ul.appendChild(li);
+                    });
+                    bd.appendChild(ul);
+                }
+            }
+            ct.appendChild(bd);
+            acc.appendChild(hd);
+            acc.appendChild(ct);
+            return acc;
+        }
+
+        function toggleAcc(acc) {
+            const ct = acc.querySelector('.accordion-content');
+            const expanded = acc.classList.contains('expanded');
+            if (expanded) { acc.classList.remove('expanded'); ct.style.maxHeight = '0'; }
+            else { acc.classList.add('expanded'); ct.style.maxHeight = '5000px'; }
+        }
+
+        function handleDragStart(e) {
+            const card = e.target.closest('.card');
+            if (!card) return;
+            draggedCard = card;
+            sourceGrid = card.closest('.card-grid');
+            card.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', '');
+        }
+
+        function handleDragEnd(e) {
+            if (draggedCard) { draggedCard.classList.remove('dragging'); }
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('drag-over'));
+            draggedCard = null;
+            sourceGrid = null;
+        }
+
+        document.addEventListener('dragover', e => {
+            e.preventDefault();
+            document.querySelectorAll('.card.drag-over').forEach(c => c.classList.remove('drag-over'));
+            const card = e.target.closest('.card');
+            if (card && sourceGrid) { card.classList.add('drag-over'); }
+        });
+
+        document.addEventListener('drop', e => {
+            e.preventDefault();
+            const target = e.target.closest('.card');
+            if (!target || !draggedCard || !sourceGrid) return;
+            const targetGrid = target.closest('.card-grid');
+            if (sourceGrid !== targetGrid) return;
+            const cards = Array.from(sourceGrid.querySelectorAll('.card'));
+            const fromIdx = cards.indexOf(draggedCard);
+            const toIdx = cards.indexOf(target);
+            if (fromIdx === toIdx) return;
+            cards.splice(fromIdx, 1);
+            cards.splice(toIdx, 0, draggedCard);
+            sourceGrid.innerHTML = '';
+            cards.forEach((c, i) => { c.setAttribute('data-index', i); sourceGrid.appendChild(c); });
+        });
+
+        function buildTree() {
+            const tc = document.getElementById('tree');
+            tc.innerHTML = '';
+            TOPICS.forEach(topic => tc.appendChild(createTreeNode(topic)));
+        }
+
+        function createTreeNode(topic) {
+            const c = document.createElement('div');
+            c.className = 'tree-node';
+            const hd = document.createElement('div');
+            hd.className = 'tree-node-header';
+            hd.setAttribute('role', 'treeitem');
+            hd.setAttribute('tabindex', '0');
+            hd.setAttribute('data-topic-id', topic.id);
+            hd.onclick = () => selectTopic(topic.id);
+            hd.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectTopic(topic.id); } };
+            const tg = document.createElement('span');
+            tg.className = 'tree-node-toggle';
+            tg.textContent = '\u25B6';
+            if (topic.children && topic.children.length > 0) { tg.id = 'toggle-' + topic.id; }
+            else { tg.classList.add('leaf'); }
+            const dot = document.createElement('span');
+            dot.className = 'tree-node-dot';
+            dot.setAttribute('data-topic', topic.color);
+            const lb = document.createElement('span');
+            lb.className = 'tree-node-label';
+            lb.textContent = topic.label;
+            hd.appendChild(tg); hd.appendChild(dot); hd.appendChild(lb);
+            c.appendChild(hd);
+            if (topic.children && topic.children.length > 0) {
+                const ch = document.createElement('div');
+                ch.className = 'tree-node-children';
+                ch.id = 'children-' + topic.id;
+                topic.children.forEach(child => ch.appendChild(createTreeNode(child)));
+                c.appendChild(ch);
+            }
+            return c;
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                document.getElementById('content-panel').innerHTML = '<div class="empty-state"><div class="empty-state-icon">\uD83C\uDF33</div><div class="empty-state-text">Select a topic from tree to explore</div></div>';
+                document.querySelectorAll('.tree-node-header').forEach(h => h.classList.remove('active'));
+            }
+        });
+
+        function setupSearch() {
+            const si = document.getElementById('search-input');
+            let dt;
+            si.addEventListener('input', e => {
+                clearTimeout(dt);
+                dt = setTimeout(() => {
+                    const q = e.target.value.toLowerCase().trim();
+                    if (q === '') {
+                        document.querySelectorAll('.tree-node').forEach(n => { n.style.display = ''; });
+                        return;
+                    }
+                    document.querySelectorAll('.tree-node').forEach(n => {
+                        const labels = n.querySelectorAll('.tree-node-label');
+                        let anyMatch = false;
+                        labels.forEach(lbl => { if (lbl.textContent.toLowerCase().includes(q)) anyMatch = true; });
+                        n.style.display = anyMatch ? '' : 'none';
+                        if (anyMatch) {
+                            const ch = n.querySelector(':scope > .tree-node-children');
+                            const tg = n.querySelector(':scope > .tree-node-header .tree-node-toggle');
+                            if (ch) ch.classList.add('expanded');
+                            if (tg) tg.classList.add('expanded');
+                        }
+                    });
+                }, 300);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => { buildTree(); setupSearch(); });
+    </script>
+</body>
+
+</html>
