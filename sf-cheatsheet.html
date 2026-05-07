@@ -2450,7 +2450,7 @@
               "Never concatenate user input directly",
               "<span class='code-inline'>WITH SECURITY_ENFORCED</span> - adds FLS check"
             ],
-            code: "// ✅ Safe - Bind Variables\nString name = 'Test Account';\nString query = 'SELECT Id FROM Account WHERE Name = :name';\nList<Account> accounts = Database.query(query);\n\n// ❌ Unsafe - Concatenation\nString userInput = \"Name' OR '1'='1\";\nString query = 'SELECT Id FROM Account WHERE Name = \\'' + userInput + '\\'';\n\n// ✅ Safe - Escaping\nString field = 'Name';\nString safeField = String.escapeSingleQuotes(field);\nString query = 'SELECT Id, ' + safeField + ' FROM Account';",
+            code: "// Safe - Bind Variables\nString name = 'Test Account';\nString query = 'SELECT Id FROM Account WHERE Name = :name';\nList<Account> accounts = Database.query(query);\n\n// Unsafe - Concatenation\nString userInput = \"Name' OR '1'='1\";\nString query = 'SELECT Id FROM Account WHERE Name = \\'' + userInput + '\\'';\n\n// Safe - Escaping\nString field = 'Name';\nString safeField = String.escapeSingleQuotes(field);\nString query = 'SELECT Id, ' + safeField + ' FROM Account';",
             tips: ["Bind variables improve performance by enabling query caching"],
             questions: ["Why use bind variables over string concatenation?"]
           },
@@ -2464,8 +2464,8 @@
               "Use Query Plan Tool in Developer Console"
             ],
             examples: [
-              "✅ SELECT Id FROM Account WHERE Type = 'Customer' AND Name LIKE 'Acme%' (selective)",
-              "❌ SELECT Id FROM Account WHERE Name LIKE '%Inc' (non-selective, table scan)"
+              "SELECT Id FROM Account WHERE Type = 'Customer' AND Name LIKE 'Acme%' (selective)",
+              "SELECT Id FROM Account WHERE Name LIKE '%Inc' (non-selective, table scan)"
             ],
             tips: ["Add custom index on frequently filtered fields"],
             questions: ["How to make a slow SOQL query faster?"]
@@ -3104,10 +3104,10 @@
     function buildContent(topic) {
       if (!topic.subtopics || topic.subtopics.length === 0) {
         const container = document.createElement('div');
-        container.style.cssText = 'padding:60px 24px;text-align:center';
+        container.style.cssText = 'padding:3.75rem 1.5rem;text-align:center';
 
         const title = document.createElement('div');
-        title.style.cssText = 'font-size:0.82rem;font-weight:600;color:var(--text-2);margin-bottom:8px';
+        title.style.cssText = 'font-size:0.82rem;font-weight:600;color:var(--text-2);margin-bottom:0.5rem';
         title.textContent = topic.label;
 
         const subtitle = document.createElement('div');
@@ -3126,7 +3126,7 @@
         // Create section header
         const sectionHeader = document.createElement('div');
         sectionHeader.className = 'section-title';
-        sectionHeader.style.cssText = 'font-size:11px;font-weight:500;color:var(--text-3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;margin-top:16px';
+        sectionHeader.style.cssText = 'font-size:0.6875rem;font-weight:500;color:var(--text-3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.75rem;margin-top:1rem';
         if (idx === 0) sectionHeader.style.marginTop = '0';
         sectionHeader.textContent = sub.name;
         container.appendChild(sectionHeader);
@@ -3215,7 +3215,7 @@
         if (sub.items && sub.items.length) {
           const grid = document.createElement('div');
           grid.className = 'limits-grid';
-          grid.style.cssText = 'margin: 0 0 12px 0';
+          grid.style.cssText = 'margin: 0 0 0.75rem 0';
 
           sub.items.forEach((item, i) => {
             const cardId = `card-${topic.id}-${idx}-${i}`;
@@ -3232,7 +3232,7 @@
             front.style.cssText = 'justify-content:center;align-items:flex-start;text-align:left';
 
             const itemLabel = document.createElement('div');
-            itemLabel.style.cssText = 'font-size:12px;color:var(--text);line-height:1.4;overflow:hidden';
+            itemLabel.style.cssText = 'font-size:0.75rem;color:var(--text);line-height:1.4;overflow:hidden';
             itemLabel.innerHTML = item;
             front.appendChild(itemLabel);
 
@@ -3253,14 +3253,14 @@
 
             const backDesc = document.createElement('div');
             backDesc.className = 'back-desc';
-            backDesc.style.cssText = 'margin-top:8px';
+            backDesc.style.cssText = 'margin-top:0.5rem';
             backDesc.innerHTML = item;
             back.appendChild(backDesc);
 
             if (sub.tips && sub.tips.length) {
               sub.tips.forEach(t => {
                 const tipEl = document.createElement('div');
-                tipEl.style.cssText = 'font-size:10px;color:var(--text-2);margin-top:6px;padding-top:6px;border-top:1px solid var(--border)';
+                tipEl.style.cssText = 'font-size:0.625rem;color:var(--text-2);margin-top:0.375rem;padding-top:0.375rem;border-top:1px solid var(--border)';
                 tipEl.textContent = 'Tip: ' + t;
                 back.appendChild(tipEl);
               });
@@ -3289,7 +3289,7 @@
 
           const infoHeader = document.createElement('div');
           infoHeader.className = 'info-section-header';
-          infoHeader.style.cssText = 'background:var(--border-strong);padding:10px 14px;font-weight:600;font-size:11px;color:var(--text);cursor:pointer;user-select:none;display:flex;justify-content:space-between;align-items:center;transition:all 0.2s ease';
+          infoHeader.style.cssText = 'background:var(--border-strong);padding:0.625rem 0.875rem;font-weight:600;font-size:0.6875rem;color:var(--text);cursor:pointer;user-select:none;display:flex;justify-content:space-between;align-items:center;transition:all 0.2s ease';
 
           const headerTitle = document.createElement('span');
           headerTitle.textContent = sub.name + ' Details';
@@ -3297,7 +3297,7 @@
           const toggle = document.createElement('span');
           toggle.className = 'section-toggle';
           toggle.textContent = '▼';
-          toggle.style.cssText = 'font-size:14px;transition:transform 0.3s ease;color:var(--text-3)';
+          toggle.style.cssText = 'font-size:0.875rem;transition:transform 0.3s ease;color:var(--text-3)';
 
           infoHeader.appendChild(headerTitle);
           infoHeader.appendChild(toggle);
@@ -3307,7 +3307,7 @@
 
           const infoBody = document.createElement('div');
           infoBody.className = 'info-section-body';
-          infoBody.style.cssText = 'padding:12px 14px';
+          infoBody.style.cssText = 'padding:0.75rem 0.875rem';
 
           if (sub.code) {
             const codeBlock = document.createElement('div');
@@ -3370,7 +3370,7 @@
       if (related.length > 0) {
         const sectionHeader = document.createElement('div');
         sectionHeader.className = 'section-title';
-        sectionHeader.style.cssText = 'font-size:11px;font-weight:500;color:var(--text-3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;margin-top:16px';
+        sectionHeader.style.cssText = 'font-size:0.6875rem;font-weight:500;color:var(--text-3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.75rem;margin-top:1rem';
         sectionHeader.textContent = 'Related Topics';
         container.appendChild(sectionHeader);
 
@@ -3379,7 +3379,7 @@
 
         const infoHeader = document.createElement('div');
         infoHeader.className = 'info-section-header';
-        infoHeader.style.cssText = 'background:var(--border-strong);padding:10px 14px;font-weight:600;font-size:11px;color:var(--text);cursor:pointer;user-select:none;display:flex;justify-content:space-between;align-items:center;transition:all 0.2s ease';
+        infoHeader.style.cssText = 'background:var(--border-strong);padding:0.625rem 0.875rem;font-weight:600;font-size:0.6875rem;color:var(--text);cursor:pointer;user-select:none;display:flex;justify-content:space-between;align-items:center;transition:all 0.2s ease';
 
         const headerTitle = document.createElement('span');
         headerTitle.textContent = 'Related Topics';
@@ -3387,7 +3387,7 @@
         const toggle = document.createElement('span');
         toggle.className = 'section-toggle';
         toggle.textContent = '▼';
-        toggle.style.cssText = 'font-size:14px;transition:transform 0.3s ease;color:var(--text-3)';
+        toggle.style.cssText = 'font-size:0.875rem;transition:transform 0.3s ease;color:var(--text-3)';
 
         infoHeader.appendChild(headerTitle);
         infoHeader.appendChild(toggle);
@@ -3397,18 +3397,18 @@
 
         const infoBody = document.createElement('div');
         infoBody.className = 'info-section-body';
-        infoBody.style.cssText = 'padding:12px 14px';
+        infoBody.style.cssText = 'padding:0.75rem 0.875rem';
 
         const chips = document.createElement('div');
         chips.className = 'related-chips';
-        chips.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px';
+        chips.style.cssText = 'display:flex;flex-wrap:wrap;gap:0.5rem';
 
         related.forEach(rid => {
           const rt = TOPICS.find(t => t.id === rid);
           if (rt) {
             const chip = document.createElement('span');
             chip.className = 'related-chip';
-            chip.style.cssText = 'display:inline-block;padding:6px 12px;border-radius:16px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;font-size:11px;font-weight:500;transition:all 0.2s ease';
+            chip.style.cssText = 'display:inline-block;padding:0.375rem 0.75rem;border-radius:1rem;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;font-size:0.6875rem;font-weight:500;transition:all 0.2s ease';
             chip.textContent = rt.label;
             chip.onclick = () => selectTopic(rid);
             chip.onkeydown = (e) => {
@@ -3439,9 +3439,9 @@
 
       return container;
     }
-
     // ── D3 TREE GRAPH ────────────────────────────────────────────────────────────
     const isMobile = () => window.innerWidth <= 768;
+
     const W = () => document.getElementById('graph-container').offsetWidth;
     const H = () => document.getElementById('graph-container').offsetHeight;
     let selectedId = null;
