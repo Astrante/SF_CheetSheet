@@ -106,29 +106,41 @@
   --code-bg: #fafafa;
   --code-border: #e5e5e5;
 
-  /* Topic Colors — grouped by branch with shades */
-  /* Architecture (violet) */
-  --color-basics: #A78BFA;
-  --color-datamodel: #8B5CF6;
-  --color-setup: #7C3AED;
+  /* Topic Colors — mindmap palette */
+  /* Architecture (purple) */
+  --color-basics: #6c4fd4;
+  --color-datamodel: #6c4fd4;
+  --color-setup: #6c4fd4;
   /* Security (blue) */
-  --color-security: #60A5FA;
-  --color-flow: #3B82F6;
-  --color-limits: #2563EB;
-  /* Apex (yellow) */
-  --color-apex: #FACC15;
-  --color-soql: #EAB308;
-  --color-sosl: #CA8A04;
-  --color-integrations: #A16207;
+  --color-security: #1a6fcc;
+  --color-flow: #1a6fcc;
+  --color-limits: #1a6fcc;
+  /* Apex (amber) */
+  --color-apex: #b07c00;
+  --color-soql: #b07c00;
+  --color-sosl: #b07c00;
+  --color-integrations: #b07c00;
   /* UI (red) */
-  --color-lwc: #F87171;
-  --color-javascript: #EF4444;
-  --color-aura: #DC2626;
-  --color-visualforce: #B91C1C;
+  --color-lwc: #c0392b;
+  --color-javascript: #c0392b;
+  --color-aura: #c0392b;
+  --color-visualforce: #c0392b;
   /* AI (green) */
-  --color-ai: #4ADE80;
-  --color-git: #22C55E;
-  --color-processes: #16A34A;
+  --color-ai: #1a7a4a;
+  --color-git: #1a7a4a;
+  --color-processes: #1a7a4a;
+
+  /* Node backgrounds — category fills per branch */
+  --purple-bg: #f0ecfc;
+  --purple-node: #2a1a66;
+  --blue-bg: #e8f2fd;
+  --blue-node: #0a2d5c;
+  --amber-bg: #fdf6e0;
+  --amber-node: #3d2a00;
+  --red-bg: #fdecea;
+  --red-node: #4a0f09;
+  --green-bg: #e4f6ec;
+  --green-node: #082f1c;
 }
 [data-theme="dark"] {
   --bg: #1f1f1e;
@@ -164,29 +176,41 @@
   --code-bg: #2a2a29;
   --code-border: #3a3a38;
 
-  /* Topic Colors — grouped by branch with shades */
-  /* Architecture (violet) */
-  --color-basics: #C4B5FD;
-  --color-datamodel: #A78BFA;
-  --color-setup: #8B5CF6;
+  /* Topic Colors — mindmap palette */
+  /* Architecture (purple) */
+  --color-basics: #9d82f0;
+  --color-datamodel: #9d82f0;
+  --color-setup: #9d82f0;
   /* Security (blue) */
-  --color-security: #93C5FD;
-  --color-flow: #60A5FA;
-  --color-limits: #3B82F6;
-  /* Apex (yellow) */
-  --color-apex: #FDE68A;
-  --color-soql: #FACC15;
-  --color-sosl: #EAB308;
-  --color-integrations: #CA8A04;
+  --color-security: #5ca8f5;
+  --color-flow: #5ca8f5;
+  --color-limits: #5ca8f5;
+  /* Apex (amber) */
+  --color-apex: #f0bc30;
+  --color-soql: #f0bc30;
+  --color-sosl: #f0bc30;
+  --color-integrations: #f0bc30;
   /* UI (red) */
-  --color-lwc: #FCA5A5;
-  --color-javascript: #F87171;
-  --color-aura: #EF4444;
-  --color-visualforce: #DC2626;
+  --color-lwc: #f05a4a;
+  --color-javascript: #f05a4a;
+  --color-aura: #f05a4a;
+  --color-visualforce: #f05a4a;
   /* AI (green) */
-  --color-ai: #86EFAC;
-  --color-git: #4ADE80;
-  --color-processes: #22C55E;
+  --color-ai: #38c878;
+  --color-git: #38c878;
+  --color-processes: #38c878;
+
+  /* Node backgrounds — category fills per branch */
+  --purple-bg: #1e1640;
+  --purple-node: #c8b8ff;
+  --blue-bg: #0a1e38;
+  --blue-node: #a8d4ff;
+  --amber-bg: #201800;
+  --amber-node: #ffe8a0;
+  --red-bg: #280c0a;
+  --red-node: #ffc0b8;
+  --green-bg: #041a0e;
+  --green-node: #a0f0c0;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -248,7 +272,7 @@ svg { width: 100%; height: 100%; }
   stroke: var(--link-color); stroke-width: 1.2;
   transition: stroke 0.3s;
 }
-.link.active { stroke: var(--link-active) !important; stroke-width: 2; }
+.link.active { stroke: var(--link-active) !important; stroke-width: 2.5; stroke-opacity: 0.8 !important; }
 .node-group { cursor: grab; }
 .node-group:active { cursor: grabbing; }
 .node-group:hover .node-bg { filter: brightness(1.15); }
@@ -257,163 +281,49 @@ svg { width: 100%; height: 100%; }
   stroke-width: 0.8;
   transition: all 0.2s;
 }
-/* Architecture (violet shades) */
-.node-bg[data-topic="basics"] {
-  fill: #EDE9FE;
-  stroke: #A78BFA;
-}
-.node-bg[data-topic="basics"].active {
-  fill: #A78BFA;
-  stroke-width: 2;
-}
+/* ── Category node styles (depth-1) — dark bg, white text ── */
+.node-bg.depth-1[data-group="Architecture"]  { fill: var(--purple-node); stroke: var(--purple-node); }
+.node-bg.depth-1[data-group="Security & Automation"] { fill: var(--blue-node); stroke: var(--blue-node); }
+.node-bg.depth-1[data-group="Apex & Data"]   { fill: var(--amber-node); stroke: var(--amber-node); }
+.node-bg.depth-1[data-group="UI & Frameworks"] { fill: var(--red-node); stroke: var(--red-node); }
+.node-bg.depth-1[data-group="AI & Tools"]    { fill: var(--green-node); stroke: var(--green-node); }
+.node-label.depth-1[data-group="Architecture"]  { fill: #fff !important; }
+.node-label.depth-1[data-group="Security & Automation"] { fill: #fff !important; }
+.node-label.depth-1[data-group="Apex & Data"]   { fill: #fff !important; }
+.node-label.depth-1[data-group="UI & Frameworks"] { fill: #fff !important; }
+.node-label.depth-1[data-group="AI & Tools"]    { fill: #fff !important; }
+/* Dark theme: darker branch-colored text */
+[data-theme="dark"] .node-label.depth-1[data-group="Architecture"]  { fill: #4a2fa0 !important; }
+[data-theme="dark"] .node-label.depth-1[data-group="Security & Automation"] { fill: #0a4a8c !important; }
+[data-theme="dark"] .node-label.depth-1[data-group="Apex & Data"]   { fill: #7a5500 !important; }
+[data-theme="dark"] .node-label.depth-1[data-group="UI & Frameworks"] { fill: #8a1a10 !important; }
+[data-theme="dark"] .node-label.depth-1[data-group="AI & Tools"]    { fill: #0a4a28 !important; }
 
-.node-bg[data-topic="datamodel"] {
-  fill: #DDD6FE;
-  stroke: #8B5CF6;
-}
-.node-bg[data-topic="datamodel"].active {
-  fill: #8B5CF6;
-  stroke-width: 2;
-}
+/* ── Sub-topic node styles (depth-2) — light bg, colored text/border ── */
+.node-bg.depth-2[data-group="Architecture"]  { fill: var(--purple-bg); stroke: var(--color-basics); stroke-width: 1; }
+.node-bg.depth-2[data-group="Security & Automation"] { fill: var(--blue-bg); stroke: var(--color-security); stroke-width: 1; }
+.node-bg.depth-2[data-group="Apex & Data"]   { fill: var(--amber-bg); stroke: var(--color-apex); stroke-width: 1; }
+.node-bg.depth-2[data-group="UI & Frameworks"] { fill: var(--red-bg); stroke: var(--color-lwc); stroke-width: 1; }
+.node-bg.depth-2[data-group="AI & Tools"]    { fill: var(--green-bg); stroke: var(--color-ai); stroke-width: 1; }
 
-.node-bg[data-topic="setup"] {
-  fill: #F5F3FF;
-  stroke: #7C3AED;
-}
-.node-bg[data-topic="setup"].active {
-  fill: #7C3AED;
-  stroke-width: 2;
-}
+/* ── Leaf node styles (depth-3+) — light bg, gray text, thin border ── */
+.node-bg.depth-3[data-group="Architecture"],
+.node-bg.depth-4[data-group="Architecture"]  { fill: var(--purple-bg); stroke: var(--border); stroke-width: 0.5; }
+.node-bg.depth-3[data-group="Security & Automation"],
+.node-bg.depth-4[data-group="Security & Automation"] { fill: var(--blue-bg); stroke: var(--border); stroke-width: 0.5; }
+.node-bg.depth-3[data-group="Apex & Data"],
+.node-bg.depth-4[data-group="Apex & Data"]   { fill: var(--amber-bg); stroke: var(--border); stroke-width: 0.5; }
+.node-bg.depth-3[data-group="UI & Frameworks"],
+.node-bg.depth-4[data-group="UI & Frameworks"] { fill: var(--red-bg); stroke: var(--border); stroke-width: 0.5; }
+.node-bg.depth-3[data-group="AI & Tools"],
+.node-bg.depth-4[data-group="AI & Tools"]    { fill: var(--green-bg); stroke: var(--border); stroke-width: 0.5; }
 
-/* Security (blue shades) */
-.node-bg[data-topic="security"] {
-  fill: #DBEAFE;
-  stroke: #60A5FA;
-}
-.node-bg[data-topic="security"].active {
-  fill: #60A5FA;
-  stroke-width: 2;
-}
-
-.node-bg[data-topic="flow"] {
-  fill: #BFDBFE;
-  stroke: #3B82F6;
-}
-.node-bg[data-topic="flow"].active {
-  fill: #3B82F6;
-  stroke-width: 2;
-}
-
-.node-bg[data-topic="limits"] {
-  fill: #EFF6FF;
-  stroke: #2563EB;
-}
-.node-bg[data-topic="limits"].active {
-  fill: #2563EB;
-  stroke-width: 2;
-}
-
-/* Apex (yellow shades) */
-.node-bg[data-topic="apex"] {
-  fill: #FEF9C3;
-  stroke: #FACC15;
-}
-.node-bg[data-topic="apex"].active {
-  fill: #FACC15;
-  stroke-width: 2;
-}
-
-.node-bg[data-topic="soql"] {
-  fill: #FDE68A;
-  stroke: #EAB308;
-}
-.node-bg[data-topic="soql"].active {
-  fill: #EAB308;
-  stroke-width: 2;
-}
-
-.node-bg[data-topic="sosl"] {
-  fill: #FFFBEB;
-  stroke: #CA8A04;
-}
-.node-bg[data-topic="sosl"].active {
-  fill: #CA8A04;
-  stroke-width: 2;
-}
-
-.node-bg[data-topic="integrations"] {
-  fill: #FEF9C3;
-  stroke: #A16207;
-}
-.node-bg[data-topic="integrations"].active {
-  fill: #A16207;
-  stroke-width: 2;
-}
-
-/* UI (red shades) */
-.node-bg[data-topic="lwc"] {
-  fill: #FEE2E2;
-  stroke: #F87171;
-}
-.node-bg[data-topic="lwc"].active {
-  fill: #F87171;
-  stroke-width: 2;
-}
-
-.node-bg[data-topic="javascript"] {
-  fill: #FECACA;
-  stroke: #EF4444;
-}
-.node-bg[data-topic="javascript"].active {
-  fill: #EF4444;
-  stroke-width: 2;
-}
-
-.node-bg[data-topic="aura"] {
-  fill: #FEF2F2;
-  stroke: #DC2626;
-}
-.node-bg[data-topic="aura"].active {
-  fill: #DC2626;
-  stroke-width: 2;
-}
-
-.node-bg[data-topic="visualforce"] {
-  fill: #FEE2E2;
-  stroke: #B91C1C;
-}
-.node-bg[data-topic="visualforce"].active {
-  fill: #B91C1C;
-  stroke-width: 2;
-}
-
-/* AI (green shades) */
-.node-bg[data-topic="ai"] {
-  fill: #DCFCE7;
-  stroke: #4ADE80;
-}
-.node-bg[data-topic="ai"].active {
-  fill: #4ADE80;
-  stroke-width: 2;
-}
-
-.node-bg[data-topic="git"] {
-  fill: #BBF7D0;
-  stroke: #22C55E;
-}
-.node-bg[data-topic="git"].active {
-  fill: #22C55E;
-  stroke-width: 2;
-}
-
-.node-bg[data-topic="processes"] {
-  fill: #F0FDF4;
-  stroke: #16A34A;
-}
-.node-bg[data-topic="processes"].active {
-  fill: #16A34A;
-  stroke-width: 2;
-}
+/* ── Active states per branch ── */
+.node-bg.active[data-group="Architecture"]  { fill: var(--color-basics); }
+.node-bg.active[data-group="Security & Automation"] { fill: var(--color-security); }
+.node-bg.active[data-group="Apex & Data"]   { fill: var(--color-apex); }
+.node-bg.active[data-group="UI & Frameworks"] { fill: var(--color-lwc); }
+.node-bg.active[data-group="AI & Tools"]    { fill: var(--color-ai); }
 
 .node-bg.placeholder {
   fill: var(--placeholder-fill);
@@ -445,13 +355,14 @@ svg { width: 100%; height: 100%; }
   letter-spacing: 0.03em; transition: fill 0.2s;
 }
 .node-label.depth-0 { font-size: 13px; font-weight: 700; }
-.node-label.depth-1 { font-size: 11px; }
-.node-label.depth-2 { font-size: 9.5px; }
-.node-label.depth-3 { font-size: 8.5px; font-weight: 500; }
-.node-label.depth-4 { font-size: 7.5px; font-weight: 400; fill: var(--text-2); }
-.node-bg.depth-0 { rx: 16; ry: 16; stroke-width: 1.5; }
-.node-bg.depth-1 { rx: 10; ry: 10; }
-.node-bg.depth-3, .node-bg.depth-4 { rx: 6; ry: 6; stroke-dasharray: 3 2; }
+.node-label.depth-1 { font-size: 10px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
+.node-label.depth-2 { font-size: 10px; font-weight: 500; }
+.node-label.depth-3 { font-size: 9px; font-weight: 400; fill: var(--text-2); }
+.node-label.depth-4 { font-size: 8px; font-weight: 400; fill: var(--text-2); opacity: 0.85; }
+.node-bg.depth-0 { rx: 20; ry: 20; stroke-width: 1.5; }
+.node-bg.depth-1 { rx: 8; ry: 8; stroke-width: 1; }
+.node-bg.depth-2 { rx: 6; ry: 6; }
+.node-bg.depth-3, .node-bg.depth-4 { rx: 5; ry: 5; }
 
 /* PANEL */
 #content-panel {
@@ -2847,6 +2758,13 @@ function getGroupColor(groupName) {
   const grp = groups.find(g => g.name === groupName);
   return grp ? cssVar('--color-' + grp.ids[0]) : cssVar('--border-strong');
 }
+function getGroupName(d) {
+  if (d.data.name && groups.some(g => g.name === d.data.name)) return d.data.name;
+  const parent = d.parent;
+  if (parent && parent.data.name && groups.some(g => g.name === parent.data.name)) return parent.data.name;
+  const ancestor = d.ancestors().find(a => a.data.name && groups.some(g => g.name === a.data.name));
+  return ancestor ? ancestor.data.name : '';
+}
 function getNodeColor(d) {
   if (d.data.topicId) return getTopicColor(d.data.topicId);
   if (d.depth === 1) return getGroupColor(d.data.name);
@@ -2953,7 +2871,19 @@ function renderTree() {
     })
     .style("stroke", d => getLinkColor(d))
     .attr("fill", "none")
-    .attr("stroke-width", d => d.target.depth <= 1 ? 1.5 : 1);
+    .attr("stroke-width", d => {
+      const td = d.target.depth;
+      if (td <= 1) return 2.5;
+      if (td === 2) return 1.5;
+      return 0.75;
+    })
+    .attr("stroke-opacity", d => {
+      const td = d.target.depth;
+      if (td <= 1) return 0.7;
+      if (td === 2) return 0.5;
+      return 0.35;
+    })
+    .attr("stroke-linecap", "round");
 
   // Draw nodes
   const nodeGroup = g.append("g").selectAll(".node-group")
@@ -2961,6 +2891,7 @@ function renderTree() {
     .join("g")
     .attr("class", "node-group")
     .attr("data-topic", d => d.data.topicId || '')
+    .attr("data-group", d => getGroupName(d))
     .attr("role", "button")
     .attr("tabindex", "0")
     .attr("transform", d => `translate(${d.px},${d.py})`);
@@ -2971,6 +2902,7 @@ function renderTree() {
     const data = d.data;
     const isLeft = data.side === "left";
     const color = getNodeColor(d);
+    const groupName = getGroupName(d);
 
     const rw = nodeWidth(data.name, depth);
     const rh = nodeHeight(depth);
@@ -2982,20 +2914,23 @@ function renderTree() {
     el.append("rect")
       .attr("class", `node-bg depth-${depth}`)
       .attr("data-topic", data.topicId || '')
+      .attr("data-group", groupName)
       .attr("x", rx).attr("y", -rh / 2)
       .attr("width", rw).attr("height", rh)
-      .attr("rx", depth <= 1 ? (depth === 0 ? 16 : 10) : 6)
+      .attr("rx", depth <= 1 ? (depth === 0 ? 20 : 8) : depth === 2 ? 6 : 5)
       .style("--node-color", color)
       .attr("stroke", color)
-      .attr("stroke-width", depth === 0 ? 1.5 : 0.8);
+      .attr("stroke-width", depth === 0 ? 1.5 : depth === 1 ? 1 : 0.8);
 
-    const fs = depth === 0 ? 13 : depth === 1 ? 11 : depth === 2 ? 10 : 9;
+    const fs = depth === 0 ? 13 : depth === 1 ? 10 : depth === 2 ? 10 : 9;
+    const textFill = depth >= 3 ? cssVar('--text-2') : color;
     el.append("text")
       .attr("class", `node-label depth-${depth}`)
       .attr("data-topic", data.topicId || '')
+      .attr("data-group", groupName)
       .attr("text-anchor", "middle")
       .attr("dominant-baseline", "central")
-      .attr("fill", color)
+      .attr("fill", textFill)
       .attr("font-size", fs + "px")
       .attr("x", textX).attr("y", 0)
       .text(data.name);
@@ -3036,7 +2971,7 @@ function renderTree() {
     }
   });
 
-  // Draw root node
+  // Draw root node — center pill (dark bg, light text)
   const rootG = g.append("g")
     .attr("class", "node-group")
     .attr("transform", `translate(${cx},${cy})`);
@@ -3044,12 +2979,14 @@ function renderTree() {
   const rootRW = nodeWidth("Salesforce", 0);
   const rootRH = nodeHeight(0);
   const rootColor = cssVar('--text');
+  const rootBg = cssVar('--bg');
 
   rootG.append("rect")
     .attr("class", "node-bg depth-0")
     .attr("x", -rootRW / 2).attr("y", -rootRH / 2)
     .attr("width", rootRW).attr("height", rootRH)
-    .attr("rx", 16)
+    .attr("rx", 20)
+    .attr("fill", rootColor)
     .style("--node-color", rootColor)
     .attr("stroke", rootColor)
     .attr("stroke-width", 1.5);
@@ -3058,8 +2995,10 @@ function renderTree() {
     .attr("class", "node-label depth-0")
     .attr("text-anchor", "middle")
     .attr("dominant-baseline", "central")
-    .attr("fill", rootColor)
+    .attr("fill", rootBg)
     .attr("font-size", "13px")
+    .attr("font-weight", "600")
+    .attr("letter-spacing", "0.06em")
     .text("Salesforce");
 
   // Drag behavior for root node
