@@ -249,7 +249,8 @@ svg { width: 100%; height: 100%; }
   transition: stroke 0.3s;
 }
 .link.active { stroke: var(--link-active) !important; stroke-width: 2; }
-.node-group { cursor: pointer; }
+.node-group { cursor: grab; }
+.node-group:active { cursor: grabbing; }
 .node-group:hover .node-bg { filter: brightness(1.15); }
 .node-bg {
   stroke: var(--node-stroke);
@@ -2835,6 +2836,10 @@ const zoomBehavior = d3.zoom()
   .on("zoom", e => g.attr("transform", e.transform));
 svg.call(zoomBehavior).on("dblclick.zoom", null);
 
+let wasDragged = false;
+let leftHierRoot = null, rightHierRoot = null;
+let rootVisualPos = { x: 0, y: 0 };
+
 function getTopicColor(topicId) {
   return topicId ? cssVar('--color-' + topicId) : cssVar('--border-strong');
 }
@@ -2928,9 +2933,10 @@ function renderTree() {
     allNodes.forEach(d => { d.py += yOffset; });
     leftHier.py = cy;
     rightHier.py = cy;
+    leftHierRoot = leftHier;
+    rightHierRoot = rightHier;
+    rootVisualPos = { x: cx, y: cy };
   }
-
-  // Draw links (include from dummy roots to groups)
   const allLinks = [...leftHier.links(), ...rightHier.links()];
 
   g.append("g").attr("class", "links")
@@ -3056,8 +3062,31 @@ function renderTree() {
     .attr("font-size", "13px")
     .text("Salesforce");
 
+  // Drag behavior for root node
+  const rootDrag = d3.drag()
+    .subject(() => ({ x: rootVisualPos.x, y: rootVisualPos.y }))
+    .on("start", () => { wasDragged = false; })
+    .on("drag", function(e) {
+      wasDragged = true;
+      rootVisualPos.x = e.x;
+      rootVisualPos.y = e.y;
+      d3.select(this).attr("transform", `translate(${e.x},${e.y})`);
+      if (leftHierRoot) { leftHierRoot.px = e.x; leftHierRoot.py = e.y; }
+      if (rightHierRoot) { rightHierRoot.px = e.x; rightHierRoot.py = e.y; }
+      g.selectAll(".link").each(function(l) {
+        if (l.source !== leftHierRoot && l.source !== rightHierRoot) return;
+        const sx = l.source.px, sy = l.source.py;
+        const tx = l.target.px, ty = l.target.py;
+        if (sx == null || tx == null) return;
+        const midX = (sx + tx) / 2;
+        d3.select(this).attr("d", `M${sx},${sy} C${midX},${sy} ${midX},${ty} ${tx},${ty}`);
+      });
+    });
+  rootG.call(rootDrag);
+
   // Node click handlers
   nodeGroup.on("click", (e, d) => {
+    if (wasDragged) { wasDragged = false; return; }
     e.stopPropagation();
     if (d.data.topicId && topicMap[d.data.topicId]) {
       selectTopic(d.data.topicId);
@@ -3078,6 +3107,26 @@ function renderTree() {
   .on("mouseleave", () => {
     document.getElementById("tooltip").style.opacity = "0";
   });
+
+  // Drag behavior for nodes
+  const nodeDrag = d3.drag()
+    .subject((e, d) => ({ x: d.px, y: d.py }))
+    .on("start", () => { wasDragged = false; })
+    .on("drag", function(e, d) {
+      wasDragged = true;
+      d.px = e.x;
+      d.py = e.y;
+      d3.select(this).attr("transform", `translate(${d.px},${d.py})`);
+      g.selectAll(".link").each(function(l) {
+        if (l.source !== d && l.target !== d) return;
+        const sx = l.source.px, sy = l.source.py;
+        const tx = l.target.px, ty = l.target.py;
+        if (sx == null || tx == null) return;
+        const midX = (sx + tx) / 2;
+        d3.select(this).attr("d", `M${sx},${sy} C${midX},${sy} ${midX},${ty} ${tx},${ty}`);
+      });
+    });
+  nodeGroup.call(nodeDrag);
 
   svg.on("click", () => closeTopic());
 }
