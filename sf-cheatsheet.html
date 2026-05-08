@@ -2815,7 +2815,7 @@ const groups = [
   { name: "Security & Automation", ids: ["security", "flow", "limits"], side: "left" },
   { name: "Apex & Data", ids: ["apex", "soql", "sosl", "integrations"], side: "right" },
   { name: "UI & Frameworks", ids: ["lwc", "aura", "visualforce", "javascript"], side: "right" },
-  { name: "AI & Tools", ids: ["ai", "git", "processes"], side: "right" }
+  { name: "AI & Tools", ids: ["ai", "git", "processes"], side: "left" }
 ];
 
 const collapsedNodes = new Set();
@@ -3254,9 +3254,9 @@ function buildMobileTree() {
   const mgroups = [
     { name: "Architecture", ids: ["basics", "datamodel", "setup"] },
     { name: "Security & Automation", ids: ["security", "flow", "limits"] },
+    { name: "AI & Tools", ids: ["ai", "git", "processes"] },
     { name: "Apex & Data", ids: ["apex", "soql", "sosl", "integrations"] },
-    { name: "UI & Frameworks", ids: ["lwc", "aura", "visualforce", "javascript"] },
-    { name: "AI & Tools", ids: ["ai", "git", "processes"] }
+    { name: "UI & Frameworks", ids: ["lwc", "aura", "visualforce", "javascript"] }
   ];
   mgroups.forEach(group => {
     const groupEl = document.createElement("div"); groupEl.className = "mt-group";
