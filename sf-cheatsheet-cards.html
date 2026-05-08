@@ -392,6 +392,27 @@ body {
 .s-red    .group-label::before { content:''; display:inline-block; width:3px; height:10px; border-radius:2px; background:var(--red); margin-right:7px; vertical-align:middle; }
 .s-green  .group-label::before { content:''; display:inline-block; width:3px; height:10px; border-radius:2px; background:var(--green); margin-right:7px; vertical-align:middle; }
 
+/* ── DRAG & DROP ── */
+.section {
+  cursor: grab;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+}
+.section:active { cursor: grabbing; }
+
+.section.dragging {
+  opacity: 0.4;
+  transform: scale(0.96);
+}
+
+.section.drag-over {
+  box-shadow: 0 0 0 2px var(--text), 0 8px 24px rgba(0,0,0,0.18);
+  transform: scale(1.02);
+}
+
+.grid.show-drop .section:not(.dragging) {
+  transition: transform 0.2s ease;
+}
+
 </style>
 </head>
 <body>
@@ -712,6 +733,91 @@ function switchToTree() {
     (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
   document.documentElement.dataset.theme = saved;
   buildMenu();
+})();
+
+// ── DRAG & DROP ──
+(function() {
+  const grid = document.querySelector(".grid");
+  if (!grid) return;
+
+  let dragEl = null;
+
+  function initDrag() {
+    const sections = grid.querySelectorAll(".section");
+    sections.forEach(sec => {
+      sec.draggable = true;
+      sec.addEventListener("dragstart", onDragStart);
+      sec.addEventListener("dragend", onDragEnd);
+      sec.addEventListener("dragover", onDragOver);
+      sec.addEventListener("dragenter", onDragEnter);
+      sec.addEventListener("dragleave", onDragLeave);
+      sec.addEventListener("drop", onDrop);
+    });
+  }
+
+  function onDragStart(e) {
+    dragEl = this;
+    this.classList.add("dragging");
+    grid.classList.add("show-drop");
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", "");
+  }
+
+  function onDragEnd() {
+    this.classList.remove("dragging");
+    grid.classList.remove("show-drop");
+    grid.querySelectorAll(".section").forEach(s => s.classList.remove("drag-over"));
+    dragEl = null;
+    saveOrder();
+  }
+
+  function onDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+  }
+
+  function onDragEnter(e) {
+    e.preventDefault();
+    if (this !== dragEl) this.classList.add("drag-over");
+  }
+
+  function onDragLeave() {
+    this.classList.remove("drag-over");
+  }
+
+  function onDrop(e) {
+    e.preventDefault();
+    this.classList.remove("drag-over");
+    if (!dragEl || dragEl === this) return;
+    const all = [...grid.querySelectorAll(".section")];
+    const fromIdx = all.indexOf(dragEl);
+    const toIdx = all.indexOf(this);
+    if (fromIdx < toIdx) {
+      this.after(dragEl);
+    } else {
+      this.before(dragEl);
+    }
+  }
+
+  function saveOrder() {
+    const ids = [...grid.querySelectorAll(".section")].map(s => s.querySelector(".title").textContent.trim());
+    localStorage.setItem("sfcs-card-order", JSON.stringify(ids));
+  }
+
+  function restoreOrder() {
+    const raw = localStorage.getItem("sfcs-card-order");
+    if (!raw) return;
+    try {
+      const order = JSON.parse(raw);
+      const sections = [...grid.querySelectorAll(".section")];
+      const map = {};
+      sections.forEach(s => { map[s.querySelector(".title").textContent.trim()] = s; });
+      order.forEach(title => { if (map[title]) grid.appendChild(map[title]); });
+    } catch(e) {}
+  }
+
+  restoreOrder();
+  initDrag();
 })();
 </script>
 
