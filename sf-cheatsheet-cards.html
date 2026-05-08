@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salesforce Knowledge Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+/* ── THEME SYSTEM ── */
+[data-theme="light"] {
+  --bg:      #f4f3ef;
+  --surface: #ffffff;
+  --text:    #181816;
+  --text2:   #6a6a62;
+  --text3:   #a3a3a3;
+  --border:  rgba(0,0,0,0.09);
+  --border-strong: #d4d4d4;
+  --toggle-bg: #f5f5f5;
+  --toggle-text: #737373;
+  --chip-hover: #e5e5e5;
+
+  --purple:      #6040c8;
+  --purple-dim:  #ede9fa;
+  --purple-dark: #22136a;
+
+  --blue:        #1660bb;
+  --blue-dim:    #e5eefa;
+  --blue-dark:   #082550;
+
+  --amber:       #9a6800;
+  --amber-dim:   #fdf3d6;
+  --amber-dark:  #382200;
+
+  --red:         #b42c20;
+  --red-dim:     #fce9e7;
+  --red-dark:    #420a06;
+
+  --green:       #156e3e;
+  --green-dim:   #e1f4ea;
+  --green-dark:  #062618;
+}
+
+[data-theme="dark"] {
+  --bg:      #1f1f1e;
+  --surface: #2a2a29;
+  --text:    #fafafa;
+  --text2:   #a3a3a3;
+  --text3:   #737373;
+  --border:  rgba(255,255,255,0.07);
+  --border-strong: #525250;
+  --toggle-bg: #2a2a29;
+  --toggle-text: #a3a3a3;
+  --chip-hover: #3a3a38;
+
+  --purple:      #a088f0;
+  --purple-dim:  #1a1232;
+  --purple-dark: #d4c8ff;
+
+  --blue:        #5898f0;
+  --blue-dim:    #091830;
+  --blue-dark:   #aaceff;
+
+  --amber:       #e8aa20;
+  --amber-dim:   #1e1400;
+  --amber-dark:  #ffe4a0;
+
+  --red:         #ee5848;
+  --red-dim:     #220806;
+  --red-dark:    #ffbdb8;
+
+  --green:       #30c070;
+  --green-dim:   #041610;
+  --green-dark:  #98f0c0;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  padding: 0;
+  min-height: 100vh;
+  transition: background 0.2s, color 0.2s;
+}
+
+/* ── HEADER (same style as tree) ── */
+#header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 14px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(to bottom, var(--bg), transparent);
+  pointer-events: none;
+}
+#header-left { pointer-events: none; }
+#header h1 {
+  font-weight: 700; font-size: 0.94rem; color: var(--text);
+  letter-spacing: -0.02em;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+#header .sub {
+  font-size: 0.64rem; color: var(--text3); margin-top: 3px;
+  font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.05em; text-transform: uppercase;
+}
+#header-right { display: flex; align-items: center; gap: 14px; pointer-events: all; }
+#view-toggle, #theme-toggle {
+  width: 34px; height: 34px; border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--toggle-bg); color: var(--toggle-text);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-family: 'IBM Plex Mono', monospace;
+  transition: all 0.2s; flex-shrink: 0;
+}
+#view-toggle:hover, #theme-toggle:hover,
+#menu-btn:hover {
+  border-color: var(--border-strong);
+  background: var(--chip-hover);
+}
+
+#menu-btn {
+  width: 34px; height: 34px; border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--toggle-bg); color: var(--toggle-text);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 16px; transition: all 0.2s; flex-shrink: 0;
+}
+
+#menu-panel {
+  position: fixed; top: 60px; right: 16px;
+  width: 260px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transform: translateY(-10px);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  z-index: 200;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+}
+
+#menu-panel.open {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+#menu-header {
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid var(--border);
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+#menu-body {
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-bottom: 4px;
+}
+
+.menu-item:hover {
+  background: var(--chip-hover);
+  transform: translateX(2px);
+}
+
+.menu-item:last-child { margin-bottom: 0; }
+
+.menu-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.menu-dot[data-color="purple"] { background: var(--purple); }
+.menu-dot[data-color="blue"] { background: var(--blue); }
+.menu-dot[data-color="amber"] { background: var(--amber); }
+.menu-dot[data-color="red"] { background: var(--red); }
+.menu-dot[data-color="green"] { background: var(--green); }
+
+.menu-label {
+  font-size: 0.7rem;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.menu-sub {
+  font-size: 0.58rem;
+  color: var(--text3);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+@media (max-width: 768px) {
+  #menu-panel {
+    top: auto; bottom: 16px; right: 16px;
+    max-height: 50vh;
+  }
+}
+#view-toggle i, #theme-toggle i {
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900;
+}
+
+/* ── MAIN CONTENT ── */
+.page-content {
+  padding: 72px 24px 80px;
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+/* ── OLD HEADER (kept as content header) ── */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 36px;
+}
+
+.logo {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text2);
+}
+
+.center-pill {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 18px;
+  font-weight: 600;
+  background: var(--text);
+  color: var(--bg);
+  padding: 8px 22px;
+  border-radius: 40px;
+  letter-spacing: 0.04em;
+}
+
+/* ── GRID ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* ── SECTION CARD ── */
+.section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+/* category header (dark bg) */
+.section-head {
+  padding: 14px 18px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-head .num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  opacity: 0.55;
+  letter-spacing: 0.06em;
+}
+
+.section-head .title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.section-head .badge {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 20px;
+  opacity: 0.6;
+  letter-spacing: 0.04em;
+}
+
+/* body */
+.section-body {
+  padding: 14px 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* sub-group */
+.group { display: flex; flex-direction: column; gap: 4px; }
+
+.group-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+/* leaf tags */
+.tags { display: flex; flex-wrap: wrap; gap: 5px; }
+
+.tag {
+  font-size: 12px;
+  font-weight: 400;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  color: var(--text2);
+  background: var(--bg);
+  line-height: 1.3;
+  transition: opacity .15s;
+}
+.tag:hover { opacity: 0.75; }
+
+/* divider between groups */
+.section-body .group + .group {
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+/* ── COLOR THEMES ── */
+
+/* purple — Basics */
+.s-purple .section-head { background: var(--purple-dark); }
+.s-purple .section-head .title,
+.s-purple .section-head .num { color: var(--purple-dark); filter: invert(1); }
+.s-purple .section-head .badge { background: var(--purple); color: #fff; }
+.s-purple .group-label { color: var(--purple); }
+.s-purple .tag:hover { border-color: var(--purple); color: var(--purple); background: var(--purple-dim); }
+
+/* blue — Security */
+.s-blue .section-head { background: var(--blue-dark); }
+.s-blue .section-head .title,
+.s-blue .section-head .num { color: var(--blue-dark); filter: invert(1); }
+.s-blue .section-head .badge { background: var(--blue); color: #fff; }
+.s-blue .group-label { color: var(--blue); }
+.s-blue .tag:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-dim); }
+
+/* amber — Apex */
+.s-amber .section-head { background: var(--amber-dark); }
+.s-amber .section-head .title,
+.s-amber .section-head .num { color: var(--amber-dark); filter: invert(1); }
+.s-amber .section-head .badge { background: var(--amber); color: #fff; }
+.s-amber .group-label { color: var(--amber); }
+.s-amber .tag:hover { border-color: var(--amber); color: var(--amber); background: var(--amber-dim); }
+
+/* red — UI */
+.s-red .section-head { background: var(--red-dark); }
+.s-red .section-head .title,
+.s-red .section-head .num { color: var(--red-dark); filter: invert(1); }
+.s-red .section-head .badge { background: var(--red); color: #fff; }
+.s-red .group-label { color: var(--red); }
+.s-red .tag:hover { border-color: var(--red); color: var(--red); background: var(--red-dim); }
+
+/* green — AI & DevOps */
+.s-green .section-head { background: var(--green-dark); }
+.s-green .section-head .title,
+.s-green .section-head .num { color: var(--green-dark); filter: invert(1); }
+.s-green .section-head .badge { background: var(--green); color: #fff; }
+.s-green .group-label { color: var(--green); }
+.s-green .tag:hover { border-color: var(--green); color: var(--green); background: var(--green-dim); }
+
+/* ── LEFT BORDER ACCENT on groups ── */
+.s-purple .group-label::before { content:''; display:inline-block; width:3px; height:10px; border-radius:2px; background:var(--purple); margin-right:7px; vertical-align:middle; }
+.s-blue   .group-label::before { content:''; display:inline-block; width:3px; height:10px; border-radius:2px; background:var(--blue); margin-right:7px; vertical-align:middle; }
+.s-amber  .group-label::before { content:''; display:inline-block; width:3px; height:10px; border-radius:2px; background:var(--amber); margin-right:7px; vertical-align:middle; }
+.s-red    .group-label::before { content:''; display:inline-block; width:3px; height:10px; border-radius:2px; background:var(--red); margin-right:7px; vertical-align:middle; }
+.s-green  .group-label::before { content:''; display:inline-block; width:3px; height:10px; border-radius:2px; background:var(--green); margin-right:7px; vertical-align:middle; }
+
+</style>
+</head>
+<body>
+
+<header id="header" role="banner">
+  <div id="header-left">
+    <h1>Salesforce Interview Cheatsheet</h1>
+    <div class="sub">Card view · click any topic to explore</div>
+  </div>
+  <div id="header-right" role="group" aria-label="Controls">
+    <button id="view-toggle" title="Switch to tree view" onclick="switchToTree()" aria-label="Switch to tree view"><i class="fa-solid fa-diagram-project"></i></button>
+    <button id="theme-toggle" title="Toggle theme" onclick="toggleTheme()" aria-label="Toggle dark/light theme">◐</button>
+    <button id="menu-btn" title="All topics" onclick="toggleMenu()" aria-label="Open topics menu" aria-expanded="false" aria-haspopup="true">≡</button>
+  </div>
+</header>
+
+<div class="page-content">
+
+<div class="header">
+  <span class="logo">Knowledge Map</span>
+  <div class="center-pill">Salesforce</div>
+</div>
+
+<div class="grid">
+
+  <!-- 1. BASICS -->
+  <div class="section s-purple">
+    <div class="section-head">
+      <span class="num">01</span>
+      <span class="title">Basics</span>
+      <span class="badge">Data · Config</span>
+    </div>
+    <div class="section-body">
+      <div class="group">
+        <div class="group-label">Data Model</div>
+        <div class="tags">
+          <span class="tag">Standard Objects</span>
+          <span class="tag">Custom Objects</span>
+          <span class="tag">Fields &amp; Types</span>
+          <span class="tag">Relationships</span>
+          <span class="tag">Schema Builder</span>
+          <span class="tag">OWD</span>
+        </div>
+      </div>
+      <div class="group">
+        <div class="group-label">Setup &amp; Config</div>
+        <div class="tags">
+          <span class="tag">User Management</span>
+          <span class="tag">Org Settings</span>
+          <span class="tag">Audit &amp; Monitoring</span>
+          <span class="tag">Data &amp; Storage</span>
+        </div>
+      </div>
+      <div class="group">
+        <div class="group-label">Reports &amp; Dashboards</div>
+        <div class="tags">
+          <span class="tag">Report Types</span>
+          <span class="tag">Filters</span>
+          <span class="tag">Dashboard Components</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. SECURITY & AUTOMATION -->
+  <div class="section s-blue">
+    <div class="section-head">
+      <span class="num">02</span>
+      <span class="title">Security &amp; Automation</span>
+      <span class="badge">Flow · Limits</span>
+    </div>
+    <div class="section-body">
+      <div class="group">
+        <div class="group-label">Access Control</div>
+        <div class="tags">
+          <span class="tag">Profiles</span>
+          <span class="tag">Permission Sets</span>
+          <span class="tag">Field-Level Security</span>
+          <span class="tag">Record-Level Security</span>
+          <span class="tag">Sharing Rules</span>
+          <span class="tag">Apex Security</span>
+        </div>
+      </div>
+      <div class="group">
+        <div class="group-label">Flow</div>
+        <div class="tags">
+          <span class="tag">Flow Types</span>
+          <span class="tag">Record-Triggered Flow</span>
+          <span class="tag">Flow Elements</span>
+          <span class="tag">Best Practices</span>
+          <span class="tag">Flow with LWC</span>
+          <span class="tag">Flow Limits</span>
+        </div>
+      </div>
+      <div class="group">
+        <div class="group-label">Governor Limits</div>
+        <div class="tags">
+          <span class="tag">SOQL &amp; SOSL Limits</span>
+          <span class="tag">DML &amp; Heap</span>
+          <span class="tag">CPU &amp; Execution</span>
+          <span class="tag">Email &amp; Messaging</span>
+          <span class="tag">Async Apex Limits</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. APEX & DATA -->
+  <div class="section s-amber">
+    <div class="section-head">
+      <span class="num">03</span>
+      <span class="title">Apex &amp; Data</span>
+      <span class="badge">SOQL · APIs</span>
+    </div>
+    <div class="section-body">
+      <div class="group">
+        <div class="group-label">Apex Core</div>
+        <div class="tags">
+          <span class="tag">Classes &amp; Methods</span>
+          <span class="tag">Triggers</span>
+          <span class="tag">Collections</span>
+          <span class="tag">Exception Handling</span>
+          <span class="tag">Async Apex</span>
+          <span class="tag">Test Classes</span>
+        </div>
+      </div>
+      <div class="group">
+        <div class="group-label">SOQL</div>
+        <div class="tags">
+          <span class="tag">Basic Queries</span>
+          <span class="tag">Aggregate Functions</span>
+          <span class="tag">SOQL Injection</span>
+          <span class="tag">Dynamic SOQL</span>
+          <span class="tag">WITH SECURITY_ENFORCED</span>
+        </div>
+      </div>
+      <div class="group">
+        <div class="group-label">SOSL</div>
+        <div class="tags">
+          <span class="tag">Structure</span>
+          <span class="tag">When to Use</span>
+          <span class="tag">SOSL vs SOQL</span>
+          <span class="tag">Limits</span>
+        </div>
+      </div>
+      <div class="group">
+        <div class="group-label">Integrations</div>
+        <div class="tags">
+          <span class="tag">REST API</span>
+          <span class="tag">SOAP API</span>
+          <span class="tag">Bulk API</span>
+          <span class="tag">Streaming Events</span>
+          <span class="tag">Integration Patterns</span>
+          <span class="tag">Authentication</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. UI & FRAMEWORKS -->
+  <div class="section s-red">
+    <div class="section-head">
+      <span class="num">04</span>
+      <span class="title">UI &amp; Frameworks</span>
+      <span class="badge">LWC · Aura · VF</span>
+    </div>
+    <div class="section-body">
+      <div class="group">
+        <div class="group-label">LWC</div>
+        <div class="tags">
+          <span class="tag">Bundle Structure</span>
+          <span class="tag">Data Binding</span>
+          <span class="tag">Calling Apex</span>
+          <span class="tag">Events</span>
+          <span class="tag">Wire Service</span>
+          <span class="tag">Lifecycle Hooks</span>
+        </div>
+      </div>
+      <div class="group">
+        <div class="group-label">JavaScript</div>
+        <div class="tags">
+          <span class="tag">ES6+ Basics</span>
+          <span class="tag">Promises &amp; Async/Await</span>
+          <span class="tag">Modules</span>
+          <span class="tag">DOM Manipulation</span>
+        </div>
+      </div>
+      <div class="group">
+        <div class="group-label">Aura Components</div>
+        <div class="tags">
+          <span class="tag">Bundle Structure</span>
+          <span class="tag">Data Binding</span>
+          <span class="tag">Events</span>
+          <span class="tag">Calling Apex</span>
+        </div>
+      </div>
+      <div class="group">
+        <div class="group-label">Visualforce</div>
+        <div class="tags">
+          <span class="tag">Pages &amp; Controllers</span>
+          <span class="tag">View State</span>
+          <span class="tag">JavaScript Integration</span>
+          <span class="tag">When to Use</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. AI & DEVOPS -->
+  <div class="section s-green">
+    <div class="section-head">
+      <span class="num">05</span>
+      <span class="title">AI &amp; DevOps</span>
+      <span class="badge">Einstein · Git · CI</span>
+    </div>
+    <div class="section-body">
+      <div class="group">
+        <div class="group-label">AI &amp; Agentforce</div>
+        <div class="tags">
+          <span class="tag">AI Concepts</span>
+          <span class="tag">Einstein GPT</span>
+          <span class="tag">Prompt Engineering</span>
+          <span class="tag">Agentforce</span>
+          <span class="tag">Copilot Studio</span>
+        </div>
+      </div>
+      <div class="group">
+        <div class="group-label">Git &amp; Version Control</div>
+        <div class="tags">
+          <span class="tag">Core Commands</span>
+          <span class="tag">Branching Strategy</span>
+          <span class="tag">Pull Requests</span>
+          <span class="tag">Conflict Resolution</span>
+        </div>
+      </div>
+      <div class="group">
+        <div class="group-label">DevOps &amp; Processes</div>
+        <div class="tags">
+          <span class="tag">Salesforce DX</span>
+          <span class="tag">Sandboxes</span>
+          <span class="tag">CI/CD Pipelines</span>
+          <span class="tag">Change Sets</span>
+          <span class="tag">Deployment Strategies</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</div>
+
+<nav id="menu-panel" role="navigation" aria-label="Topics menu" aria-hidden="true">
+  <div id="menu-header">All Topics</div>
+  <div id="menu-body" role="list"></div>
+</nav>
+
+<script>
+const MENU_TOPICS = [
+  { section: "01", label: "Basics", sub: "Data Model · Config · Reports", color: "purple", target: 0 },
+  { section: "02", label: "Security & Automation", sub: "Access · Flow · Limits", color: "blue", target: 1 },
+  { section: "03", label: "Apex & Data", sub: "Apex · SOQL · SOSL · APIs", color: "amber", target: 2 },
+  { section: "04", label: "UI & Frameworks", sub: "LWC · JS · Aura · VF", color: "red", target: 3 },
+  { section: "05", label: "AI & DevOps", sub: "Einstein · Git · CI", color: "green", target: 4 },
+];
+
+function buildMenu() {
+  const body = document.getElementById("menu-body");
+  const sections = document.querySelectorAll(".section");
+  MENU_TOPICS.forEach(t => {
+    const item = document.createElement("div");
+    item.className = "menu-item";
+    item.setAttribute("role", "button");
+    item.setAttribute("tabindex", "0");
+    item.innerHTML = `<div class="menu-dot" data-color="${t.color}"></div><div><div class="menu-label">${t.label}</div><div class="menu-sub">${t.sub}</div></div>`;
+    item.onclick = () => {
+      if (sections[t.target]) sections[t.target].scrollIntoView({ behavior: "smooth", block: "start" });
+      closeMenu();
+    };
+    item.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); item.click(); } };
+    body.appendChild(item);
+  });
+}
+
+function toggleMenu() {
+  const menu = document.getElementById("menu-panel");
+  const btn = document.getElementById("menu-btn");
+  const isOpen = menu.classList.toggle("open");
+  menu.setAttribute("aria-hidden", !isOpen);
+  btn.setAttribute("aria-expanded", isOpen);
+}
+
+function closeMenu() {
+  const menu = document.getElementById("menu-panel");
+  const btn = document.getElementById("menu-btn");
+  menu.classList.remove("open");
+  menu.setAttribute("aria-hidden", "true");
+  btn.setAttribute("aria-expanded", "false");
+}
+
+document.addEventListener("click", (e) => {
+  const menu = document.getElementById("menu-panel");
+  if (menu.classList.contains("open") && !menu.contains(e.target) && e.target.id !== "menu-btn") closeMenu();
+});
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const next = html.dataset.theme === "light" ? "dark" : "light";
+  html.dataset.theme = next;
+  localStorage.setItem("sfcs-theme", next);
+}
+function switchToTree() {
+  localStorage.setItem("sfcs-theme", document.documentElement.dataset.theme);
+  window.location.href = "sf-cheatsheet-tree.html";
+}
+(function() {
+  const saved = localStorage.getItem("sfcs-theme") ||
+    (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  document.documentElement.dataset.theme = saved;
+  buildMenu();
+})();
+</script>
+
+</body>
+</html>
