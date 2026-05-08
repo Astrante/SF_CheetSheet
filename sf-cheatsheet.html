@@ -2730,6 +2730,8 @@ const groups = [
 ];
 
 const collapsedNodes = new Set();
+// Collapse all depth-2 (topic) nodes by default so depth-3 subtopics are hidden
+groups.forEach(g => g.ids.forEach(id => collapsedNodes.add(id)));
 
 const _meas = document.createElement("canvas").getContext("2d");
 function nodeWidth(name, depth) {
