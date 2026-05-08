@@ -234,10 +234,11 @@ body {
 }
 svg { width: 100%; height: 100%; }
 .link {
+  fill: none;
   stroke: var(--link-color); stroke-width: 1.2;
   transition: stroke 0.3s;
 }
-.link.active { stroke: var(--link-active); stroke-width: 2; }
+.link.active { stroke: var(--link-active) !important; stroke-width: 2; }
 .node-group { cursor: pointer; }
 .node-group:hover .node-bg { filter: brightness(1.15); }
 .node-bg {
@@ -404,72 +405,37 @@ svg { width: 100%; height: 100%; }
   stroke-dasharray: 4 3;
 }
 
-.node-abbr {
+.node-bg.active { fill: var(--node-color, var(--border-strong)); }
+.node-label.active { fill: var(--bg) !important; }
+
+.node-group.collapsed .node-bg { stroke-dasharray: 4 2; }
+.toggle-btn {
+  cursor: pointer;
   font-family: 'IBM Plex Mono', monospace;
-  font-weight: 600; font-size: 11px; text-anchor: middle;
-  dominant-baseline: central; pointer-events: none;
-  letter-spacing: 0.05em;
-  transition: fill 0.2s;
+  font-size: 10px; font-weight: 600;
+  fill: var(--text-3);
 }
-.node-abbr[data-topic="basics"] { fill: #534AB7; }
-.node-abbr[data-topic="basics"].active { fill: #ffffff; }
-
-.node-abbr[data-topic="datamodel"] { fill: #185FA5; }
-.node-abbr[data-topic="datamodel"].active { fill: #ffffff; }
-
-.node-abbr[data-topic="soql"] { fill: #185FA5; }
-.node-abbr[data-topic="soql"].active { fill: #ffffff; }
-
-.node-abbr[data-topic="apex"] { fill: #0F6E56; }
-.node-abbr[data-topic="apex"].active { fill: #ffffff; }
-
-.node-abbr[data-topic="lwc"] { fill: #993C1D; }
-.node-abbr[data-topic="lwc"].active { fill: #ffffff; }
-
-.node-abbr[data-topic="security"] { fill: #993556; }
-.node-abbr[data-topic="security"].active { fill: #ffffff; }
-
-.node-abbr[data-topic="flow"] { fill: #854F0B; }
-.node-abbr[data-topic="flow"].active { fill: #ffffff; }
-
-.node-abbr[data-topic="integrations"] { fill: #3B6D11; }
-.node-abbr[data-topic="integrations"].active { fill: #ffffff; }
-
-.node-abbr[data-topic="javascript"] { fill: #9D174D; }
-.node-abbr[data-topic="javascript"].active { fill: #ffffff; }
-
-.node-abbr[data-topic="git"] { fill: #115E59; }
-.node-abbr[data-topic="git"].active { fill: #ffffff; }
-
-.node-abbr[data-topic="processes"] { fill: #4B5563; }
-.node-abbr[data-topic="processes"].active { fill: #ffffff; }
-
-.node-abbr[data-topic="limits"] { fill: #185FA5; }
-.node-abbr[data-topic="limits"].active { fill: #ffffff; }
-
-.node-abbr[data-topic="sosl"] { fill: #185FA5; }
-.node-abbr[data-topic="sosl"].active { fill: #ffffff; }
-
-.node-abbr[data-topic="setup"] { fill: #4B5563; }
-.node-abbr[data-topic="setup"].active { fill: #ffffff; }
-
-.node-abbr[data-topic="aura"] { fill: #993C1D; }
-.node-abbr[data-topic="aura"].active { fill: #ffffff; }
-
-.node-abbr[data-topic="visualforce"] { fill: #993C1D; }
-.node-abbr[data-topic="visualforce"].active { fill: #ffffff; }
-
-.node-abbr[data-topic="ai"] { fill: #993556; }
-.node-abbr[data-topic="ai"].active { fill: #ffffff; }
-
-.node-abbr.placeholder { fill: var(--placeholder-text); }
+.toggle-btn:hover { fill: var(--text); }
+.toggle-bg {
+  fill: var(--surface); stroke: var(--border);
+  stroke-width: 0.8; rx: 4; ry: 4; cursor: pointer;
+}
+.toggle-bg:hover { stroke: var(--border-strong); fill: var(--accent-soft); }
 
 .node-label {
-  fill: var(--text-2); font-family: 'IBM Plex Sans', sans-serif;
-  font-weight: 500; font-size: 8px; text-anchor: middle;
-  pointer-events: none; letter-spacing: 0.02em;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 600; font-size: 10px; text-anchor: middle;
+  dominant-baseline: central; pointer-events: none;
+  letter-spacing: 0.03em; transition: fill 0.2s;
 }
-.node-label.placeholder { fill: var(--placeholder-text); }
+.node-label.depth-0 { font-size: 13px; font-weight: 700; }
+.node-label.depth-1 { font-size: 11px; }
+.node-label.depth-2 { font-size: 9.5px; }
+.node-label.depth-3 { font-size: 8.5px; font-weight: 500; }
+.node-label.depth-4 { font-size: 7.5px; font-weight: 400; fill: var(--text-2); }
+.node-bg.depth-0 { rx: 16; ry: 16; stroke-width: 1.5; }
+.node-bg.depth-1 { rx: 10; ry: 10; }
+.node-bg.depth-3, .node-bg.depth-4 { rx: 6; ry: 6; stroke-dasharray: 3 2; }
 
 /* PANEL */
 #content-panel {
@@ -1238,6 +1204,31 @@ svg { width: 100%; height: 100%; }
 }
 #sheet-close:hover { border-color: var(--border-strong); color: var(--text); }
 #sheet-body { overflow-y: auto; flex: 1; padding: 12px; }
+
+/* MOBILE TREE */
+#mobile-tree {
+  display: none; position: fixed; inset: 0;
+  background: var(--bg); z-index: 50;
+  overflow-y: auto; padding: 60px 0 24px;
+}
+#mobile-tree.open { display: block; }
+.mt-group { margin-bottom: 8px; }
+.mt-group-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 20px; cursor: pointer;
+  border-bottom: 1px solid var(--border); user-select: none;
+}
+.mt-group-header:hover { background: var(--accent-soft); }
+.mt-group-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.mt-group-label { font-weight: 600; font-size: 0.82rem; color: var(--text); flex: 1; }
+.mt-group-toggle { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--text-3); }
+.mt-children { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background: var(--surface); }
+.mt-group.expanded .mt-children { max-height: 2000px; }
+.mt-topic {
+  padding: 10px 20px 10px 46px; font-size: 0.75rem; color: var(--text-2);
+  cursor: pointer; border-bottom: 1px solid var(--border);
+}
+.mt-topic:hover { background: var(--accent-soft); color: var(--text); }
 #sheet-body::-webkit-scrollbar { width: 4px; }
 #sheet-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
@@ -1394,7 +1385,7 @@ svg { width: 100%; height: 100%; }
   <header id="header" role="banner">
     <div id="header-left">
       <h1>Salesforce Interview Cheatsheet</h1>
-      <div class="sub">Interactive knowledge graph · click any node to explore</div>
+      <div class="sub">Interactive knowledge tree · click any node to explore</div>
     </div>
     <div id="header-right" role="group" aria-label="Controls">
       <span id="node-count" aria-live="polite"></span>
@@ -1430,8 +1421,10 @@ svg { width: 100%; height: 100%; }
     <div id="sheet-body" role="document" tabindex="0"></div>
   </div>
 
+  <div id="mobile-tree" role="tree" aria-label="Salesforce topics"></div>
+
   <div id="tooltip" role="tooltip" aria-hidden="true"></div>
-  <div id="hint" role="note" aria-label="Keyboard and mouse hints">scroll to zoom · drag to pan · click node to open · ≡ menu · esc to close</div>
+  <div id="hint" role="note" aria-label="Keyboard and mouse hints">scroll to zoom · drag to pan · [+] expand · click node to open · esc to close</div>
 </div>
 
 <!-- Error handling for D3.js loading failure -->
@@ -2792,113 +2785,275 @@ function buildContent(topic) {
   return container;
 }
 
-// ── D3 GRAPH ─────────────────────────────────────────────────────────────────
-const edges = buildEdges();
-const nodes = TOPICS.map(t => ({...t}));
+// ── HORIZONTAL TREE LAYOUT ─────────────────────────────────────────────────
 const isMobile = () => window.innerWidth <= 768;
 const W = () => document.getElementById('graph-container').offsetWidth;
 const H = () => document.getElementById('graph-container').offsetHeight;
 let selectedId = null;
 
+const topicMap = {};
+TOPICS.forEach(t => { topicMap[t.id] = t; });
+
+const groups = [
+  { name: "Architecture", ids: ["basics", "datamodel", "setup"], side: "left" },
+  { name: "Security & Automation", ids: ["security", "flow", "limits"], side: "left" },
+  { name: "Apex & Data", ids: ["apex", "soql", "sosl", "integrations"], side: "right" },
+  { name: "UI & Frameworks", ids: ["lwc", "aura", "visualforce", "javascript"], side: "right" },
+  { name: "AI & Tools", ids: ["ai", "git", "processes"], side: "right" }
+];
+
+const collapsedNodes = new Set();
+
+const _meas = document.createElement("canvas").getContext("2d");
+function nodeWidth(name, depth) {
+  const fs = depth === 0 ? 13 : depth === 1 ? 11 : depth === 2 ? 10 : 9;
+  const fw = depth <= 1 ? 700 : 600;
+  _meas.font = `${fw} ${fs}px 'IBM Plex Sans', sans-serif`;
+  return _meas.measureText(name).width + (depth === 0 ? 36 : depth === 1 ? 28 : depth === 2 ? 24 : 18);
+}
+function nodeHeight(depth) { return depth === 0 ? 38 : depth === 1 ? 30 : depth === 2 ? 26 : 20; }
+
 const svg = d3.select("#graph");
 const g = svg.append("g");
-const zoom = d3.zoom()
-  .scaleExtent([0.2, 3])
+const zoomBehavior = d3.zoom()
+  .scaleExtent([0.1, 4])
   .on("zoom", e => g.attr("transform", e.transform));
-svg.call(zoom).on("dblclick.zoom", null);
+svg.call(zoomBehavior).on("dblclick.zoom", null);
 
-const simulation = d3.forceSimulation(nodes)
-  .force("link", d3.forceLink(edges).id(d => d.id)
-    .distance(d => {
-      const minDim = Math.min(W(), H());
-      const isDev = d.source.category === "dev" || d.target.category === "dev";
-      const basePct = isDev ? 0.18 : 0.22;
-      return minDim * basePct;
-    })
-    .strength(0.45))
-  .force("charge", d3.forceManyBody()
-    .strength(d => {
-      const minDim = Math.min(W(), H());
-      return -minDim * 0.65;
-    }))
-  .force("center", d3.forceCenter(W() / 2, H() / 2))
-  .force("collision", d3.forceCollide(d => d.size + Math.min(W(), H()) * 0.04))
-  .alpha(1).alphaDecay(0.018);
-
-const link = g.append("g").selectAll("line")
-  .data(edges)
-  .join("line")
-  .attr("class", "link");
-
-const nodeGroup = g.append("g").selectAll(".node-group")
-  .data(nodes)
-  .join("g")
-  .attr("class", "node-group")
-  .attr("role", "button")
-  .attr("tabindex", "0")
-  .attr("aria-label", d => `${d.label} (${d.abbr}) - ${d.subtopics?.length || 0} sections`)
-  .call(d3.drag()
-    .on("start", (e, d) => {
-      if (!e.active) simulation.alphaTarget(0.3).restart();
-      d.fx = d.x;
-      d.fy = d.y;
-    })
-    .on("drag", (e, d) => {
-      d.fx = e.x;
-      d.fy = e.y;
-    })
-    .on("end", (e, d) => {
-      if (!e.active) simulation.alphaTarget(0);
-      d.fx = null;
-      d.fy = null;
-    })
-  );
-
-nodeGroup.append("circle")
-  .attr("class", d => "node-bg" + (d.category === "placeholder" ? " placeholder" : ""))
-  .attr("data-topic", d => d.id)
-  .attr("r", d => d.size);
-
-const abbrTexts = nodeGroup.append("text")
-  .attr("class", d => "node-abbr" + (d.category === "placeholder" ? " placeholder" : ""))
-  .attr("data-topic", d => d.id)
-  .attr("text-anchor", "middle")
-  .attr("dominant-baseline", "central")
-  .attr("y", d => d.subtopics && d.subtopics.length ? -4 : 0)
-  .text(d => d.abbr);
-
-const labelTexts = nodeGroup.append("text")
-  .attr("class", d => "node-label" + (d.category === "placeholder" ? " placeholder" : ""))
-  .attr("text-anchor", "middle")
-  .attr("y", d => d.size * 0.55)
-  .text(d => d.label);
-
-function updateNodeColors() {
-  // Colors are now handled by CSS via data-topic attributes
+function getTopicColor(topicId) {
+  return topicId ? cssVar('--color-' + topicId) : cssVar('--border-strong');
+}
+function getGroupColor(groupName) {
+  const grp = groups.find(g => g.name === groupName);
+  return grp ? cssVar('--color-' + grp.ids[0]) : cssVar('--border-strong');
+}
+function getNodeColor(d) {
+  if (d.data.topicId) return getTopicColor(d.data.topicId);
+  if (d.depth === 1) return getGroupColor(d.data.name);
+  return cssVar('--text');
+}
+function getLinkColor(link) {
+  const t = link.target.data;
+  if (t.topicId) return getTopicColor(t.topicId);
+  if (link.target.depth === 1) return getGroupColor(t.name);
+  return cssVar('--border');
 }
 
-updateNodeColors();
+function buildHalfData(groupList) {
+  return {
+    children: groupList.map(group => ({
+      name: group.name, id: "group-" + group.name, side: group.side,
+      children: group.ids.map(tid => {
+        const topic = topicMap[tid];
+        if (!topic) return null;
+        return {
+          name: topic.label, id: tid, topicId: tid, side: group.side,
+          children: (topic.subtopics || []).map((st, si) => ({
+            name: st.name.replace(/^[^\p{L}\p{N}]+/u, '').trim() || st.name,
+            id: tid + "-sub-" + si, topicId: tid, side: group.side
+          }))
+        };
+      }).filter(Boolean)
+    }))
+  };
+}
 
-nodeGroup
-  .on("click", (e, d) => {
-    e.stopPropagation();
-    selectTopic(d.id);
-  })
-  .on("keydown", (e, d) => {
-    // Keyboard navigation: Enter or Space to activate
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      e.stopPropagation();
-      selectTopic(d.id);
+function renderTree() {
+  g.selectAll("*").remove();
+
+  const leftGroups = groups.filter(g => g.side === "left");
+  const rightGroups = groups.filter(g => g.side === "right");
+  const leftData = buildHalfData(leftGroups);
+  const rightData = buildHalfData(rightGroups);
+
+  const leftHier = d3.hierarchy(leftData);
+  const rightHier = d3.hierarchy(rightData);
+
+  [leftHier, rightHier].forEach(root => {
+    root.descendants().forEach(d => {
+      if (collapsedNodes.has(d.data.id) && d.children) {
+        d._children = d.children;
+        d.children = null;
+      }
+    });
+  });
+
+  const treeLayout = d3.tree().nodeSize([26, 200]);
+  treeLayout(leftHier);
+  treeLayout(rightHier);
+
+  const cx = W() / 2;
+  const cy = H() / 2;
+
+  const leftNodes = [];
+  leftHier.each(d => {
+    if (d.depth === 0) { d.px = cx; d.py = 0; return; }
+    d.px = cx - d.y;
+    d.py = d.x;
+    d.data.side = "left";
+    leftNodes.push(d);
+  });
+
+  const rightNodes = [];
+  rightHier.each(d => {
+    if (d.depth === 0) { d.px = cx; d.py = 0; return; }
+    d.px = cx + d.y;
+    d.py = d.x;
+    d.data.side = "right";
+    rightNodes.push(d);
+  });
+
+  const allNodes = [...leftNodes, ...rightNodes];
+
+  // Center all nodes vertically
+  if (allNodes.length > 0) {
+    const yMin = d3.min(allNodes, d => d.py);
+    const yMax = d3.max(allNodes, d => d.py);
+    const yOffset = cy - (yMin + yMax) / 2;
+    allNodes.forEach(d => { d.py += yOffset; });
+    leftHier.py = cy;
+    rightHier.py = cy;
+  }
+
+  // Draw links (include from dummy roots to groups)
+  const allLinks = [...leftHier.links(), ...rightHier.links()];
+
+  g.append("g").attr("class", "links")
+    .selectAll("path")
+    .data(allLinks)
+    .join("path")
+    .attr("class", "link")
+    .attr("d", d => {
+      const sx = d.source.px, sy = d.source.py;
+      const tx = d.target.px, ty = d.target.py;
+      if (sx == null || tx == null) return "";
+      const midX = (sx + tx) / 2;
+      return `M${sx},${sy} C${midX},${sy} ${midX},${ty} ${tx},${ty}`;
+    })
+    .style("stroke", d => getLinkColor(d))
+    .attr("fill", "none")
+    .attr("stroke-width", d => d.target.depth <= 1 ? 1.5 : 1);
+
+  // Draw nodes
+  const nodeGroup = g.append("g").selectAll(".node-group")
+    .data(allNodes)
+    .join("g")
+    .attr("class", "node-group")
+    .attr("data-topic", d => d.data.topicId || '')
+    .attr("role", "button")
+    .attr("tabindex", "0")
+    .attr("transform", d => `translate(${d.px},${d.py})`);
+
+  nodeGroup.each(function(d) {
+    const el = d3.select(this);
+    const depth = d.depth;
+    const data = d.data;
+    const isLeft = data.side === "left";
+    const color = getNodeColor(d);
+
+    const rw = nodeWidth(data.name, depth);
+    const rh = nodeHeight(depth);
+
+    let rx, textX;
+    if (isLeft) { rx = -rw; textX = -rw / 2; }
+    else { rx = 0; textX = rw / 2; }
+
+    el.append("rect")
+      .attr("class", `node-bg depth-${depth}`)
+      .attr("data-topic", data.topicId || '')
+      .attr("x", rx).attr("y", -rh / 2)
+      .attr("width", rw).attr("height", rh)
+      .attr("rx", depth <= 1 ? (depth === 0 ? 16 : 10) : 6)
+      .style("--node-color", color)
+      .attr("stroke", color)
+      .attr("stroke-width", depth === 0 ? 1.5 : 0.8);
+
+    const fs = depth === 0 ? 13 : depth === 1 ? 11 : depth === 2 ? 10 : 9;
+    el.append("text")
+      .attr("class", `node-label depth-${depth}`)
+      .attr("data-topic", data.topicId || '')
+      .attr("text-anchor", "middle")
+      .attr("dominant-baseline", "central")
+      .attr("fill", color)
+      .attr("font-size", fs + "px")
+      .attr("x", textX).attr("y", 0)
+      .text(data.name);
+
+    // Toggle button for non-leaf nodes
+    if (d.children || d._children) {
+      const isCollapsed = !d.children;
+      const toggleX = isLeft ? -rw - 12 : rw + 12;
+      const symbol = isCollapsed ? "+" : "−";
+
+      const toggleG = el.append("g")
+        .attr("class", "toggle-group")
+        .attr("transform", `translate(${toggleX}, 0)`)
+        .style("cursor", "pointer");
+
+      toggleG.append("rect")
+        .attr("class", "toggle-bg")
+        .attr("x", -8).attr("y", -8)
+        .attr("width", 16).attr("height", 16)
+        .attr("rx", 4);
+
+      toggleG.append("text")
+        .attr("class", "toggle-btn")
+        .attr("text-anchor", "middle")
+        .attr("dominant-baseline", "central")
+        .text(symbol);
+
+      toggleG.on("click", (e) => {
+        e.stopPropagation();
+        if (d.children) {
+          collapsedNodes.add(data.id);
+        } else {
+          collapsedNodes.delete(data.id);
+        }
+        renderTree();
+        if (selectedId) highlightSelected(selectedId);
+      });
     }
-    // Arrow keys for navigation could be added here
+  });
+
+  // Draw root node
+  const rootG = g.append("g")
+    .attr("class", "node-group")
+    .attr("transform", `translate(${cx},${cy})`);
+
+  const rootRW = nodeWidth("Salesforce", 0);
+  const rootRH = nodeHeight(0);
+  const rootColor = cssVar('--text');
+
+  rootG.append("rect")
+    .attr("class", "node-bg depth-0")
+    .attr("x", -rootRW / 2).attr("y", -rootRH / 2)
+    .attr("width", rootRW).attr("height", rootRH)
+    .attr("rx", 16)
+    .style("--node-color", rootColor)
+    .attr("stroke", rootColor)
+    .attr("stroke-width", 1.5);
+
+  rootG.append("text")
+    .attr("class", "node-label depth-0")
+    .attr("text-anchor", "middle")
+    .attr("dominant-baseline", "central")
+    .attr("fill", rootColor)
+    .attr("font-size", "13px")
+    .text("Salesforce");
+
+  // Node click handlers
+  nodeGroup.on("click", (e, d) => {
+    e.stopPropagation();
+    if (d.data.topicId && topicMap[d.data.topicId]) {
+      selectTopic(d.data.topicId);
+    }
   })
   .on("mouseenter", (e, d) => {
     const tip = document.getElementById("tooltip");
-    const sectionCount = d.subtopics ? d.subtopics.length : 0;
-    tip.textContent = d.label + (d.category === "placeholder" ? " · coming soon" : ` · ${sectionCount} sections`);
+    const topic = d.data.topicId ? topicMap[d.data.topicId] : null;
+    const extra = topic && topic.subtopics ? ` · ${topic.subtopics.length} sections` : '';
+    tip.textContent = d.data.name + extra;
     tip.style.opacity = "1";
-    tip.setAttribute('aria-hidden', 'false');
   })
   .on("mousemove", e => {
     const tip = document.getElementById("tooltip");
@@ -2906,36 +3061,31 @@ nodeGroup
     tip.style.top = (e.clientY - 8) + "px";
   })
   .on("mouseleave", () => {
-    const tip = document.getElementById("tooltip");
-    tip.style.opacity = "0";
-    tip.setAttribute('aria-hidden', 'true');
-  })
-  .on("focus", function(e, d) {
-    // Add visual focus indicator
-    d3.select(this).select(".node-bg").attr("stroke-width", 2.5);
-  })
-  .on("blur", function(e, d) {
-    // Remove visual focus indicator
-    d3.select(this).select(".node-bg").attr("stroke-width", 0.8);
+    document.getElementById("tooltip").style.opacity = "0";
   });
 
-svg.on("click", () => closeTopic());
+  svg.on("click", () => closeTopic());
+}
 
-simulation.on("tick", () => {
-  link
-    .attr("x1", d => d.source.x)
-    .attr("y1", d => d.source.y)
-    .attr("x2", d => d.target.x)
-    .attr("y2", d => d.target.y);
+function highlightSelected(id) {
+  g.selectAll(".node-bg").each(function(d) {
+    const node = d3.select(this);
+    const isActive = d.data && d.data.topicId === id;
+    node.classed("active", isActive);
+    if (isActive) {
+      node.style("fill", getNodeColor(d));
+    }
+  });
+  g.selectAll(".node-label").classed("active", d => d.data && d.data.topicId === id);
+  g.selectAll(".link").classed("active", d => {
+    if (!d.source || !d.target) return false;
+    const sid = d.source.data ? (d.source.data.topicId || d.source.data.id) : '';
+    const tid = d.target.data ? (d.target.data.topicId || d.target.data.id) : '';
+    return sid === id || tid === id;
+  });
+}
 
-  nodeGroup.attr("transform", d => `translate(${d.x},${d.y})`);
-});
-
-// Performance: Stop simulation when alpha is very low
-simulation.on("end", () => {
-  // Simulation has stabilized
-  console.debug("Force simulation stabilized");
-});
+function updateNodeColors() { renderTree(); if (selectedId) highlightSelected(selectedId); }
 
 // ── TOPIC SELECTION ───────────────────────────────────────────────────────────
 function selectTopic(id) {
@@ -2943,201 +3093,138 @@ function selectTopic(id) {
   const topic = TOPICS.find(t => t.id === id);
   if (!topic) return;
 
+  highlightSelected(id);
+
   const content = buildContent(topic);
 
-  // Update node/link styles
-  nodeGroup.selectAll("circle.node-bg").classed("active", d => d.id === id);
-  nodeGroup.selectAll("text.node-abbr").classed("active", d => d.id === id);
-  link.classed("active", d => d.source.id === id || d.target.id === id);
-
-  // Update panel
   if (isMobile()) {
     const sheetTitle = document.getElementById("sheet-title");
     const sheetBody = document.getElementById("sheet-body");
     const sheet = document.getElementById("mobile-sheet");
-
     sheetTitle.textContent = topic.label;
     sheetBody.innerHTML = '';
     sheetBody.appendChild(content);
     sheet.classList.add("open");
     sheet.setAttribute('aria-hidden', 'false');
-
-    // Focus management
     setTimeout(() => sheetBody.focus(), 100);
   } else {
     const panelTitle = document.getElementById("panel-title");
     const panelBody = document.getElementById("panel-body");
     const panel = document.getElementById("content-panel");
-
     panelTitle.textContent = topic.label;
     panelBody.innerHTML = '';
     panelBody.appendChild(content);
     panel.classList.add("open");
     panel.setAttribute('aria-hidden', 'false');
     document.getElementById("graph-container").classList.add("panel-open");
-
-    // Resize simulation after panel animation completes
-    setTimeout(() => {
-      const container = document.getElementById('graph-container');
-      simulation.force("center", d3.forceCenter(container.offsetWidth / 2, container.offsetHeight / 2))
-        .alpha(0.3)
-        .restart();
-    }, 350);
-
-    // Focus management
     setTimeout(() => panelBody.focus(), 100);
   }
-
-  // Update hash
   window.location.hash = id;
 }
 
 function closeTopic() {
   selectedId = null;
-  nodeGroup.selectAll("circle.node-bg").classed("active", false);
-  nodeGroup.selectAll("text.node-abbr").classed("active", false);
-  link.classed("active", false);
+  g.selectAll(".node-bg.active").classed("active", false).style("fill", null);
+  g.selectAll(".node-label.active").classed("active", false);
+  g.selectAll(".link.active").classed("active", false);
 
   const panel = document.getElementById("content-panel");
   const sheet = document.getElementById("mobile-sheet");
-
   panel.classList.remove("open");
   panel.setAttribute('aria-hidden', 'true');
   document.getElementById("graph-container").classList.remove("panel-open");
-
   sheet.classList.remove("open");
   sheet.setAttribute('aria-hidden', 'true');
-
-  // Resize simulation after panel animation completes
-  setTimeout(() => {
-    const container = document.getElementById('graph-container');
-    simulation.force("center", d3.forceCenter(container.offsetWidth / 2, container.offsetHeight / 2))
-      .alpha(0.3)
-      .restart();
-  }, 350);
 
   window.location.hash = "";
 }
 
-// Event listeners
-document.getElementById("panel-close").addEventListener("click", e => {
-  e.stopPropagation();
-  closeTopic();
-});
+document.getElementById("panel-close").addEventListener("click", e => { e.stopPropagation(); closeTopic(); });
+document.getElementById("sheet-close").addEventListener("click", e => { e.stopPropagation(); closeTopic(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeTopic(); });
 
-document.getElementById("sheet-close").addEventListener("click", e => {
-  e.stopPropagation();
-  closeTopic();
-});
-
-document.addEventListener("keydown", e => {
-  if (e.key === "Escape") closeTopic();
-});
-
-// RESIZE HANDLE FUNCTIONALITY
+// RESIZE HANDLE
 const resizeHandle = document.getElementById("resize-handle");
 const contentPanel = document.getElementById("content-panel");
 const graphContainer = document.getElementById("graph-container");
-let isResizing = false;
-let startX = 0;
-let startWidth = 0;
+let isResizing = false, startX = 0, startWidth = 0;
 
-resizeHandle.addEventListener("mousedown", (e) => {
-  isResizing = true;
-  startX = e.clientX;
-  startWidth = contentPanel.offsetWidth;
+resizeHandle.addEventListener("mousedown", e => {
+  isResizing = true; startX = e.clientX; startWidth = contentPanel.offsetWidth;
   resizeHandle.classList.add("active");
-  document.body.style.cursor = "ew-resize";
-  document.body.style.userSelect = "none";
+  document.body.style.cursor = "ew-resize"; document.body.style.userSelect = "none";
   e.preventDefault();
 });
-
-document.addEventListener("mousemove", (e) => {
+document.addEventListener("mousemove", e => {
   if (!isResizing) return;
-
-  const deltaX = startX - e.clientX;
-  const newWidth = Math.max(300, Math.min(window.innerWidth * 0.95, startWidth + deltaX));
-  const widthPercent = (newWidth / window.innerWidth) * 100;
-
-  contentPanel.style.width = widthPercent + "%";
-  graphContainer.style.width = (100 - widthPercent) + "%";
-
-  // Resize simulation after a short delay
-  clearTimeout(window.resizeSimulationTimeout);
-  window.resizeSimulationTimeout = setTimeout(() => {
-    simulation.force("center", d3.forceCenter(graphContainer.offsetWidth / 2, graphContainer.offsetHeight / 2))
-      .alpha(0.3)
-      .restart();
-  }, 150);
+  const newWidth = Math.max(300, Math.min(window.innerWidth * 0.95, startWidth + startX - e.clientX));
+  contentPanel.style.width = (newWidth / window.innerWidth * 100) + "%";
+  graphContainer.style.width = ((1 - newWidth / window.innerWidth) * 100) + "%";
 });
-
 document.addEventListener("mouseup", () => {
   if (isResizing) {
-    isResizing = false;
-    resizeHandle.classList.remove("active");
-    document.body.style.cursor = "";
-    document.body.style.userSelect = "";
-  }
-});
-
-// Touch support for mobile
-resizeHandle.addEventListener("touchstart", (e) => {
-  isResizing = true;
-  startX = e.touches[0].clientX;
-  startWidth = contentPanel.offsetWidth;
-  resizeHandle.classList.add("active");
-  e.preventDefault();
-});
-
-document.addEventListener("touchmove", (e) => {
-  if (!isResizing) return;
-
-  const deltaX = startX - e.touches[0].clientX;
-  const newWidth = Math.max(300, Math.min(window.innerWidth * 0.95, startWidth + deltaX));
-  const widthPercent = (newWidth / window.innerWidth) * 100;
-
-  contentPanel.style.width = widthPercent + "%";
-  graphContainer.style.width = (100 - widthPercent) + "%";
-
-  clearTimeout(window.resizeSimulationTimeout);
-  window.resizeSimulationTimeout = setTimeout(() => {
-    simulation.force("center", d3.forceCenter(graphContainer.offsetWidth / 2, graphContainer.offsetHeight / 2))
-      .alpha(0.3)
-      .restart();
-  }, 150);
-});
-
-document.addEventListener("touchend", () => {
-  if (isResizing) {
-    isResizing = false;
-    resizeHandle.classList.remove("active");
+    isResizing = false; resizeHandle.classList.remove("active");
+    document.body.style.cursor = ""; document.body.style.userSelect = "";
+    renderTree(); if (selectedId) highlightSelected(selectedId);
   }
 });
 
 document.getElementById("node-count").textContent =
   `${TOPICS.filter(t => t.category !== "placeholder").length}/${TOPICS.length} topics`;
 
-// Debounced resize handler for performance
 window.addEventListener("resize", debounce(() => {
-  simulation.force("center", d3.forceCenter(W() / 2, H() / 2))
-    .alpha(0.3)
-    .restart();
+  if (isMobile()) {
+    document.getElementById("graph-container").style.display = "none";
+    document.getElementById("mobile-tree").classList.add("open");
+  } else {
+    document.getElementById("graph-container").style.display = "";
+    document.getElementById("mobile-tree").classList.remove("open");
+    renderTree(); if (selectedId) highlightSelected(selectedId);
+  }
 }, 250));
 
-// Handle hash-based routing
-function handleHash() {
-  const hash = window.location.hash.slice(1);
-  if (hash && TOPICS.find(t => t.id === hash)) {
-    selectTopic(hash);
-  }
+// MOBILE TREE VIEW
+function buildMobileTree() {
+  const container = document.getElementById("mobile-tree");
+  container.innerHTML = '';
+  const mgroups = [
+    { name: "Architecture", ids: ["basics", "datamodel", "setup"] },
+    { name: "Security & Automation", ids: ["security", "flow", "limits"] },
+    { name: "Apex & Data", ids: ["apex", "soql", "sosl", "integrations"] },
+    { name: "UI & Frameworks", ids: ["lwc", "aura", "visualforce", "javascript"] },
+    { name: "AI & Tools", ids: ["ai", "git", "processes"] }
+  ];
+  mgroups.forEach(group => {
+    const groupEl = document.createElement("div"); groupEl.className = "mt-group";
+    const header = document.createElement("div"); header.className = "mt-group-header";
+    const dot = document.createElement("div"); dot.className = "mt-group-dot";
+    dot.style.background = getGroupColor(group.name);
+    const label = document.createElement("div"); label.className = "mt-group-label"; label.textContent = group.name;
+    const toggle = document.createElement("div"); toggle.className = "mt-group-toggle"; toggle.textContent = "+";
+    header.appendChild(dot); header.appendChild(label); header.appendChild(toggle);
+    const children = document.createElement("div"); children.className = "mt-children";
+    group.ids.forEach(id => {
+      const topic = topicMap[id]; if (!topic) return;
+      const topicEl = document.createElement("div"); topicEl.className = "mt-topic";
+      topicEl.textContent = topic.label; topicEl.onclick = () => selectTopic(topic.id);
+      children.appendChild(topicEl);
+    });
+    header.onclick = () => {
+      groupEl.classList.toggle("expanded");
+      toggle.textContent = groupEl.classList.contains("expanded") ? "−" : "+";
+    };
+    groupEl.appendChild(header); groupEl.appendChild(children); container.appendChild(groupEl);
+  });
 }
 
+function handleHash() {
+  const hash = window.location.hash.slice(1);
+  if (hash && TOPICS.find(t => t.id === hash)) selectTopic(hash);
+}
 window.addEventListener("hashchange", handleHash);
 
-// Build menu
 buildMenu();
 
-// Initialize when DOM is ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initializeApp);
 } else {
@@ -3145,14 +3232,18 @@ if (document.readyState === 'loading') {
 }
 
 function initializeApp() {
-  // Initial positioning
   requestAnimationFrame(() => {
+    if (isMobile()) {
+      buildMobileTree();
+      document.getElementById("mobile-tree").classList.add("open");
+      document.getElementById("graph-container").style.display = "none";
+    } else {
+      renderTree();
+      svg.call(zoomBehavior.transform,
+        d3.zoomIdentity.translate(W() * 0.08, H() * 0.08).scale(0.85)
+      );
+    }
     handleHash();
-    svg.call(zoom.transform,
-      d3.zoomIdentity
-        .translate(W() * 0.05, H() * 0.05)
-        .scale(0.90)
-    );
   });
 }
 </script>
