@@ -106,24 +106,29 @@
   --code-bg: #fafafa;
   --code-border: #e5e5e5;
 
-  /* Topic Colors */
-  --color-basics: #8B5CF6;
+  /* Topic Colors — grouped by branch with shades */
+  /* Architecture (blue) */
+  --color-basics: #60A5FA;
   --color-datamodel: #3B82F6;
-  --color-soql: #0EA5E9;
-  --color-apex: #F97316;
-  --color-lwc: #EF4444;
-  --color-security: #22C55E;
-  --color-flow: #A855F7;
-  --color-integrations: #EAB308;
-  --color-javascript: #EC4899;
-  --color-git: #14B8A6;
-  --color-processes: #6B7280;
-  --color-limits: #1E40AF;
-  --color-sosl: #06B6D4;
-  --color-setup: #64748B;
-  --color-aura: #8B5CF6;
-  --color-visualforce: #6366F1;
-  --color-ai: #10B981;
+  --color-setup: #2563EB;
+  /* Security & Automation (green) */
+  --color-security: #4ADE80;
+  --color-flow: #22C55E;
+  --color-limits: #16A34A;
+  /* Apex & Data (orange) */
+  --color-apex: #FB923C;
+  --color-soql: #F97316;
+  --color-sosl: #EA580C;
+  --color-integrations: #C2410C;
+  /* UI & Frameworks (violet) */
+  --color-lwc: #A78BFA;
+  --color-javascript: #8B5CF6;
+  --color-aura: #7C3AED;
+  --color-visualforce: #6D28D9;
+  /* AI & Tools (red) */
+  --color-ai: #F87171;
+  --color-git: #EF4444;
+  --color-processes: #DC2626;
 }
 [data-theme="dark"] {
   --bg: #1f1f1e;
@@ -159,24 +164,29 @@
   --code-bg: #2a2a29;
   --code-border: #3a3a38;
 
-  /* Topic Colors */
-  --color-basics: #A78BFA;
+  /* Topic Colors — grouped by branch with shades */
+  /* Architecture (blue) */
+  --color-basics: #93C5FD;
   --color-datamodel: #60A5FA;
-  --color-soql: #38BDF8;
-  --color-apex: #FB923C;
-  --color-lwc: #F87171;
-  --color-security: #4ADE80;
-  --color-flow: #C084FC;
-  --color-integrations: #FACC15;
-  --color-javascript: #F472B6;
-  --color-git: #2DD4BF;
-  --color-processes: #9CA3AF;
-  --color-limits: #3B82F6;
-  --color-sosl: #22D3EE;
-  --color-setup: #94A3B8;
-  --color-aura: #A78BFA;
-  --color-visualforce: #818CF8;
-  --color-ai: #34D399;
+  --color-setup: #3B82F6;
+  /* Security & Automation (green) */
+  --color-security: #86EFAC;
+  --color-flow: #4ADE80;
+  --color-limits: #22C55E;
+  /* Apex & Data (orange) */
+  --color-apex: #FDBA74;
+  --color-soql: #FB923C;
+  --color-sosl: #F97316;
+  --color-integrations: #EA580C;
+  /* UI & Frameworks (violet) */
+  --color-lwc: #C4B5FD;
+  --color-javascript: #A78BFA;
+  --color-aura: #8B5CF6;
+  --color-visualforce: #7C3AED;
+  /* AI & Tools (red) */
+  --color-ai: #FCA5A5;
+  --color-git: #F87171;
+  --color-processes: #EF4444;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -246,156 +256,161 @@ svg { width: 100%; height: 100%; }
   stroke-width: 0.8;
   transition: all 0.2s;
 }
+/* Architecture (blue shades) */
 .node-bg[data-topic="basics"] {
-  fill: #EEEDFE;
-  stroke: #534AB7;
+  fill: #DBEAFE;
+  stroke: #60A5FA;
 }
 .node-bg[data-topic="basics"].active {
-  fill: #534AB7;
+  fill: #60A5FA;
   stroke-width: 2;
 }
 
 .node-bg[data-topic="datamodel"] {
-  fill: #E6F1FB;
-  stroke: #185FA5;
+  fill: #BFDBFE;
+  stroke: #3B82F6;
 }
 .node-bg[data-topic="datamodel"].active {
-  fill: #185FA5;
-  stroke-width: 2;
-}
-
-.node-bg[data-topic="soql"] {
-  fill: #E6F1FB;
-  stroke: #185FA5;
-}
-.node-bg[data-topic="soql"].active {
-  fill: #185FA5;
-  stroke-width: 2;
-}
-
-.node-bg[data-topic="apex"] {
-  fill: #E1F5EE;
-  stroke: #0F6E56;
-}
-.node-bg[data-topic="apex"].active {
-  fill: #0F6E56;
-  stroke-width: 2;
-}
-
-.node-bg[data-topic="lwc"] {
-  fill: #FAECE7;
-  stroke: #993C1D;
-}
-.node-bg[data-topic="lwc"].active {
-  fill: #993C1D;
-  stroke-width: 2;
-}
-
-.node-bg[data-topic="security"] {
-  fill: #FBEAF0;
-  stroke: #993556;
-}
-.node-bg[data-topic="security"].active {
-  fill: #993556;
-  stroke-width: 2;
-}
-
-.node-bg[data-topic="flow"] {
-  fill: #FAEEDA;
-  stroke: #854F0B;
-}
-.node-bg[data-topic="flow"].active {
-  fill: #854F0B;
-  stroke-width: 2;
-}
-
-.node-bg[data-topic="integrations"] {
-  fill: #EAF3DE;
-  stroke: #3B6D11;
-}
-.node-bg[data-topic="integrations"].active {
-  fill: #3B6D11;
-  stroke-width: 2;
-}
-
-.node-bg[data-topic="javascript"] {
-  fill: #FCE7F3;
-  stroke: #9D174D;
-}
-.node-bg[data-topic="javascript"].active {
-  fill: #9D174D;
-  stroke-width: 2;
-}
-
-.node-bg[data-topic="git"] {
-  fill: #CCFBF1;
-  stroke: #115E59;
-}
-.node-bg[data-topic="git"].active {
-  fill: #115E59;
-  stroke-width: 2;
-}
-
-.node-bg[data-topic="processes"] {
-  fill: #F3F4F6;
-  stroke: #4B5563;
-}
-.node-bg[data-topic="processes"].active {
-  fill: #4B5563;
-  stroke-width: 2;
-}
-
-.node-bg[data-topic="limits"] {
-  fill: #E6F1FB;
-  stroke: #185FA5;
-}
-.node-bg[data-topic="limits"].active {
-  fill: #185FA5;
-  stroke-width: 2;
-}
-
-.node-bg[data-topic="sosl"] {
-  fill: #E6F1FB;
-  stroke: #185FA5;
-}
-.node-bg[data-topic="sosl"].active {
-  fill: #185FA5;
+  fill: #3B82F6;
   stroke-width: 2;
 }
 
 .node-bg[data-topic="setup"] {
-  fill: #F3F4F6;
-  stroke: #4B5563;
+  fill: #EFF6FF;
+  stroke: #2563EB;
 }
 .node-bg[data-topic="setup"].active {
-  fill: #4B5563;
+  fill: #2563EB;
+  stroke-width: 2;
+}
+
+/* Security & Automation (green shades) */
+.node-bg[data-topic="security"] {
+  fill: #DCFCE7;
+  stroke: #4ADE80;
+}
+.node-bg[data-topic="security"].active {
+  fill: #4ADE80;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="flow"] {
+  fill: #BBF7D0;
+  stroke: #22C55E;
+}
+.node-bg[data-topic="flow"].active {
+  fill: #22C55E;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="limits"] {
+  fill: #F0FDF4;
+  stroke: #16A34A;
+}
+.node-bg[data-topic="limits"].active {
+  fill: #16A34A;
+  stroke-width: 2;
+}
+
+/* Apex & Data (orange shades) */
+.node-bg[data-topic="apex"] {
+  fill: #FFEDD5;
+  stroke: #FB923C;
+}
+.node-bg[data-topic="apex"].active {
+  fill: #FB923C;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="soql"] {
+  fill: #FED7AA;
+  stroke: #F97316;
+}
+.node-bg[data-topic="soql"].active {
+  fill: #F97316;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="sosl"] {
+  fill: #FFF7ED;
+  stroke: #EA580C;
+}
+.node-bg[data-topic="sosl"].active {
+  fill: #EA580C;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="integrations"] {
+  fill: #FFEDD5;
+  stroke: #C2410C;
+}
+.node-bg[data-topic="integrations"].active {
+  fill: #C2410C;
+  stroke-width: 2;
+}
+
+/* UI & Frameworks (violet shades) */
+.node-bg[data-topic="lwc"] {
+  fill: #EDE9FE;
+  stroke: #A78BFA;
+}
+.node-bg[data-topic="lwc"].active {
+  fill: #A78BFA;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="javascript"] {
+  fill: #DDD6FE;
+  stroke: #8B5CF6;
+}
+.node-bg[data-topic="javascript"].active {
+  fill: #8B5CF6;
   stroke-width: 2;
 }
 
 .node-bg[data-topic="aura"] {
-  fill: #FAECE7;
-  stroke: #993C1D;
+  fill: #F5F3FF;
+  stroke: #7C3AED;
 }
 .node-bg[data-topic="aura"].active {
-  fill: #993C1D;
+  fill: #7C3AED;
   stroke-width: 2;
 }
 
 .node-bg[data-topic="visualforce"] {
-  fill: #FAECE7;
-  stroke: #993C1D;
+  fill: #EDE9FE;
+  stroke: #6D28D9;
 }
 .node-bg[data-topic="visualforce"].active {
-  fill: #993C1D;
+  fill: #6D28D9;
   stroke-width: 2;
 }
 
+/* AI & Tools (red shades) */
 .node-bg[data-topic="ai"] {
-  fill: #FBEAF0;
-  stroke: #993556;
+  fill: #FEE2E2;
+  stroke: #F87171;
 }
 .node-bg[data-topic="ai"].active {
-  fill: #993556;
+  fill: #F87171;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="git"] {
+  fill: #FECACA;
+  stroke: #EF4444;
+}
+.node-bg[data-topic="git"].active {
+  fill: #EF4444;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="processes"] {
+  fill: #FEF2F2;
+  stroke: #DC2626;
+}
+.node-bg[data-topic="processes"].active {
+  fill: #DC2626;
   stroke-width: 2;
 }
 
