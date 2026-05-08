@@ -107,28 +107,28 @@
   --code-border: #e5e5e5;
 
   /* Topic Colors — grouped by branch with shades */
-  /* Architecture (blue) */
-  --color-basics: #60A5FA;
-  --color-datamodel: #3B82F6;
-  --color-setup: #2563EB;
-  /* Security & Automation (green) */
-  --color-security: #4ADE80;
-  --color-flow: #22C55E;
-  --color-limits: #16A34A;
-  /* Apex & Data (orange) */
-  --color-apex: #FB923C;
-  --color-soql: #F97316;
-  --color-sosl: #EA580C;
-  --color-integrations: #C2410C;
-  /* UI & Frameworks (violet) */
-  --color-lwc: #A78BFA;
-  --color-javascript: #8B5CF6;
-  --color-aura: #7C3AED;
-  --color-visualforce: #6D28D9;
-  /* AI & Tools (red) */
-  --color-ai: #F87171;
-  --color-git: #EF4444;
-  --color-processes: #DC2626;
+  /* Architecture (violet) */
+  --color-basics: #A78BFA;
+  --color-datamodel: #8B5CF6;
+  --color-setup: #7C3AED;
+  /* Security (blue) */
+  --color-security: #60A5FA;
+  --color-flow: #3B82F6;
+  --color-limits: #2563EB;
+  /* Apex (yellow) */
+  --color-apex: #FACC15;
+  --color-soql: #EAB308;
+  --color-sosl: #CA8A04;
+  --color-integrations: #A16207;
+  /* UI (red) */
+  --color-lwc: #F87171;
+  --color-javascript: #EF4444;
+  --color-aura: #DC2626;
+  --color-visualforce: #B91C1C;
+  /* AI (green) */
+  --color-ai: #4ADE80;
+  --color-git: #22C55E;
+  --color-processes: #16A34A;
 }
 [data-theme="dark"] {
   --bg: #1f1f1e;
@@ -165,28 +165,28 @@
   --code-border: #3a3a38;
 
   /* Topic Colors — grouped by branch with shades */
-  /* Architecture (blue) */
-  --color-basics: #93C5FD;
-  --color-datamodel: #60A5FA;
-  --color-setup: #3B82F6;
-  /* Security & Automation (green) */
-  --color-security: #86EFAC;
-  --color-flow: #4ADE80;
-  --color-limits: #22C55E;
-  /* Apex & Data (orange) */
-  --color-apex: #FDBA74;
-  --color-soql: #FB923C;
-  --color-sosl: #F97316;
-  --color-integrations: #EA580C;
-  /* UI & Frameworks (violet) */
-  --color-lwc: #C4B5FD;
-  --color-javascript: #A78BFA;
-  --color-aura: #8B5CF6;
-  --color-visualforce: #7C3AED;
-  /* AI & Tools (red) */
-  --color-ai: #FCA5A5;
-  --color-git: #F87171;
-  --color-processes: #EF4444;
+  /* Architecture (violet) */
+  --color-basics: #C4B5FD;
+  --color-datamodel: #A78BFA;
+  --color-setup: #8B5CF6;
+  /* Security (blue) */
+  --color-security: #93C5FD;
+  --color-flow: #60A5FA;
+  --color-limits: #3B82F6;
+  /* Apex (yellow) */
+  --color-apex: #FDE68A;
+  --color-soql: #FACC15;
+  --color-sosl: #EAB308;
+  --color-integrations: #CA8A04;
+  /* UI (red) */
+  --color-lwc: #FCA5A5;
+  --color-javascript: #F87171;
+  --color-aura: #EF4444;
+  --color-visualforce: #DC2626;
+  /* AI (green) */
+  --color-ai: #86EFAC;
+  --color-git: #4ADE80;
+  --color-processes: #22C55E;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -257,161 +257,161 @@ svg { width: 100%; height: 100%; }
   stroke-width: 0.8;
   transition: all 0.2s;
 }
-/* Architecture (blue shades) */
+/* Architecture (violet shades) */
 .node-bg[data-topic="basics"] {
-  fill: #DBEAFE;
-  stroke: #60A5FA;
-}
-.node-bg[data-topic="basics"].active {
-  fill: #60A5FA;
-  stroke-width: 2;
-}
-
-.node-bg[data-topic="datamodel"] {
-  fill: #BFDBFE;
-  stroke: #3B82F6;
-}
-.node-bg[data-topic="datamodel"].active {
-  fill: #3B82F6;
-  stroke-width: 2;
-}
-
-.node-bg[data-topic="setup"] {
-  fill: #EFF6FF;
-  stroke: #2563EB;
-}
-.node-bg[data-topic="setup"].active {
-  fill: #2563EB;
-  stroke-width: 2;
-}
-
-/* Security & Automation (green shades) */
-.node-bg[data-topic="security"] {
-  fill: #DCFCE7;
-  stroke: #4ADE80;
-}
-.node-bg[data-topic="security"].active {
-  fill: #4ADE80;
-  stroke-width: 2;
-}
-
-.node-bg[data-topic="flow"] {
-  fill: #BBF7D0;
-  stroke: #22C55E;
-}
-.node-bg[data-topic="flow"].active {
-  fill: #22C55E;
-  stroke-width: 2;
-}
-
-.node-bg[data-topic="limits"] {
-  fill: #F0FDF4;
-  stroke: #16A34A;
-}
-.node-bg[data-topic="limits"].active {
-  fill: #16A34A;
-  stroke-width: 2;
-}
-
-/* Apex & Data (orange shades) */
-.node-bg[data-topic="apex"] {
-  fill: #FFEDD5;
-  stroke: #FB923C;
-}
-.node-bg[data-topic="apex"].active {
-  fill: #FB923C;
-  stroke-width: 2;
-}
-
-.node-bg[data-topic="soql"] {
-  fill: #FED7AA;
-  stroke: #F97316;
-}
-.node-bg[data-topic="soql"].active {
-  fill: #F97316;
-  stroke-width: 2;
-}
-
-.node-bg[data-topic="sosl"] {
-  fill: #FFF7ED;
-  stroke: #EA580C;
-}
-.node-bg[data-topic="sosl"].active {
-  fill: #EA580C;
-  stroke-width: 2;
-}
-
-.node-bg[data-topic="integrations"] {
-  fill: #FFEDD5;
-  stroke: #C2410C;
-}
-.node-bg[data-topic="integrations"].active {
-  fill: #C2410C;
-  stroke-width: 2;
-}
-
-/* UI & Frameworks (violet shades) */
-.node-bg[data-topic="lwc"] {
   fill: #EDE9FE;
   stroke: #A78BFA;
 }
-.node-bg[data-topic="lwc"].active {
+.node-bg[data-topic="basics"].active {
   fill: #A78BFA;
   stroke-width: 2;
 }
 
-.node-bg[data-topic="javascript"] {
+.node-bg[data-topic="datamodel"] {
   fill: #DDD6FE;
   stroke: #8B5CF6;
 }
-.node-bg[data-topic="javascript"].active {
+.node-bg[data-topic="datamodel"].active {
   fill: #8B5CF6;
   stroke-width: 2;
 }
 
-.node-bg[data-topic="aura"] {
+.node-bg[data-topic="setup"] {
   fill: #F5F3FF;
   stroke: #7C3AED;
 }
-.node-bg[data-topic="aura"].active {
+.node-bg[data-topic="setup"].active {
   fill: #7C3AED;
   stroke-width: 2;
 }
 
-.node-bg[data-topic="visualforce"] {
-  fill: #EDE9FE;
-  stroke: #6D28D9;
+/* Security (blue shades) */
+.node-bg[data-topic="security"] {
+  fill: #DBEAFE;
+  stroke: #60A5FA;
 }
-.node-bg[data-topic="visualforce"].active {
-  fill: #6D28D9;
+.node-bg[data-topic="security"].active {
+  fill: #60A5FA;
   stroke-width: 2;
 }
 
-/* AI & Tools (red shades) */
-.node-bg[data-topic="ai"] {
+.node-bg[data-topic="flow"] {
+  fill: #BFDBFE;
+  stroke: #3B82F6;
+}
+.node-bg[data-topic="flow"].active {
+  fill: #3B82F6;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="limits"] {
+  fill: #EFF6FF;
+  stroke: #2563EB;
+}
+.node-bg[data-topic="limits"].active {
+  fill: #2563EB;
+  stroke-width: 2;
+}
+
+/* Apex (yellow shades) */
+.node-bg[data-topic="apex"] {
+  fill: #FEF9C3;
+  stroke: #FACC15;
+}
+.node-bg[data-topic="apex"].active {
+  fill: #FACC15;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="soql"] {
+  fill: #FDE68A;
+  stroke: #EAB308;
+}
+.node-bg[data-topic="soql"].active {
+  fill: #EAB308;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="sosl"] {
+  fill: #FFFBEB;
+  stroke: #CA8A04;
+}
+.node-bg[data-topic="sosl"].active {
+  fill: #CA8A04;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="integrations"] {
+  fill: #FEF9C3;
+  stroke: #A16207;
+}
+.node-bg[data-topic="integrations"].active {
+  fill: #A16207;
+  stroke-width: 2;
+}
+
+/* UI (red shades) */
+.node-bg[data-topic="lwc"] {
   fill: #FEE2E2;
   stroke: #F87171;
 }
-.node-bg[data-topic="ai"].active {
+.node-bg[data-topic="lwc"].active {
   fill: #F87171;
   stroke-width: 2;
 }
 
-.node-bg[data-topic="git"] {
+.node-bg[data-topic="javascript"] {
   fill: #FECACA;
   stroke: #EF4444;
 }
-.node-bg[data-topic="git"].active {
+.node-bg[data-topic="javascript"].active {
   fill: #EF4444;
   stroke-width: 2;
 }
 
-.node-bg[data-topic="processes"] {
+.node-bg[data-topic="aura"] {
   fill: #FEF2F2;
   stroke: #DC2626;
 }
-.node-bg[data-topic="processes"].active {
+.node-bg[data-topic="aura"].active {
   fill: #DC2626;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="visualforce"] {
+  fill: #FEE2E2;
+  stroke: #B91C1C;
+}
+.node-bg[data-topic="visualforce"].active {
+  fill: #B91C1C;
+  stroke-width: 2;
+}
+
+/* AI (green shades) */
+.node-bg[data-topic="ai"] {
+  fill: #DCFCE7;
+  stroke: #4ADE80;
+}
+.node-bg[data-topic="ai"].active {
+  fill: #4ADE80;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="git"] {
+  fill: #BBF7D0;
+  stroke: #22C55E;
+}
+.node-bg[data-topic="git"].active {
+  fill: #22C55E;
+  stroke-width: 2;
+}
+
+.node-bg[data-topic="processes"] {
+  fill: #F0FDF4;
+  stroke: #16A34A;
+}
+.node-bg[data-topic="processes"].active {
+  fill: #16A34A;
   stroke-width: 2;
 }
 
