@@ -392,6 +392,186 @@ body {
 .s-red    .group-label::before { content:''; display:inline-block; width:3px; height:10px; border-radius:2px; background:var(--red); margin-right:7px; vertical-align:middle; }
 .s-green  .group-label::before { content:''; display:inline-block; width:3px; height:10px; border-radius:2px; background:var(--green); margin-right:7px; vertical-align:middle; }
 
+/* ── DETAIL PANEL ── */
+.detail-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 300;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s, visibility 0.25s;
+  backdrop-filter: blur(2px);
+}
+.detail-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.detail-panel {
+  position: fixed; top: 0; right: 0;
+  width: 70vw; min-width: 480px; max-width: 1100px;
+  height: 100vh;
+  background: var(--bg);
+  z-index: 301;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex; flex-direction: column;
+  box-shadow: -8px 0 40px rgba(0,0,0,0.15);
+}
+.detail-panel.open {
+  transform: translateX(0);
+}
+
+.detail-header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: flex-start; justify-content: space-between;
+  flex-shrink: 0;
+  background: var(--surface);
+}
+
+.detail-title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.detail-close {
+  width: 32px; height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--toggle-bg);
+  color: var(--toggle-text);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+.detail-close:hover {
+  border-color: var(--border-strong);
+  background: var(--chip-hover);
+}
+
+.detail-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px 32px;
+}
+
+.detail-body .grid {
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.detail-body .section {
+  cursor: default;
+}
+
+.detail-body .tag {
+  cursor: default;
+}
+
+/* extra blocks inside panel cards */
+.detail-tips {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: var(--chip-hover);
+  border-radius: 8px;
+  border-left: 3px solid var(--amber);
+}
+
+.detail-tip {
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.4;
+}
+.detail-tip::before {
+  content: '💡 ';
+}
+
+.detail-code {
+  margin-top: 8px;
+  padding: 10px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text2);
+  white-space: pre-wrap;
+  line-height: 1.5;
+  overflow-x: auto;
+}
+
+.detail-examples {
+  margin-top: 8px;
+  display: flex; flex-direction: column; gap: 3px;
+}
+
+.detail-example {
+  font-size: 12px;
+  color: var(--text3);
+  line-height: 1.4;
+}
+.detail-example::before {
+  content: '→ ';
+}
+
+.detail-questions {
+  margin-top: 8px;
+  display: flex; flex-wrap: wrap; gap: 5px;
+}
+
+.detail-question {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  color: var(--text3);
+  background: var(--bg);
+}
+
+.detail-question::before {
+  content: '❓ ';
+}
+
+/* highlight animation when scrolling to subtopic */
+.detail-body .section.highlight-sub {
+  box-shadow: 0 0 0 2px var(--text), 0 8px 24px rgba(0,0,0,0.18);
+  transition: box-shadow 0.4s ease;
+}
+
+/* clickable groups & tags */
+.group-label[data-topic] {
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.group-label[data-topic]:hover {
+  opacity: 0.7;
+}
+
+.tag {
+  cursor: pointer;
+}
+
+/* color-specific panel accent */
+.detail-panel[data-color="purple"] .detail-header { border-bottom-color: var(--purple); }
+.detail-panel[data-color="blue"] .detail-header { border-bottom-color: var(--blue); }
+.detail-panel[data-color="amber"] .detail-header { border-bottom-color: var(--amber); }
+.detail-panel[data-color="red"] .detail-header { border-bottom-color: var(--red); }
+.detail-panel[data-color="green"] .detail-header { border-bottom-color: var(--green); }
+
+@media (max-width: 600px) {
+  .detail-panel {
+    width: 100vw;
+    max-width: 100vw;
+  }
+  .detail-body .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ── DRAG & DROP ── */
 .section {
   cursor: grab;
@@ -670,6 +850,15 @@ body {
   <div id="menu-body" role="list"></div>
 </nav>
 
+<div class="detail-overlay" id="detail-overlay"></div>
+<aside class="detail-panel" id="detail-panel" role="dialog" aria-label="Topic details" aria-hidden="true">
+  <div class="detail-header">
+    <div class="detail-title" id="detail-title"></div>
+    <button class="detail-close" id="detail-close" aria-label="Close panel">&times;</button>
+  </div>
+  <div class="detail-body" id="detail-body"></div>
+</aside>
+
 <script>
 const MENU_TOPICS = [
   { section: "01", label: "Basics", sub: "Data Model · Config · Reports", color: "purple", target: 0 },
@@ -679,6 +868,389 @@ const MENU_TOPICS = [
   { section: "05", label: "AI & DevOps", sub: "Einstein · Git · CI", color: "green", target: 4 },
 ];
 
+// ── TOPICS DATA ──
+const TOPICS = [
+  {
+    id: "basics", label: "Salesforce Basics", subtopics: [
+      { name: "Multitenant Architecture", items: ["Shared infrastructure, isolated tenant data", "IaaS: Infrastructure as a Service", "PaaS: Platform as a Service (Salesforce)", "SaaS: Software as a Service (end users)"], tips: ["Metadata-driven architecture: config, not code"], questions: ["Explain multitenancy", "IaaS vs PaaS vs SaaS?"] },
+      { name: "Editions & Sandboxes", items: ["Essentials, Professional, Enterprise, Unlimited", "Performance: unlimited sandbox & live agent", "Developer: dev & testing, no prod data", "Developer Pro: larger data limits", "Partial Copy: sampled prod data (1GB)", "Full: complete prod copy"], tips: ["Full sandbox for final UAT before deploy"], questions: ["When to use each sandbox type?"] },
+      { name: "Order of Execution", items: ["1. System validation rules", "2. Before triggers", "3. Custom validation rules", "4. Duplicate rules", "5. After triggers", "6. Assignment rules / auto-response", "7. Workflow rules", "8. Process Builder / Flow", "9. Roll-up summary fields", "10. Criteria-based sharing"], tips: ["Before triggers: can modify records before save", "After triggers: records have IDs, can do DML"], questions: ["Where do validation rules fire?", "Before vs After trigger?"] },
+      { name: "Cloud Products", items: ["Sales Cloud: CRM, sales automation", "Service Cloud: customer service, support", "Marketing Cloud: marketing automation", "Commerce Cloud: e-commerce", "Experience Cloud: communities & portals", "Health Cloud: healthcare management", "Financial Services Cloud: financial CRM"], tips: ["Experience Cloud = formerly Communities"] },
+      { name: "Data Management", items: ["Import Wizard: ≤50k records, simple", "Data Loader: any volume, complex", "Mass Transfer Records: change ownership", "Mass Delete Records: bulk cleanup", "Storage limits: file vs data storage"], tips: ["Use Data Loader with CLI for automation"] },
+      { name: "Deferred Calculations", items: ["Defer Sharing Calculations: batch sharing updates", "Defer Group Membership: batch group changes", "Improves bulk data load performance", "Recalculate when load completes"], tips: ["Enable for large data migrations"] }
+    ]
+  },
+  {
+    id: "datamodel", label: "Data Model", subtopics: [
+      { name: "Objects & Fields", items: ["Standard objects: Account, Contact, Opportunity, Case, Lead (258+)", "Custom objects: __c suffix, max 500 fields per object", "Field types: Text, Number, Formula, Lookup, Master-Detail, Picklist", "External ID: unique, indexed, upsert key", "Formula fields: calculated values, cross-object references", "Roll-Up Summary: aggregate child data on parent (Master-Detail only)"], tips: ["Hit 500 field limit? Use External Objects, Big Objects, or refactor to Custom Metadata"], questions: ["What's the workaround for 500 field limit?", "External ID use cases?"], examples: ["External ID field for upsert from external system", "Formula field: AnnualRevenue * 0.10 (commission calculation)"] },
+      { name: "Relationships", items: ["Lookup: loose coupling, nullable, optional parent relationship", "Master-Detail (MD): tight coupling, required parent, controls sharing", "MD benefits: cascade delete, roll-up summary fields, inherited sharing", "Junction object: many-to-many via 2 Master-Detail relationships", "External Lookup: connect to external data via Salesforce Connect"], tips: ["Master-Detail required on child, affects sharing and deletion"], examples: ["Lookup: Account → Contact (one Account, many Contacts)", "Junction: Student ← Enrollment → Course (many-to-many)"], questions: ["How to implement many-to-many relationship?", "Cascade delete gotchas?"] },
+      { name: "Record Types & Page Layouts", items: ["Record Types: support different business processes", "Controls: picklist values, page layouts, business processes", "Page Layouts: field arrangement, buttons, links, related lists", "Dynamic Forms: field-level visibility without record types (LWC)", "Page Layout Assignment: by profile and record type combination"], tips: ["Dynamic Forms can reduce record type complexity"], examples: ["B2B vs B2C customers: different record types, different fields", "Dynamic Forms: show fields based on picklist value"], questions: ["Record Type vs Dynamic Forms — when to use which?"] },
+      { name: "Validation & Business Logic", items: ["Validation Rules: prevent save on error conditions", "Field Dependencies: control picklist values based on another field", "Matching Rules: define duplicate record matching criteria", "Duplicate Rules: prevent or allow duplicates based on Matching Rules", "Limit: 100 validation rules per object"], tips: ["Use description field to document Validation Rule purpose"], examples: ["VR: Require email domain for certain Account types", "Field Dependency: Country → State (filtered values)"], questions: ["How to prevent duplicate records automatically?"] },
+      { name: "Custom Metadata Types (CMT)", items: ["Deployable metadata (like Custom Settings but better)", "Type-safe, can use in packaging, can migrate via change sets", "Features: field sets, relationships, validation rules", "Use cases: feature flags, configuration mappings, business rules", "Accessible via SOQL and Apex Metadata API"], tips: ["Prefer CMT over Custom Settings for new development"], examples: ["Feature flag: Enable_New_Flow__c = true", "Field mapping: External_Field__c → SF_Field__c"], questions: ["CMT vs Custom Settings — key differences?"] },
+      { name: "Data Quality & Scale", items: ["Validation Rules enforce data integrity", "Field Dependencies guide valid inputs", "Duplicate Rules with Matching Rules", "Indexes improve query performance", "Archive old data: Big Objects, external"], tips: ["Slow reports? Add custom index on filter field"], questions: ["Reports slow with millions of records?"] }
+    ]
+  },
+  {
+    id: "setup", label: "Setup & Config", subtopics: [
+      { name: "User Management", items: ["Users: add, edit, deactivate", "Public Groups: sharing, permissions", "Queues: record ownership", "Permission Sets: grant access", "Profiles: baseline permissions"] },
+      { name: "Security Controls", items: ["Session Settings: timeout, high assurance", "Password Policies: complexity, expiration", "Login Flows: custom login logic", "Login IP Ranges: restrict by IP", "Two-Factor Authentication: 2FA"] },
+      { name: "Audit & Monitoring", items: ["Setup Audit Trail: track changes", "Field History Tracking: data changes", "Login History: access logs", "Event Monitoring: detailed user activity"] },
+      { name: "Data & Storage", items: ["Storage Usage: monitor file vs data", "Data Export: weekly backup", "Mass Delete: cleanup old data", "Storage Limits: plan for growth"] }
+    ]
+  },
+  {
+    id: "reports", label: "Reports & Dashboards", subtopics: [
+      { name: "Report Types", items: ["Tabular: simple list of records", "Summary: grouped with subtotals", "Matrix: grouped by rows and columns", "Joined: combine multiple report types", "Custom Report Types: define custom sources"], tips: ["Use Summary reports for most use cases"] },
+      { name: "Filters", items: ["Standard Filters: date, owner, field values", "Cross Filters: filter on related objects (WITH/WITHOUT)", "Filter Logic: AND/OR combinations", "Row-Level Formulas: calculated columns"], tips: ["Cross filters are powerful for finding records WITH/WITHOUT related data"] },
+      { name: "Dashboard Components", items: ["Charts: bar, line, pie, donut", "Gauge: show progress toward goal", "Metric: single number", "Table: mini report", "Visualforce: custom component"], questions: ["When to use a dashboard vs report?"] }
+    ]
+  },
+  {
+    id: "security", label: "Security", subtopics: [
+      { name: "Access Layers (4 levels)", items: ["1. Organization-level: IP restrictions, login hours", "2. Object-level: CRUD (Profile, Permission Set)", "3. Field-level: FLS (read/edit per field)", "4. Record-level: Sharing (OWD, Rules, Manual)"], tips: ["Security evaluation: top to bottom"], questions: ["Order of security evaluation?"] },
+      { name: "Object-Level Security", items: ["Profiles: baseline CRUD permissions", "Permission Sets: additive CRUD", "Permission Set Groups: bundle PS", "Tab visibility: separate from object access"], tips: ["Minimize profile changes; use permission sets"] },
+      { name: "Field-Level Security (FLS)", items: ["Profile: baseline field access", "Permission Sets: additive field access", "Hidden vs Read-Only vs Edit", "Field accessibility check in Apex"], questions: ["How to enforce FLS in Apex?"] },
+      { name: "Record-Level Security", items: ["OWD (Organization-Wide Defaults): baseline", "Private: owner only", "Public Read/Write: all users", "Public Read/Write/Transfer: all + transfer", "Public Full Access: all + edit/delete all (custom only)"], tips: ["OWD is most restrictive baseline"] },
+      { name: "Sharing Mechanisms", items: ["Role Hierarchy: inherit upward", "Sharing Rules: criteria-based or owner-based", "Manual Sharing: ad hoc (record owner)", "Apex Sharing: programmatic (AccountShare)", "Team-based sharing: account teams, opportunity teams"], tips: ["Role hierarchy grants access, never revokes"] },
+      { name: "Profiles & Permission Sets", items: ["Profile: required, baseline access", "Permission Set: optional, additive", "Permission Set Group: bundle permission sets", "Muting Permission: remove from PSG", "Custom Permission: feature flag logic"], tips: ["Move customizations to Permission Sets"] },
+      { name: "Apex Security", items: ["with sharing: enforce record security", "without sharing: bypass record security", "inherited sharing: maintain caller's context", "Sharing recalculation: on FLS, role changes", "Apex Managed Sharing: custom sharing reasons"], questions: ["When to use without sharing?"] }
+    ]
+  },
+  {
+    id: "flow", label: "Flow", subtopics: [
+      { name: "Flow Types", items: ["Screen Flow: user-interactive UI", "Record-Triggered Flow: auto on DML", "Scheduled Flow: time-based execution", "Platform Event-Triggered Flow: event-driven", "Auto-Launched Flow: no UI, invocable"], questions: ["Screen vs Record-Triggered?"] },
+      { name: "Record-Triggered Flow", items: ["Trigger: Create, Update, Delete, Undelete", "Optimization: Before Save (fast, no DML)", "After Save: can do DML, creates transaction", "Trigger Order: 1, 2, 3, ... 200", "Record-Triggered vs: Flow: run as record owner"], tips: ["Before Save replaces simple Apex triggers"], questions: ["Before vs After Save Flow?"] },
+      { name: "Flow Elements", items: ["Screens: UI components", "Actions: create records, send email", "Decisions: logic branches", "Loops: iterate collections", "Assignments: set variable values", "Get Records: query SOQL", "Update Records: DML"], tips: ["Use Get Records with filters to avoid iteration"] },
+      { name: "Best Practices", items: ["Bulkify: no SOQL in loops", "Fault Paths: always handle errors", "Use One Element per Action", "Subflows: reusable components", "Debug with Debug Mode + run as specific user"], questions: ["How to debug Flow errors?"] },
+      { name: "Flow Limits", items: ["SOQL queries: 100 per transaction", "DML operations: 150 per transaction", "Elements: 2000 per flow (screen)", "Interview limit: 200 elements executed", "Execution time limits apply"] },
+      { name: "Flow with LWC", items: ["LWC as Flow Screen component", "lightning-flow-support: access flow attrs", "Input attributes, output attributes", "Validation with FlowValidation", "Use for: complex UI, custom logic"] }
+    ]
+  },
+  {
+    id: "limits", label: "Governor Limits", subtopics: [
+      { name: "SOQL & SOSL Limits", items: ["100 (200 async) SOQL queries per transaction", "50,000 records retrieved by SOQL", "50,000 aggregate result rows", "10 nested subqueries", "2,000 OFFSET max", "10 SOSL queries per transaction", "2,000 SOSL result rows", "120s query timeout"], tips: ["Use Limits class: Limits.getLimitQueries(), Limits.getQueries()"], questions: ["How to monitor limit usage in Apex?"] },
+      { name: "DML & Heap Limits", items: ["150 DML operations per transaction", "10,000 records per DML operation", "6MB / 12MB heap size (sync/async)", "1,000 variables in scope"] },
+      { name: "CPU & Execution Limits", items: ["10s / 60s CPU time limit (sync/async)", "120s single callout timeout", "100 callout requests per transaction", "10s / 15s synchronous Apex limit"] },
+      { name: "Email & Messaging Limits", items: ["1,000 email invocations per transaction", "10 sendEmail invocations via Apex", "5MB single file attachment", "10MB total email attachments"] },
+      { name: "Async Apex Limits", items: ["250,000 future jobs per 24hr", "5 queueable chain depth", "50 batch jobs queued", "100 batch start/execute/finish methods"] },
+      { name: "Other Limits", items: ["100 describe calls", "15 triggers per object", "50 push topics per org", "10 future method calls per transaction"], tips: ["Use Limits class to monitor usage"] }
+    ]
+  },
+  {
+    id: "apex", label: "Apex", subtopics: [
+      { name: "Core Concepts", items: ["Strongly typed, object-oriented (like Java)", "Runs on Salesforce servers (multi-tenant)", "Triggers: database event handlers (7 events)", "Classes: business logic, controllers, utilities", "Interfaces: Comparable, Database.Batchable, etc", "Collections: List (ordered), Set (unique), Map (key-value)"], tips: ["Follow Single Responsibility Principle"], questions: ["List vs Set vs Map — when to use each?"] },
+      { name: "Triggers", items: ["Events: before/after insert, update, delete, undelete", "Context variables: Trigger.new, Trigger.old, Trigger.newMap, Trigger.oldMap", "Best practice: One trigger per object → Handler class", "Bulkify: handle 200+ records, no SOQL/DML in loops"], code: "trigger AccountTrigger on Account (\n  before insert, before update,\n  after insert, after update\n) {\n  AccountTriggerHandler.handle(\n    Trigger.new, Trigger.oldMap,\n    Trigger.isInsert, Trigger.isUpdate\n  );\n}", examples: ["Before insert: Set default values, validate", "After insert: Create related records, send emails"], tips: ["Use Trigger.isExecuting, Trigger.isInsert for conditional logic"], questions: ["What's the handler pattern and why use it?"] },
+      { name: "Async Apex", items: ["@future: static methods, void return, primitive params only", "Queueable: chaining, complex objects, job monitoring", "Batch Apex: up to 50M records, start/execute/finish", "Schedulable: cron-like scheduling", "Queueable can chain up to 50 jobs total"], code: "// Future Method\n@future\npublic static void processAsync(Id accountId) {\n  // Async logic\n}\n\n// Queueable\npublic class MyQueueable implements Queueable {\n  public void execute(QueueableContext ctx) {\n    // Complex async logic\n  }\n}\n\nSystem.enqueueJob(new MyQueueable());", examples: ["@future: simple callouts, web service integration", "Queueable: complex processing, chaining", "Batch: large data volumes, record processing"], tips: ["Batch: query in start(), process in execute(), notify in finish()"], questions: ["When to use @future vs Queueable vs Batch?"] },
+      { name: "Apex Security", items: ["Default: without sharing — system mode, no record security", "with sharing: enforce record sharing rules", "without sharing: bypass sharing (use carefully)", "inherited sharing: maintain caller's sharing context", "Security.stripInaccessible(): enforce FLS"], examples: ["Use with sharing for user-facing operations", "Use without sharing for system-level background jobs"], tips: ["Default to with sharing for most Apex classes"], questions: ["with sharing vs without sharing — which to use?"] },
+      { name: "Testing", items: ["≥75% code coverage required", "@isTest: test classes, no limits applied", "Test.startTest() / Test.stopTest(): reset limits", "System.assert(), assertEquals(), assertNotEquals()", "Test.isRunningTest(): conditional test logic", "SeeAllData=true: access org data (avoid, use test data)"], code: "@isTest\nprivate class AccountHandlerTest {\n  @isTest\n  static void testCreateAccount() {\n    Test.startTest();\n    Account acc = new Account(Name = 'Test');\n    insert acc;\n    Test.stopTest();\n    System.assertEquals('Test', acc.Name);\n  }\n}", examples: ["Test positive cases: happy path", "Test negative cases: error handling", "Test bulk: 200+ records"], tips: ["Use Test.loadData() for large test datasets"] },
+      { name: "Advanced Patterns", items: ["Dynamic SOQL: Database.query(string)", "Dynamic DML: Database class methods", "Platform Events: pub/sub, Change Data Capture", "Platform Cache: Org cache / Session cache", "Dependency Injection: DI framework for testability", "Custom Exception: extends Exception"], examples: ["Platform Events for async processing", "Platform Cache to reduce repeated SOQL queries", "DI framework for mocking dependencies in tests"], tips: ["Use allOrNone=false for partial success processing"], questions: ["How to implement a custom Logger in Apex?"] }
+    ]
+  },
+  {
+    id: "soql", label: "SOQL", subtopics: [
+      { name: "Basic Structure", items: ["SELECT — Fields to retrieve (required)", "FROM — Object type (required)", "WHERE — Filter records (optional)", "ORDER BY — Sort results (optional)", "LIMIT n — Max records (optional, max 50k)", "OFFSET n — Skip records (optional, max 2000)"], examples: ["SELECT Id, Name, Industry FROM Account WHERE Industry = 'Technology' ORDER BY Name DESC LIMIT 10", "SELECT FirstName, LastName FROM Contact WHERE CreatedDate = LAST_N_DAYS:30"], tips: ["Use LIMIT to prevent governor limit issues"], questions: ["SOQL vs SQL key differences?"] },
+      { name: "Relationship Queries", items: ["Child-to-Parent: Account.Name in query (up to 5 levels)", "Parent-to-Child: (SELECT field FROM Contacts)", "Cross-object: Account.Owner.CreatedBy.Name", "Nested query counts as 1 SOQL query, not 2"], examples: ["SELECT Id, Name, Account.Owner.Name FROM Contact", "SELECT Id, (SELECT Amount FROM Opportunities ORDER BY Amount DESC LIMIT 3) FROM Account"], tips: ["Cannot use OFFSET in parent query with subquery"], questions: ["How many levels deep can you query?"] },
+      { name: "Aggregate Functions", items: ["COUNT() / COUNT_DISTINCT()", "SUM() / AVG() / MIN() / MAX()", "GROUP BY for aggregation", "HAVING for filtering aggregates", "Returns AggregateResult objects"], examples: ["SELECT Status, COUNT(Id) FROM Case GROUP BY Status", "SELECT LeadSource, COUNT_DISTINCT(CreatedById) FROM Lead GROUP BY LeadSource"], tips: ["Cannot use OFFSET with aggregate queries"], questions: ["HAVING vs WHERE — when to use each?"] },
+      { name: "SOQL Injection Defense", items: ["Use bind variables :variable — prevents injection", "String.escapeSingleQuotes() for dynamic field names", "Never concatenate user input directly", "WITH SECURITY_ENFORCED — adds FLS check"], tips: ["Bind variables improve performance by enabling query caching"], questions: ["Why use bind variables over string concatenation?"] },
+      { name: "Query Optimization", items: ["Indexed fields: Id, Name, OwnerId, RecordTypeId, External ID, Unique", "Custom indexes: 5 per object (can be extended)", "Selectivity threshold: < 10% of records returned", "Avoid: NOT operators, leading wildcards LIKE '%text'", "Use Query Plan Tool in Developer Console"], tips: ["Add custom index on frequently filtered fields"], questions: ["How to make a slow SOQL query faster?"] },
+      { name: "WITH SECURITY_ENFORCED", items: ["Enforces object-level & field-level permissions", "Throws System.QueryException if no access", "Use at user-facing query boundaries", "Alternative: Security.stripInaccessible()"], tips: ["Always enforce FLS for user-initiated queries"], questions: ["WITH SECURITY_ENFORCED vs stripInaccessible?"] }
+    ]
+  },
+  {
+    id: "sosl", label: "SOSL", subtopics: [
+      { name: "Structure", items: ["FIND 'search term' IN FIELDS", "RETURNING Object(fields)", "LIMIT n, OFFSET n", "Can search multiple objects"], code: "FIND 'John*' IN NAME FIELDS\nRETURNING Account(Id, Name), Contact(Id, FirstName, LastName)\nLIMIT 10" },
+      { name: "When to Use", items: ["Don't know which object contains data", "Fuzzy text search across fields", "Search multiple objects simultaneously", "Lead, Contact, Account search together"] },
+      { name: "SOSL vs SOQL", items: ["SOSL: text search, multiple objects", "SOQL: precise queries, single object", "SOSL: simpler fuzzy matching", "SOQL: relationships, aggregates"] },
+      { name: "Limits", items: ["20 SOSL queries per transaction", "2000 records retrieved per query", "Search: all fields or specific fields"] }
+    ]
+  },
+  {
+    id: "integrations", label: "Integrations", subtopics: [
+      { name: "Authentication", items: ["Named Credentials: secure endpoint + auth", "Remote Site Settings: whitelist domains", "Connected App: OAuth (client creds, JWT)", "Auth Provider: SSO, OpenID Connect", "Single Sign-On: SAML, OAuth"], tips: ["Never hardcode credentials in Apex"], questions: ["Named Credential vs Remote Site Setting?"] },
+      { name: "REST API", items: ["Resources: /services/data/v56.0/", "CRUD: GET, POST, PATCH, DELETE", "SOQL: /query/?q=SELECT...", "Composite: batch requests, SObject tree", "REST resources: @RestResource annotation"] },
+      { name: "SOAP API", items: ["WSDL-based: enterprise vs partner", "describeSObject(): metadata", "query(): SOQL execution", "Enterprise WSDL: strong typing", "Partner WSDL: dynamic types"], tips: ["Use SOAP when WSDL provided by vendor"] },
+      { name: "Bulk API", items: ["Bulk API 1.0: CSV-based, sequential", "Bulk API 2.0: JSON, parallel processing", "Use for: 50k+ records", "Operations: insert, update, upsert, delete, query"], tips: ["Use Bulk API 2.0 for better performance"] },
+      { name: "Streaming & Events", items: ["PushTopics: SOQL-based subscriptions", "Change Data Capture (CDC): all changes", "Platform Events: pub/sub, custom events", "Generic Events: standard CDC events", "empAPI: subscribe in LWC/Apex"], tips: ["CDC: real-time data sync without polling"] },
+      { name: "Integration Patterns", items: ["Request/Reply: sync, wait for response", "Fire & Forget: async, no response", "Publish/Subscribe: event-driven", "Batch: scheduled, large volumes", "Retry: exponential backoff"], questions: ["Sync vs Async pattern?"] }
+    ]
+  },
+  {
+    id: "lwc", label: "LWC", subtopics: [
+      { name: "Bundle Structure", items: ["component.html: template", "component.js: controller", "component.js-meta.xml: config", "component.css: styles (scoped)"], tips: ["Files share same base name"] },
+      { name: "Lifecycle Hooks", items: ["constructor(): before DOM, no property access", "connectedCallback(): DOM ready, query first", "disconnectedCallback(): cleanup", "renderCallback(): after render", "errorCallback(): error handling"], tips: ["Don't query DOM in constructor"], questions: ["Lifecycle order?"] },
+      { name: "Decorators", items: ["@api: public property, reactive", "@track: (legacy) reactive deep objects", "@wire: reactive data service", "@readonly: track in tests only"], tips: ["Primitives reactive by default (Spring '20+)"] },
+      { name: "Lightning Data Service (LDS)", items: ["getRecord: single record", "getListUI: list view data", "createRecord, deleteRecord, updateRecord", "generateRecordInputForCreate: form data", "@wire or imperative patterns"], tips: ["LDS handles sharing & FLS automatically"] },
+      { name: "Events", items: ["Event bubbling: child → parent (up to 10 levels)", "CustomEvent('name', {detail: data})", "dispatchEvent(event)", "Lightning Message Service (LMS): cross-component"], questions: ["Bubbling vs LMS?"] },
+      { name: "JavaScript Integration", items: ["import resources from @salesforce/*", "loadStyle, loadScript from lightning/platformResourceLoader", "NavigationMixin from lightning/navigation", "refreshApex from @salesforce/apex"], tips: ["Use static resources for third-party libs"] },
+      { name: "Testing", items: ["@salesforce/sfdx-lwc-jest: test framework", "jest.config.js: configuration", "describe(), it(), expect()", "createElement(): render component", "Test for user interactions, @wire data"] }
+    ]
+  },
+  {
+    id: "javascript", label: "JavaScript", subtopics: [
+      { name: "Variables & Scope", items: ["var: function scope, hoisted, redeclare", "let: block scope, TDZ, no redeclare", "const: block scope, no reassign", "Hoisting: declarations lifted, not values", "TDZ: Temporal Dead Zone (let/const)"], tips: ["Prefer const, use let if needed, avoid var"], questions: ["var vs let vs const?"] },
+      { name: "Functions", items: ["Function declaration: hoisted", "Function expression: not hoisted", "Arrow function: no own this, arguments", "this: depends on call site", "Default parameters: fn(a=1) {}"], questions: ["Arrow fn gotchas?"] },
+      { name: "Closures", items: ["Function retains access to outer scope", "Used for: data hiding, factories", "Memory leak risk: circular references", "Module pattern: IIFE closure"] },
+      { name: "Promises & Async", items: ["Promise states: pending, fulfilled, rejected", "async/await: syntactic sugar over Promise", "Promise.all(): parallel, fail-fast", "Promise.any(): first success", "Promise.race(): first settled", "Promise.allSettled(): wait for all"], tips: ["Callback hell → async/await"], questions: ["Promise.all vs Promise.any?"] },
+      { name: "Array Methods", items: ["map(): transform each element", "filter(): keep matching", "reduce(): aggregate to single value", "find(), findIndex(): search", "some(), every(): test condition", "forEach(): side effects (no return)"] },
+      { name: "ES6+ Features", items: ["Destructuring: const {a} = obj", "Spread: [...arr], {...obj}", "Template literals: `hello ${name}`", "Classes: class syntax", "Modules: import/export"] }
+    ]
+  },
+  {
+    id: "aura", label: "Aura Components", subtopics: [
+      { name: "Bundle Structure", items: ["Component: .cmp file", "Controller: .js (client-side)", "Helper: .js (reusable functions)", "Renderer: custom rendering logic", "CSS: styles for component"] },
+      { name: "Data Binding", items: ["<aura:attribute>: component state", "{!v.attribute}: value binding", "{!c.method}: controller binding", "Two-way binding with <aura:if>"] },
+      { name: "Calling Apex", items: ["@AuraEnabled: expose Apex method", "<force:recordData>: LDS", "action.setCallback(): handle response", "component.get(): invoke Apex"] },
+      { name: "Events", items: ["Component events: child → parent", "Application events: broadcast globally", "Standard events: force:showToast, etc"] }
+    ]
+  },
+  {
+    id: "visualforce", label: "Visualforce", subtopics: [
+      { name: "Pages & Controllers", items: ["<apex:page>: VF page markup", "Standard Controller: auto CRUD", "Custom Controller: Apex class", "Controller Extension: extend standard"] },
+      { name: "View State", items: ["Holds page state between requests", "Max 135KB (65KB licensed)", "Minimize: transient keyword, re-render"], tips: ["Use transient for large, non-essential data"] },
+      { name: "JavaScript Integration", items: ["<apex:actionFunction>: call JS from Apex", "<apex:includeScript>: load JS libs", "Visualforce Remoting: async Apex calls"] },
+      { name: "When to Use", items: ["Need fine-grained PDF control", "Migrate legacy VF", "Complex rendering not possible in LWC"] }
+    ]
+  },
+  {
+    id: "ai", label: "AI & Agentforce", subtopics: [
+      { name: "AI Concepts", items: ["Model: algorithm trained on data", "Prompt: input to AI model", "Token: basic unit of text", "Temperature: randomness control", "Hallucination: false confidence"], tips: ["Lower temp = more deterministic"] },
+      { name: "Einstein GPT", items: ["Sales Email: generate outreach", "Service Replies: auto-response", "Work Summary: summarize records", "Einstein Copilot: AI assistant"] },
+      { name: "Prompt Engineering", items: ["Be specific & provide context", "Chain of Thought: show reasoning", "Few-shot: provide examples", "Structure: clear instructions"] },
+      { name: "Agentforce", items: ["Agents: autonomous AI assistants", "Topics: agent capabilities", "Actions: what agent can do", "RAG: Retrieval-Augmented Generation"] }
+    ]
+  },
+  {
+    id: "git", label: "Git & Version Control", subtopics: [
+      { name: "Core Commands", items: ["git clone: copy repository", "git checkout: switch branch/commit", "git add: stage changes", "git commit: save snapshot", "git push: upload to remote", "git pull: fetch + merge", "git fetch: download without merge"], tips: ["Use git pull --rebase to avoid merge commits"] },
+      { name: "Branching", items: ["git branch: list/create branches", "git checkout -b: create & switch", "git merge: combine branches", "git rebase: linear history", "git cherry-pick: apply specific commit"], questions: ["Merge vs Rebase?"] },
+      { name: "Branching Strategies", items: ["GitFlow: feature, develop, release, master", "Trunk-based: short-lived feature branches", "GitHub Flow: master + feature branches", "Feature flags: branch by abstraction"], tips: ["Trunk-based reduces merge pain, requires CI/CD"] },
+      { name: "Undo Changes", items: ["git reset --soft: keep changes staged", "git reset --hard: discard all changes", "git revert: create undo commit", "git commit --amend: edit last commit", "git restore: restore working tree files"], tips: ["Never amend pushed commits"] },
+      { name: "Conflict Resolution", items: ["git mergetool: visual merge tool", "git diff: view conflicts", "<<<<<<<, =======, >>>>>>> markers", "Accept current, accept incoming, or both", "Test merge resolution before commit"] }
+    ]
+  },
+  {
+    id: "processes", label: "DevOps & Processes", subtopics: [
+      { name: "Salesforce DX", items: ["sfdx-cli: command line tools", "scratch orgs: temporary dev environments", "source-tracked development", "force:source:push / pull", "force:mdapi:deploy for metadata API"], tips: ["Scratch orgs are disposable — never prod data"] },
+      { name: "Sandboxes", items: ["Developer: free, no prod data", "Developer Pro: larger storage", "Partial Copy: sampled prod data", "Full Sandbox: complete copy", "Refresh intervals vary by type"], tips: ["Match sandbox type to development phase"] },
+      { name: "CI/CD Pipelines", items: ["CI: automated build + test on push", "CD: automated deployment to staging/prod", "Tools: Jenkins, GitHub Actions, Copado", "Pipeline: lint → test → deploy", "Branch-based deployments"], tips: ["Automate everything that can be automated"] },
+      { name: "Change Sets", items: ["Classic deployment mechanism", "Inbound / Outbound change sets", "Component selection, dependencies", "Upload between connected orgs"], tips: ["Use SFDX for modern deployments"] },
+      { name: "Deployment Strategies", items: ["Blue-Green: zero-downtime switches", "Canary: gradual rollout", "Rolling: sequential updates", "Feature flags: controlled release"], questions: ["When to use which deployment strategy?"] }
+    ]
+  }
+];
+
+// Mapping: group label text → TOPICS id
+const GROUP_TOPIC_MAP = {
+  "Data Model": "datamodel",
+  "Setup & Config": "setup",
+  "Reports & Dashboards": "reports",
+  "Access Control": "security",
+  "Flow": "flow",
+  "Governor Limits": "limits",
+  "Apex Core": "apex",
+  "SOQL": "soql",
+  "SOSL": "sosl",
+  "Integrations": "integrations",
+  "LWC": "lwc",
+  "JavaScript": "javascript",
+  "Aura Components": "aura",
+  "Visualforce": "visualforce",
+  "AI & Agentforce": "ai",
+  "Git & Version Control": "git",
+  "DevOps & Processes": "processes"
+};
+
+// Mapping: tag text → { topicId, subtopicIndex }
+const TAG_TOPIC_MAP = {
+  "Standard Objects": { topicId: "datamodel", subIdx: 0 },
+  "Custom Objects": { topicId: "datamodel", subIdx: 0 },
+  "Fields & Types": { topicId: "datamodel", subIdx: 0 },
+  "Relationships": { topicId: "datamodel", subIdx: 1 },
+  "Schema Builder": { topicId: "datamodel", subIdx: 1 },
+  "OWD": { topicId: "security", subIdx: 3 },
+  "User Management": { topicId: "setup", subIdx: 0 },
+  "Org Settings": { topicId: "setup", subIdx: 1 },
+  "Audit & Monitoring": { topicId: "setup", subIdx: 2 },
+  "Data & Storage": { topicId: "setup", subIdx: 3 },
+  "Report Types": { topicId: "reports", subIdx: 0 },
+  "Filters": { topicId: "reports", subIdx: 1 },
+  "Dashboard Components": { topicId: "reports", subIdx: 2 },
+  "Profiles": { topicId: "security", subIdx: 5 },
+  "Permission Sets": { topicId: "security", subIdx: 5 },
+  "Field-Level Security": { topicId: "security", subIdx: 2 },
+  "Record-Level Security": { topicId: "security", subIdx: 3 },
+  "Sharing Rules": { topicId: "security", subIdx: 4 },
+  "Apex Security": { topicId: "security", subIdx: 6 },
+  "Flow Types": { topicId: "flow", subIdx: 0 },
+  "Record-Triggered Flow": { topicId: "flow", subIdx: 1 },
+  "Flow Elements": { topicId: "flow", subIdx: 2 },
+  "Best Practices": { topicId: "flow", subIdx: 3 },
+  "Flow with LWC": { topicId: "flow", subIdx: 5 },
+  "Flow Limits": { topicId: "flow", subIdx: 4 },
+  "SOQL & SOSL Limits": { topicId: "limits", subIdx: 0 },
+  "DML & Heap": { topicId: "limits", subIdx: 1 },
+  "CPU & Execution": { topicId: "limits", subIdx: 2 },
+  "Email & Messaging": { topicId: "limits", subIdx: 3 },
+  "Async Apex Limits": { topicId: "limits", subIdx: 4 },
+  "Classes & Methods": { topicId: "apex", subIdx: 0 },
+  "Triggers": { topicId: "apex", subIdx: 1 },
+  "Collections": { topicId: "apex", subIdx: 0 },
+  "Exception Handling": { topicId: "apex", subIdx: 4 },
+  "Async Apex": { topicId: "apex", subIdx: 2 },
+  "Test Classes": { topicId: "apex", subIdx: 4 },
+  "Basic Queries": { topicId: "soql", subIdx: 0 },
+  "Aggregate Functions": { topicId: "soql", subIdx: 2 },
+  "SOQL Injection": { topicId: "soql", subIdx: 3 },
+  "Dynamic SOQL": { topicId: "apex", subIdx: 5 },
+  "WITH SECURITY_ENFORCED": { topicId: "soql", subIdx: 5 },
+  "Structure": { topicId: "sosl", subIdx: 0 },
+  "When to Use": { topicId: "sosl", subIdx: 1 },
+  "SOSL vs SOQL": { topicId: "sosl", subIdx: 2 },
+  "Limits": { topicId: "sosl", subIdx: 3 },
+  "REST API": { topicId: "integrations", subIdx: 1 },
+  "SOAP API": { topicId: "integrations", subIdx: 2 },
+  "Bulk API": { topicId: "integrations", subIdx: 3 },
+  "Streaming Events": { topicId: "integrations", subIdx: 4 },
+  "Integration Patterns": { topicId: "integrations", subIdx: 5 },
+  "Authentication": { topicId: "integrations", subIdx: 0 },
+  "Bundle Structure": { topicId: "lwc", subIdx: 0 },
+  "Data Binding": { topicId: "lwc", subIdx: 0 },
+  "Calling Apex": { topicId: "lwc", subIdx: 0 },
+  "Events": { topicId: "lwc", subIdx: 4 },
+  "Wire Service": { topicId: "lwc", subIdx: 3 },
+  "Lifecycle Hooks": { topicId: "lwc", subIdx: 1 },
+  "ES6+ Basics": { topicId: "javascript", subIdx: 5 },
+  "Promises & Async/Await": { topicId: "javascript", subIdx: 3 },
+  "Modules": { topicId: "javascript", subIdx: 5 },
+  "DOM Manipulation": { topicId: "javascript", subIdx: 5 },
+  "Pages & Controllers": { topicId: "visualforce", subIdx: 0 },
+  "View State": { topicId: "visualforce", subIdx: 1 },
+  "JavaScript Integration": { topicId: "visualforce", subIdx: 2 },
+  "When to Use": { topicId: "visualforce", subIdx: 3 },
+  "AI Concepts": { topicId: "ai", subIdx: 0 },
+  "Einstein GPT": { topicId: "ai", subIdx: 1 },
+  "Prompt Engineering": { topicId: "ai", subIdx: 2 },
+  "Agentforce": { topicId: "ai", subIdx: 3 },
+  "Copilot Studio": { topicId: "ai", subIdx: 3 },
+  "Core Commands": { topicId: "git", subIdx: 0 },
+  "Branching Strategy": { topicId: "git", subIdx: 2 },
+  "Pull Requests": { topicId: "git", subIdx: 0 },
+  "Conflict Resolution": { topicId: "git", subIdx: 4 },
+  "Salesforce DX": { topicId: "processes", subIdx: 0 },
+  "Sandboxes": { topicId: "processes", subIdx: 1 },
+  "CI/CD Pipelines": { topicId: "processes", subIdx: 2 },
+  "Change Sets": { topicId: "processes", subIdx: 3 },
+  "Deployment Strategies": { topicId: "processes", subIdx: 4 }
+};
+
+// Get section color class from an element
+function getSectionColor(el) {
+  const section = el.closest(".section");
+  if (!section) return "purple";
+  if (section.classList.contains("s-blue")) return "blue";
+  if (section.classList.contains("s-amber")) return "amber";
+  if (section.classList.contains("s-red")) return "red";
+  if (section.classList.contains("s-green")) return "green";
+  return "purple";
+}
+
+function findTopic(id) {
+  return TOPICS.find(t => t.id === id);
+}
+
+// Render subtopic HTML
+function renderSubtopicCard(sub, colorClass) {
+  let html = '<div class="section ' + colorClass + '" data-sub-idx="' + (sub._idx || 0) + '">';
+  html += '<div class="section-head"><span class="title">' + sub.name + '</span></div>';
+  html += '<div class="section-body"><div class="group">';
+
+  if (sub.items && sub.items.length) {
+    html += '<div class="tags">';
+    sub.items.forEach(item => {
+      html += '<span class="tag">' + item + '</span>';
+    });
+    html += '</div>';
+  }
+
+  html += '</div></div>';
+
+  // extras block after section-body
+  let extras = '';
+  if (sub.tips && sub.tips.length) {
+    extras += '<div class="detail-tips" style="margin:0 18px 10px">';
+    sub.tips.forEach(tip => { extras += '<div class="detail-tip">' + tip + '</div>'; });
+    extras += '</div>';
+  }
+  if (sub.code) {
+    extras += '<div style="margin:0 18px 10px"><pre class="detail-code">' + sub.code.replace(/</g, '&lt;') + '</pre></div>';
+  }
+  if (sub.examples && sub.examples.length) {
+    extras += '<div class="detail-examples" style="margin:0 18px 10px">';
+    sub.examples.forEach(ex => { extras += '<div class="detail-example">' + ex + '</div>'; });
+    extras += '</div>';
+  }
+  if (sub.questions && sub.questions.length) {
+    extras += '<div class="detail-questions" style="margin:0 18px 16px">';
+    sub.questions.forEach(q => { extras += '<span class="detail-question">' + q + '</span>'; });
+    extras += '</div>';
+  }
+
+  html += extras + '</div>';
+  return html;
+}
+
+// Open detail panel — full topic
+function openTopicPanel(topicId, color, highlightSubIdx) {
+  const topic = findTopic(topicId);
+  if (!topic) return;
+
+  const colorClass = "s-" + color;
+  const overlay = document.getElementById("detail-overlay");
+  const panel = document.getElementById("detail-panel");
+  const title = document.getElementById("detail-title");
+  const body = document.getElementById("detail-body");
+
+  title.textContent = topic.label;
+  panel.setAttribute("data-color", color);
+  panel.setAttribute("aria-hidden", "false");
+
+  let html = '<div class="grid">';
+  topic.subtopics.forEach((sub, idx) => {
+    sub._idx = idx;
+    html += renderSubtopicCard(sub, colorClass);
+  });
+  html += '</div>';
+
+  body.innerHTML = html;
+  overlay.classList.add("open");
+  panel.classList.add("open");
+  document.body.style.overflow = "hidden";
+
+  // Scroll to highlighted subtopic if specified
+  if (typeof highlightSubIdx === 'number' && highlightSubIdx >= 0) {
+    requestAnimationFrame(() => {
+      const cards = body.querySelectorAll('.section');
+      if (cards[highlightSubIdx]) {
+        cards[highlightSubIdx].classList.add('highlight-sub');
+        cards[highlightSubIdx].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => {
+          cards[highlightSubIdx].classList.remove('highlight-sub');
+        }, 2000);
+      }
+    });
+  }
+}
+
+function closeDetailPanel() {
+  const overlay = document.getElementById("detail-overlay");
+  const panel = document.getElementById("detail-panel");
+  overlay.classList.remove("open");
+  panel.classList.remove("open");
+  panel.setAttribute("aria-hidden", "true");
+  document.body.style.overflow = "";
+}
+
+// ── MENU ──
 function buildMenu() {
   const body = document.getElementById("menu-body");
   const sections = document.querySelectorAll(".section");
@@ -728,11 +1300,56 @@ function switchToTree() {
   localStorage.setItem("sfcs-theme", document.documentElement.dataset.theme);
   window.location.href = "sf-cheatsheet-tree.html";
 }
+
+// ── INIT ──
 (function() {
   const saved = localStorage.getItem("sfcs-theme") ||
     (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
   document.documentElement.dataset.theme = saved;
   buildMenu();
+
+  // Close detail panel
+  document.getElementById("detail-close").addEventListener("click", closeDetailPanel);
+  document.getElementById("detail-overlay").addEventListener("click", closeDetailPanel);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeDetailPanel();
+  });
+
+  // Click on group labels → open full topic
+  document.querySelectorAll(".group-label").forEach(label => {
+    const text = label.textContent.trim();
+    const topicId = GROUP_TOPIC_MAP[text];
+    if (topicId) {
+      label.setAttribute("data-topic", topicId);
+      label.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const color = getSectionColor(label);
+        openTopicPanel(topicId, color);
+      });
+    }
+  });
+
+  // Click on tags → open topic, highlight matching subtopic
+  document.querySelectorAll(".tag").forEach(tag => {
+    tag.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const text = tag.textContent.trim();
+      const mapped = TAG_TOPIC_MAP[text];
+      const color = getSectionColor(tag);
+      if (mapped) {
+        openTopicPanel(mapped.topicId, color, mapped.subIdx);
+      } else {
+        // Fallback: find by group label
+        const group = tag.closest(".group");
+        if (group) {
+          const groupLabel = group.querySelector(".group-label");
+          const gText = groupLabel ? groupLabel.textContent.trim() : "";
+          const gTopicId = GROUP_TOPIC_MAP[gText];
+          if (gTopicId) openTopicPanel(gTopicId, color);
+        }
+      }
+    });
+  });
 })();
 
 // ── DRAG & DROP ──
